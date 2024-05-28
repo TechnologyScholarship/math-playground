@@ -1,0 +1,12 @@
+{
+	"name": "math-playground",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {},
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"mathquill": "^0.10.1-a"
+	}
+}
