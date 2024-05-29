@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Math Playground",
+    "slug": "math-playground",
+    "scheme": "t4",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "enabled": false
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.t4.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.t4.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1a4e7d5d-1838-4473-bdb0-40c75508641b"
+      }
+    },
+    "owner": "wntivc",
+    "plugins": ["expo-router"],
+    "experiments": {
+      "tsconfigPaths": true,
+      "typedRoutes": true
+    }
+  }
+}
