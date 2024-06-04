@@ -1,4 +1,4 @@
-name = "t4-api"
+name = "math-playground"
 compatibility_date = "2024-06-04"
 send_metrics = false
 node_compat = true
