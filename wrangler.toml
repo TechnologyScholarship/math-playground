@@ -5,8 +5,8 @@ account_id = "your_account_id"
  
 [[ d1_databases ]]
 binding = "DB"
-database_name = "math-playground"
-database_id = "8d80ba28-82f8-4c65-bf29-638cfc58fbc2"
+database_name = "production"
+database_id = "4b816e36-1c7a-45b5-8696-5fa0846eb7a2"
 
 [env.preview]
 name = "math-playground"
