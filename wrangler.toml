@@ -4,9 +4,9 @@ send_metrics = false
 account_id = "10393c29ef6e10da4ef439cd32928a94"
  
 [[ d1_databases ]]
-binding = "DB"
-database_name = "production"
-database_id = "4b816e36-1c7a-45b5-8696-5fa0846eb7a2"
+binding = "production"
+database_name = "math-playground"
+database_id = "8d80ba28-82f8-4c65-bf29-638cfc58fbc2"
 
 [env.preview]
 name = "math-playground"
