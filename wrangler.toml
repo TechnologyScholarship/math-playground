@@ -1,7 +1,7 @@
 name = "math-playground"
 compatibility_date = "2024-06-04"
 send_metrics = false
-account_id = "your_account_id"
+account_id = "10393c29ef6e10da4ef439cd32928a94"
  
 [[ d1_databases ]]
 binding = "DB"
