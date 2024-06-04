@@ -1,10 +1,10 @@
-name = "t4-stack"
-compatibility_date = "2023-10-30"
+name = "math-playground"
+compatibility_date = "2024-06-04"
 send_metrics = false
 node_compat = true
-route = "app.t4stack.com/*"
+route = "math-playground.pages.dev/*"
 workers_dev = false
 
 [env.preview]
-name = "t4-stack-preview"
+name = "math-playground-preview"
 workers_dev = true
