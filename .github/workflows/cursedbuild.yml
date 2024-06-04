@@ -12,7 +12,7 @@ jobs:
   deploy:
     name: Build stuff
     runs-on: windows-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
 
     steps:
       - name: Checkout code
@@ -28,12 +28,13 @@ jobs:
       - name: 'Bun install'
         run: bun install
 
+      - name: 'Zip output'
+        run: Compress-Archive -LiteralPath ".\node_modules" ".\bun.lockb" -DestinationPath ".\build.zip"
+
       - name: 'Store Build'
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: |
-            ./node_modules
-            ./bun.lockb
+          path: ./build.zip
           retention-days: 1
 
