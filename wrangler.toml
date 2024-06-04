@@ -1,0 +1,18 @@
+name = "math-playground"
+compatibility_date = "2024-06-04"
+send_metrics = false
+account_id = "your_account_id"
+ 
+[[ d1_databases ]]
+binding = "DB"
+database_name = "math-playground"
+database_id = "8d80ba28-82f8-4c65-bf29-638cfc58fbc2"
+
+[env.preview]
+name = "math-playground"
+workers_dev = true
+ 
+[env.production]
+name = "math-playground"
+route = "math-playground.pages.dev/*"
+workers_dev = false
