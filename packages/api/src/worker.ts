@@ -19,7 +19,7 @@ app.use('/trpc/*', async (c, next) => {
       'APP_URL is not set. CORS errors may occur. Make sure the .dev.vars file is present at /packages/api/.dev.vars'
     )
   }
-  return await cors({
+  return cors({
     origin: (origin) => (origin.endsWith(new URL(c.env.APP_URL).host) ? origin : c.env.APP_URL),
     credentials: true,
     allowMethods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE'],

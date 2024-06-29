@@ -6,6 +6,12 @@ import { createTamagui } from 'tamagui'
 
 import { animations } from './animations'
 
+declare module 'tamagui' {
+  interface TypeOverride {
+    groupNames(): string
+  }
+}
+
 const headingFont = createInterFont({
   size: {
     6: 15,
