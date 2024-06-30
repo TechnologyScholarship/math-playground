@@ -1,11 +1,16 @@
 {
   "name": "@t4/ui",
   "version": "2.0.0",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "private": true,
   "main": "src/index.tsx",
   "module:jsx": "src",
-  "files": ["types", "dist"],
+  "files": [
+    "types",
+    "dist"
+  ],
   "scripts": {
     "build": "tamagui-build",
     "watch": "tamagui-build --watch",

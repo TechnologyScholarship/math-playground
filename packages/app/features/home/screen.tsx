@@ -1,12 +1,18 @@
 import {
   Anchor,
   Button,
+  Circle,
+  Frame,
   H1,
   H3,
+  Handle,
+  Overlay,
   Paragraph,
   ScrollView,
   Separator,
   Sheet,
+  Square,
+  View,
   XStack,
   YStack,
   useToastController,
@@ -16,11 +22,15 @@ import { ChevronDown } from '@tamagui/lucide-icons'
 import { useSupabase } from 'app/utils/supabase/hooks/useSupabase'
 import { useUser } from 'app/utils/supabase/hooks/useUser'
 import { trpc } from 'app/utils/trpc'
-import React, { useState } from 'react'
+import React, { ReactNode, useContext, useState } from 'react'
 import { Linking } from 'react-native'
 import { SolitoImage } from 'solito/image'
 import { useLink } from 'solito/link'
 import { useSheetOpen } from '../../atoms/sheet'
+import { space, size } from '@tamagui/themes'
+import src from 'app/tamagui.config'
+import { openURL } from 'expo-linking'
+import { AnimatedCircle } from '@t4/ui/src/AnimatedCircle'
 
 export function HomeScreen() {
   const utils = trpc.useContext()
@@ -51,6 +61,7 @@ export function HomeScreen() {
   return (
     <ScrollView>
       <YStack flex={1} jc='center' ai='center' p='$4' space='$4'>
+        <AnimatedCircle />
         <SolitoImage src='/t4-logo.png' width={128} height={128} alt='T4 Logo' />
         <H1 textAlign='center'>👋 Hello, T4 App</H1>
         <Separator />

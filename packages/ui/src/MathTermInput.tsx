@@ -1,26 +1,26 @@
-import { Button, Circle, View } from '@t4/ui';
-import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons';
-import React from 'react';
-import { MathQuillInput } from './MathQuillInput';
-import { ScrollOver } from './ScrollOver';
-import { Platform } from 'react-native';
-import { XStack, YStack } from 'tamagui';
+import { Button, Circle, View } from '@t4/ui'
+import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
+import React from 'react'
+import { MathQuillInput } from './MathQuillInput'
+import { ScrollOver } from './ScrollOver'
+import { Platform } from 'react-native'
+import { XStack, YStack } from 'tamagui'
 
 export function MathTermInput(props) {
-  const [expression, setExpression] = React.useState<string>(props.children);
+  const [expression, setExpression] = React.useState<string>(props.children)
   return (
     <ScrollOver
       onMouseWheel={(e) => {
-        const value = parseFloat(expression.trim() || '0');
+        const value = parseFloat(expression.trim() || '0')
         if (!Number.isNaN(value)) {
           const offset =
-            Math.ceil(Math.abs(e.deltaY / (e.deltaMode === 0 ? 100 : 1))) * Math.sign(e.deltaY);
+            Math.ceil(Math.abs(e.deltaY / (e.deltaMode === 0 ? 100 : 1))) * Math.sign(e.deltaY)
           setExpression(
             (expression.trim() || '0').replace(
               /^[+-]?[0-9_]+(\.[0-9]+)?/g,
               (value - offset).toString()
             )
-          );
+          )
         }
       }}
     >
@@ -49,14 +49,11 @@ export function MathTermInput(props) {
         <XStack width='100%' height='100%' position='absolute' ai='center' jc='center' zIndex={1}>
           <Circle aspectRatio={1} height={0}>
             <Circle
-              animation={{
-                height: 'bouncy',
-                backgroundColor: 'easeIn',
-              }}
+              animation='bouncy'
               aspectRatio={1}
-              height={0}
+              height='50%'
               backgroundColor='$backgroundTransparent'
-              $group-here-hover={{
+              hoverStyle={{
                 height: '100%',
                 backgroundColor: '$backgroundHover',
               }}
@@ -74,7 +71,7 @@ export function MathTermInput(props) {
           f={1}
           fb={0}
           onChange={(math) => {
-            setExpression(math.latex());
+            setExpression(math.latex())
           }}
           latex={expression}
           {...props}
@@ -88,5 +85,5 @@ export function MathTermInput(props) {
         />
       </YStack>
     </ScrollOver>
-  );
+  )
 }

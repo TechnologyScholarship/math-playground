@@ -1,17 +1,17 @@
-import { View, Text, Square, Circle, XStack, YStack, ScrollView, ScrollOver } from '@t4/ui'
-import { EquationAction } from '@t4/ui/src/EquationAction'
-import { EquationHistory } from '@t4/ui/src/EquationHistory'
-import { MathQuillInput } from '@t4/ui/src/MathQuillInput'
-import { MathQuillText } from '@t4/ui/src/MathQuillText'
-import { MathTermInput } from '@t4/ui/src/MathTermInput'
-import React from 'react'
+import { View, Text, Square, Circle, XStack, YStack, ScrollView, ScrollOver } from '@t4/ui';
+import { EquationAction } from '@t4/ui/src/EquationAction';
+import { EquationHistory } from '@t4/ui/src/EquationHistory';
+import { MathQuillInput } from '@t4/ui/src/MathQuillInput';
+import { MathQuillText } from '@t4/ui/src/MathQuillText';
+import { MathTermInput } from '@t4/ui/src/MathTermInput';
+import React from 'react';
 
-export function TestScreenScreen() {
+export function TestScreen() {
   // {/* <MathQuillInput color='green' /> */}
   return (
     <YStack f={1} maxHeight='100dvh'>
       <Square
-        animation={'easeIn' as any}
+        animation={'bouncy' as any}
         animateOnly={['transform']}
         size={104}
         borderColor='$borderColor'
@@ -29,12 +29,12 @@ export function TestScreenScreen() {
       </Square>
 
       <View
-        animation='easeIn'
+        animation='bouncy'
         width='$8'
         height='$8'
-        opacity={1}
+        opacity={0.5}
         scale={1}
-        hoverStyle={{ opacity: 0.5, scale: 1.2 }}
+        hoverStyle={{ opacity: 1, scale: 1.2 }}
       >
         <Circle backgroundColor='$backgroundHover' aspectRatio={1} height='100%' />
       </View>
@@ -61,7 +61,7 @@ export function TestScreenScreen() {
         paddingVertical='$6'
         overflowX='auto'
         maxWidth='100%'
-        // maxHeight="10vh"
+      // maxHeight="10vh"
       >
         <EquationAction fontSize='$5'>
           <MathQuillText unselectable>+1</MathQuillText>
@@ -84,5 +84,5 @@ export function TestScreenScreen() {
         </EquationAction>
       </XStack>
     </YStack>
-  )
+  );
 }

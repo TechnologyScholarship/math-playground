@@ -1,8 +1,7 @@
 import { createAnimations } from '@tamagui/animations-react-native'
-import type { AnimationDriver } from '@tamagui/web'
-import { Easing } from 'react-native'
+// import { Easing } from 'react-native'
 
-export const animations: AnimationDriver = createAnimations({
+export const animations = createAnimations({
   bouncy: {
     type: 'spring',
     damping: 10,
@@ -20,9 +19,9 @@ export const animations: AnimationDriver = createAnimations({
     mass: 1.2,
     stiffness: 250,
   },
-  easeIn: {
-    type: 'timing',
-    easing: Easing.in(Easing.ease),
-    duration: 3,
-  },
+  // easeIn: {
+  //   type: 'timing',
+  //   easing: Easing.in(Easing.ease),
+  //   duration: 3,
+  // },
 })
