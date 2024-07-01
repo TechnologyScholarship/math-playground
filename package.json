@@ -1,5 +1,5 @@
 {
-  "name": "t4-app-monorepo",
+  "name": "math-playground-monorepo",
   "private": true,
   "license": "MIT",
   "version": "3.0.0",
@@ -32,12 +32,15 @@
     "deps:fix": "manypkg fix",
     "deps:update": "bun x npm-check-updates -ui -ws",
     "postinstall": "bun run build && bun ./.github/scripts/env.ts && bun check-deps && bun format",
-    "clean": "git clean -xdf node_modules && rm -f bun.lockb && rm -rf ./apps/next/.next && rm -rf ./apps/next/.tamagui && rm -rf ./apps/next/node_modules && rm -rf ./packages/ui/dist"
+    "clean": "git clean -xdf node_modules && rm -f bun.lockb && rm -rf ./apps/next/.next && rm -rf ./apps/next/.tamagui && rm -rf ./apps/next/node_modules && rm -rf ./packages/ui/dist",
+    "clean:all": "run-p clean clean:app clean:api clean:ui clean:next clean:expo",
+    "clean:app": "cd packages/app && bun clean",
+    "clean:api": "cd packages/api && bun clean",
+    "clean:ui": "cd packages/ui && bun clean",
+    "clean:next": "cd apps/next && bun clean",
+    "clean:expo": "cd apps/expo && bun clean"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@biomejs/biome": "1.3.3",
@@ -53,9 +56,5 @@
     "typescript": "^5.2.2",
     "workerd": "1.20231218.0"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "@t4/api",
-    "es5-ext"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "@swc/core", "@t4/api", "es5-ext", "esbuild", "workerd"]
 }

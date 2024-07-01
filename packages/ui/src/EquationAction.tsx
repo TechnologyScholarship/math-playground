@@ -4,7 +4,9 @@ export function EquationAction(props: SizableTextProps) {
   return (
     <Draggable onDrag={console.log}>
       <SizableText {...props}>
-        <XStack ai='center'>{props.children}</XStack>
+        <XStack group='action' paddingHorizontal='$6' ai='center'>
+          {props.children}
+        </XStack>
       </SizableText>
     </Draggable>
   )

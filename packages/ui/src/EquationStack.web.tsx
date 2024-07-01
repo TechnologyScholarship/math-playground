@@ -1,26 +1,25 @@
-import React from 'react'
-import { YStack, getTokens } from '@t4/ui'
+import React from 'react';
+import { YStack, getToken } from '@t4/ui';
 export const EquationStack = (props) => {
   return (
-    <YStack className='eq-stack' f={1} rowGap='$2' fd='column-reverse' ac='center'>
+    <>
       <style
         dangerouslySetInnerHTML={{
           __html: `
-        .eq-stack > * > :first-child {
-          justify-self: right;
-        }
-      `,
+            .eq-stack > * {
+              display: grid !important;
+              grid-template-columns: 1fr min-content 1fr ${getToken('$2', 'size', true)};
+              align-items: baseline !important;
+            }
+            .eq-stack > * > :first-child {
+              justify-self: right;
+            }
+          `,
         }}
       />
-      {props.children.map((el) => {
-        return React.cloneElement(el, {
-          style: {
-            display: 'grid',
-            gridTemplateColumns: '1fr min-content 1fr ' + getTokens().size[2].variable,
-            alignItems: 'baseline',
-          },
-        })
-      })}
-    </YStack>
-  )
-}
+      <YStack className='eq-stack' f={1} rowGap='$2' fd='column-reverse' ac='center'>
+        {props.children}
+      </YStack>
+    </>
+  );
+};

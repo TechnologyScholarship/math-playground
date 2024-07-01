@@ -4,9 +4,9 @@ import React from 'react'
 import { View } from '@t4/ui'
 
 export function Draggable(props: DraggableProps) {
-  let dragging = React.useRef(false) // Spoof implementation of onDragStart
+  const dragging = React.useRef(false); // Spoof implementation of onDragStart
   return (
-    <View>
+    <View group='dragging'>
       <NativeDraggable.default // TODO: remap event handler types
         onDrag={
           props.onDragStart

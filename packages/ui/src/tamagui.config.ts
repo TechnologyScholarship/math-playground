@@ -6,12 +6,6 @@ import { createTamagui } from 'tamagui'
 
 import { animations } from './animations'
 
-declare module 'tamagui' {
-  interface TypeOverride {
-    groupNames(): string
-  }
-}
-
 const headingFont = createInterFont({
   size: {
     6: 15,
@@ -57,6 +51,9 @@ const bodyFont = createInterFont(
 )
 
 export const config = createTamagui({
+  settings: {
+    webContainerType: 'normal',
+  },
   defaultFont: 'body',
   animations,
   shouldAddPrefersColorThemes: true,

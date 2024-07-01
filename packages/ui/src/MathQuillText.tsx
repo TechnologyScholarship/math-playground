@@ -9,23 +9,25 @@ const StaticMathField = dynamic(
   { ssr: false }
 )
 
-export const MathQuillText: React.FunctionComponent<SizableTextProps & { unselectable?: boolean }> =
+export const MathQuillText: React.FunctionComponent<SizableTextProps & { children: string, unselectable?: boolean; }> =
   (props) => {
     React.useEffect(() => {
       import('react-mathquill').then((mq) => mq.addStyles())
     }, [])
     return (
-      <StaticMathField
-        style={
-          props.unselectable
-            ? {
+      <SizableText unstyled {...props as SizableTextProps}>
+        <StaticMathField
+          style={
+            props.unselectable
+              ? {
                 cursor: 'inherit',
               }
-            : undefined
-        }
-        onMouseDownCapture={props.unselectable ? (e) => e.stopPropagation() : undefined}
-      >
-        {props.children}
-      </StaticMathField>
+              : undefined
+          }
+          onMouseDownCapture={props.unselectable ? (e) => e.stopPropagation() : undefined}
+        >
+          {props.children}
+        </StaticMathField>
+      </SizableText>
     )
   }
