@@ -1,29 +1,7 @@
-"use client";
-import { AnimatePresence, styled } from '@t4/ui';
+import { AnimatePresence, styled, View } from '@t4/ui';
 import React from 'react'
 import { EquationStack } from './EquationStack'
 import { EquationRow } from './EquationRow'
-
-const CustomEquationRow = styled(EquationRow, {
-  animation: 'bouncy',
-  enterStyle: {
-    y: '-100%'
-  },
-  exitStyle: {
-    y: '-100%',
-    opacity: 0,
-    marginBottom: '-100%'
-  },
-
-  variants: {
-    // 1 = right, 0 = nowhere, -1 = left
-    exiting: {
-      true: {
-        y: '100%',
-      }
-    },
-  } as const,
-});
 
 export function EquationHistory() {
   const [key, setKey] = React.useState(6);
@@ -54,7 +32,7 @@ export function EquationHistory() {
   // const [currentKey, setCurrentKey] = React.useState<number | null>(null);
   return (
     <EquationStack>
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {
           // <EquationRow
           //   size='$7'
@@ -85,18 +63,17 @@ export function EquationHistory() {
           //   {current}
           // </EquationRow>
         }
-        {...(history ?? []).map((eq, i) => ( // TODO: element keys
-          <EquationRow
+        {...(history ?? []).map((eq, i) => (
+          <View
             key={eq.key}
-            color={i !== 0 ? '$placeholderColor' : undefined}
-            onRemove={
-              i === 0 && history?.length > 1
-                ? (e) => {
-                  e.stopPropagation();
-                  updateHistory({ type: 'pop' });
-                }
-                : undefined
-            }
+            animation='bouncy'
+            enterStyle={{
+              y: '-100%'
+            }}
+            exitStyle={{
+              y: '-100%',
+              opacity: 0
+            }}
             onPress={i === 0 ? e => {
               updateHistory({
                 type: 'push',
@@ -105,8 +82,21 @@ export function EquationHistory() {
               setKey(key + 1);
             } : undefined}
           >
-            {eq.item}
-          </EquationRow>
+            <EquationRow
+              fontSize='$7'
+              color={i !== 0 ? '$placeholderColor' : undefined}
+              onRemove={
+                i === 0 && history?.length > 1
+                  ? (e) => {
+                    e.stopPropagation();
+                    updateHistory({ type: 'pop' });
+                  }
+                  : undefined
+              }
+            >
+              {eq.item}
+            </EquationRow>
+          </View>
         ))}
       </AnimatePresence>
     </EquationStack>

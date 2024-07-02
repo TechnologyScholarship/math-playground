@@ -1,12 +1,12 @@
 import { Button, Circle, View } from '@t4/ui'
 import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
 import React from 'react'
-import { MathQuillInput } from './MathQuillInput'
+import { MathQuillInput, MathQuillInputProps } from './MathQuillInput';
 import { ScrollOver } from './ScrollOver'
 import { Platform } from 'react-native'
-import { getToken, XStack, YStack } from 'tamagui'
+import { SizableText, SizableTextProps, XStack, YStack } from 'tamagui'
 
-export function MathTermInput(props) {
+export function MathTermInput(props: MathQuillInputProps) {
   const [expression, setExpression] = React.useState<string>(props.children)
   const shiftExpression = delta => {
     const value = parseFloat(expression.trim() || '0');
@@ -73,13 +73,15 @@ export function MathTermInput(props) {
           onPress={() => shiftExpression(1)}
         />
         <MathQuillInput
+          zIndex={1}
           f={1}
           fb={0}
+          {...props}
           onChange={(math) => {
-            setExpression(math.latex())
+            setExpression(math.latex());
+            if (props.onChange) props.onChange(math);
           }}
           latex={expression}
-          {...props}
         />
         <Button
           animation='bouncy'

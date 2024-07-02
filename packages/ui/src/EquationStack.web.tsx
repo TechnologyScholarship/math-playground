@@ -17,7 +17,7 @@ export const EquationStack = (props) => {
           `,
         }}
       />
-      <YStack className='eq-stack' f={1} rowGap='$2' fd='column-reverse' ac='center'>
+      <YStack position='relative' className='eq-stack' f={1} rowGap='$2' fd='column-reverse' ac='center'>
         {props.children}
       </YStack>
     </>

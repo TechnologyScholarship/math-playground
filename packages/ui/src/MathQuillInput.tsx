@@ -1,8 +1,7 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-import { Text, TextProps } from '@t4/ui'
-import { Property } from 'csstype'
+import { SizableText, SizableTextProps, useTheme } from '@t4/ui';
 import React from 'react'
 import { EditableMathFieldProps } from 'react-mathquill'
 
@@ -11,20 +10,87 @@ const EditableMathField = dynamic(
   { ssr: false }
 )
 
-export interface MathQuillInputProps
-  extends Omit<EditableMathFieldProps, keyof Omit<React.HTMLProps<HTMLSpanElement>, 'onChange'>> {}
-export const MathQuillInput: React.FunctionComponent<MathQuillInputProps & TextProps> = (props) => {
+export type MathQuillInputProps = Omit<EditableMathFieldProps, keyof Omit<React.HTMLProps<HTMLSpanElement>, 'onChange'>>
+  & SizableTextProps;
+
+
+// export class MathQuillInput2 extends React.Component<MathQuillInputProps> {
+//   latex: string;
+//   constructor (props: MathQuillInputProps) {
+//     super(props);
+//     this.latex = props.latex;
+//   }
+
+//   render() {
+//     const {
+//       onChange,
+//       latex,
+//       config,
+//       mathquillDidMount,
+//       ...textProps
+//     } = this.props;
+//     const theme = useTheme();
+//     React.useEffect(() => {
+//       import('react-mathquill').then((mq) => mq.addStyles());
+//     }, []);
+//     return (
+//       <SizableText
+//         unstyled={true}
+//         {...textProps}
+//       >
+//         <style dangerouslySetInnerHTML={{
+//           __html: `
+//         .mq-editable-field.mq-focused {
+//           background-color: ${theme.backgroundFocus.get()};
+//         }
+//         .mq-editable-field .mq-cursor {
+//           border-left-color: currentColor !important;
+//         }
+//       `}} />
+//         <EditableMathField
+//           config={{
+//             spaceBehavesLikeTab: true,
+//             restrictMismatchedBrackets: true,
+//             supSubsRequireOperand: true,
+//             charsThatBreakOutOfSupSub: '+-=<>',
+//             autoSubscriptNumerals: true,
+//             autoCommands: 'pi theta sqrt sum int',
+//             maxDepth: 10,
+//             ...config
+//           }}
+//           latex={latex || textProps.children}
+//           onChange={onChange}
+//           mathquillDidMount={mathquillDidMount}
+//         />
+//       </SizableText>
+//     );
+//   }
+// }
+export const MathQuillInput: React.FunctionComponent<MathQuillInputProps> = ({
+  onChange,
+  latex,
+  config,
+  mathquillDidMount,
+  ...textProps
+}) => {
+  const theme = useTheme();
   React.useEffect(() => {
     import('react-mathquill').then((mq) => mq.addStyles())
-    const style = document.createElement('style')
-    // Hacky fix for cursor color
-    style.innerText =
-      '.mq-editable-field .mq-cursor { border-left-color: currentColor !important; }'
-    const head = document.getElementsByTagName('head')[0]
-    head.appendChild(style)
   }, [])
   return (
-    <Text {...(props as TextProps)} unstyled={true}>
+    <SizableText
+      unstyled={true}
+      {...textProps}
+    >
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        .mq-editable-field.mq-focused {
+          background-color: ${theme.backgroundFocus.get()};
+        }
+        .mq-editable-field .mq-cursor {
+          border-left-color: currentColor !important;
+        }
+      `}} />
       <EditableMathField
         config={{
           spaceBehavesLikeTab: true,
@@ -34,10 +100,12 @@ export const MathQuillInput: React.FunctionComponent<MathQuillInputProps & TextP
           autoSubscriptNumerals: true,
           autoCommands: 'pi theta sqrt sum int',
           maxDepth: 10,
+          ...config
         }}
-        latex={props.latex || props.children}
-        {...(props as MathQuillInputProps)}
+        latex={latex || textProps.children}
+        onChange={onChange}
+        mathquillDidMount={mathquillDidMount}
       />
-    </Text>
+    </SizableText>
   )
 }

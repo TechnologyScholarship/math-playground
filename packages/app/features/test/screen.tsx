@@ -35,24 +35,26 @@ export function TestScreen() {
         overflowInline='auto'
         // maxHeight="10vh"
       >
-        <EquationAction fontSize='$5'>
-          <MathQuillText unselectable>+1</MathQuillText>
+        <EquationAction whiteSpace='nowrap' size='$5'>
+          <MathQuillText unselectable paddingRight='$2'>+</MathQuillText>
+          <MathTermInput>1</MathTermInput>
         </EquationAction>
-        <EquationAction whiteSpace='nowrap' fontSize='$5'>
+        <EquationAction whiteSpace='nowrap' size='$5'>
+          <MathQuillText unselectable paddingRight='$2'>-</MathQuillText>
+          <MathTermInput>1</MathTermInput>
+        </EquationAction>
+        <EquationAction whiteSpace='nowrap' size='$5'>
           <MathQuillText unselectable>\times</MathQuillText>
-          <MathTermInput>5</MathTermInput>
+          <MathTermInput>2</MathTermInput>
         </EquationAction>
-        <EquationAction fontSize='$5'>
-          <MathQuillText unselectable>\div1</MathQuillText>
+        <EquationAction whiteSpace='nowrap' size='$5'>
+          <MathQuillText unselectable>\div</MathQuillText>
+          <MathTermInput>2</MathTermInput>
         </EquationAction>
-        <EquationAction fontSize='$5'>
-          <MathQuillText unselectable>+2</MathQuillText>
-        </EquationAction>
-        <EquationAction fontSize='$5'>
-          <MathQuillText unselectable>\times2</MathQuillText>
-        </EquationAction>
-        <EquationAction fontSize='$5'>
-          <MathQuillText unselectable>\div2</MathQuillText>
+        <EquationAction whiteSpace='nowrap' size='$5'>
+          <MathQuillText>
+            (\ellipsis)^<MathQuillInput>2</MathQuillInput>
+          </MathQuillText>
         </EquationAction>
       </XStack>
     </YStack>
