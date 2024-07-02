@@ -1,22 +1,19 @@
 import { Button, Circle, View } from '@t4/ui'
 import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
 import React from 'react'
-import { MathQuillInput, MathQuillInputProps } from './MathQuillInput';
+import { MathQuillInput, MathQuillInputProps } from './MathQuillInput'
 import { ScrollOver } from './ScrollOver'
 import { Platform } from 'react-native'
 import { SizableText, SizableTextProps, XStack, YStack } from 'tamagui'
 
 export function MathTermInput(props: MathQuillInputProps) {
   const [expression, setExpression] = React.useState<string>(props.children)
-  const shiftExpression = delta => {
-    const value = parseFloat(expression.trim() || '0');
+  const shiftExpression = (delta) => {
+    const value = parseFloat(expression.trim() || '0')
     setExpression(
-      (expression.trim() || '0').replace(
-        /^[+-]?[0-9_]+(\.[0-9]+)?/g,
-        (value + delta).toString()
-      )
-    );
-  };
+      (expression.trim() || '0').replace(/^[+-]?[0-9_]+(\.[0-9]+)?/g, (value + delta).toString())
+    )
+  }
   return (
     <ScrollOver
       onMouseWheel={(e) => {
@@ -49,7 +46,7 @@ export function MathTermInput(props: MathQuillInputProps) {
               backgroundColor: '$backgroundHover',
             }}
             $group-dragging-active={{
-              display: 'none'
+              display: 'none',
             }}
           />
         </XStack>
@@ -64,7 +61,7 @@ export function MathTermInput(props: MathQuillInputProps) {
             y: 0,
           }}
           $group-dragging-active={{
-            display: 'none'
+            display: 'none',
           }}
           className='dragging-display-none'
           chromeless
@@ -78,8 +75,8 @@ export function MathTermInput(props: MathQuillInputProps) {
           fb={0}
           {...props}
           onChange={(math) => {
-            setExpression(math.latex());
-            if (props.onChange) props.onChange(math);
+            setExpression(math.latex())
+            if (props.onChange) props.onChange(math)
           }}
           latex={expression}
         />
@@ -94,7 +91,7 @@ export function MathTermInput(props: MathQuillInputProps) {
             y: 0,
           }}
           $group-dragging-active={{
-            display: 'none'
+            display: 'none',
           }}
           className='dragging-display-none'
           chromeless

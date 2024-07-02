@@ -1,5 +1,5 @@
-import React from 'react';
-import { YStack, getToken } from '@t4/ui';
+import React from 'react'
+import { YStack, getToken } from '@t4/ui'
 export const EquationStack = (props) => {
   return (
     <>
@@ -17,9 +17,16 @@ export const EquationStack = (props) => {
           `,
         }}
       />
-      <YStack position='relative' className='eq-stack' f={1} rowGap='$2' fd='column-reverse' ac='center'>
+      <YStack
+        position='relative'
+        className='eq-stack'
+        f={1}
+        rowGap='$2'
+        fd='column-reverse'
+        ac='center'
+      >
         {props.children}
       </YStack>
     </>
-  );
-};
+  )
+}

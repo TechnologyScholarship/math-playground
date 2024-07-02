@@ -1,4 +1,4 @@
-import { View, Text, Square, Circle, XStack, YStack, ScrollView, ScrollOver } from '@t4/ui';
+import { XStack, YStack, ScrollView } from '@t4/ui';
 import { EquationAction } from '@t4/ui/src/EquationAction';
 import { EquationHistory } from '@t4/ui/src/EquationHistory';
 import { MathQuillInput } from '@t4/ui/src/MathQuillInput';
@@ -7,7 +7,6 @@ import { MathTermInput } from '@t4/ui/src/MathTermInput';
 import React from 'react'
 
 export function TestScreen() {
-  // {/* <MathQuillInput color='green' /> */}
   return (
     <YStack f={1} maxHeight='100dvh' overflow='hidden'>
       <ScrollView
@@ -36,11 +35,15 @@ export function TestScreen() {
         // maxHeight="10vh"
       >
         <EquationAction whiteSpace='nowrap' size='$5'>
-          <MathQuillText unselectable paddingRight='$2'>+</MathQuillText>
+          <MathQuillText unselectable paddingRight='$2'>
+            +
+          </MathQuillText>
           <MathTermInput>1</MathTermInput>
         </EquationAction>
         <EquationAction whiteSpace='nowrap' size='$5'>
-          <MathQuillText unselectable paddingRight='$2'>-</MathQuillText>
+          <MathQuillText unselectable paddingRight='$2'>
+            -
+          </MathQuillText>
           <MathTermInput>1</MathTermInput>
         </EquationAction>
         <EquationAction whiteSpace='nowrap' size='$5'>
