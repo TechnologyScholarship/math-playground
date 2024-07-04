@@ -1,9 +1,9 @@
-import { XStack, YStack, ScrollView } from '@t4/ui';
-import { EquationAction } from '@t4/ui/src/EquationAction';
-import { EquationHistory } from '@t4/ui/src/EquationHistory';
-import { MathQuillInput } from '@t4/ui/src/MathQuillInput';
-import { MATHQUILL_NULL_TOKEN, MathQuillText } from '@t4/ui/src/MathQuillText';
-import { MathTermInput } from '@t4/ui/src/MathTermInput';
+import { XStack, YStack, ScrollView } from '@t4/ui'
+import { EquationAction } from '@t4/ui/src/EquationAction'
+import { EquationHistory } from '@t4/ui/src/EquationHistory'
+import { MathQuillInput } from '@t4/ui/src/MathQuillInput'
+import { MATHQUILL_NULL_TOKEN, MathQuillText } from '@t4/ui/src/MathQuillText'
+import { MathTermInput } from '@t4/ui/src/MathTermInput'
 import React from 'react'
 
 export function TestScreen() {
@@ -61,5 +61,5 @@ export function TestScreen() {
         </EquationAction>
       </XStack>
     </YStack>
-  );
+  )
 }

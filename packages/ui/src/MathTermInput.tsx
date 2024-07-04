@@ -4,10 +4,10 @@ import React from 'react'
 import { MathQuillInput, MathQuillInputProps } from './MathQuillInput'
 import { ScrollOver } from './ScrollOver'
 import { Platform } from 'react-native'
-import { getVariable, SizableText, SizableTextProps, XStack, YStack } from 'tamagui';
-import { MathField } from 'react-mathquill';
+import { getVariable, SizableText, SizableTextProps, TamaguiElement, XStack, YStack } from 'tamagui'
+import { MathField } from 'react-mathquill'
 
-export function MathTermInput(props: React.PropsWithRef<MathQuillInputProps>) {
+export const MathTermInput = React.forwardRef<TamaguiElement, MathQuillInputProps>((props, ref) => {
   const [expression, setExpression] = React.useState<string>(props.children)
   const [mathField, setMathField] = React.useState<MathField>()
   const shiftExpression = (delta) => {
@@ -37,6 +37,7 @@ export function MathTermInput(props: React.PropsWithRef<MathQuillInputProps>) {
         />
       ) : null}
       <YStack
+        ref={ref}
         rowGap='$1'
         jc='center'
         ai='center'
@@ -65,12 +66,7 @@ export function MathTermInput(props: React.PropsWithRef<MathQuillInputProps>) {
             }}
           />
         </XStack>
-        <YStack
-          ai='center'
-          jc='flex-end'
-          pos='relative'
-          width='100%'
-        >
+        <YStack ai='center' jc='flex-end' pos='relative' width='100%'>
           <Button
             animation='bouncy'
             position='absolute'
@@ -99,7 +95,7 @@ export function MathTermInput(props: React.PropsWithRef<MathQuillInputProps>) {
           {...props}
           onChange={(math) => {
             if (expression !== math.latex()) {
-              setExpression(math.latex());
+              setExpression(math.latex())
               if (props.onChange) props.onChange(math)
               // mathField?.reflow();
             }
@@ -107,12 +103,7 @@ export function MathTermInput(props: React.PropsWithRef<MathQuillInputProps>) {
           latex={expression}
           mathquillDidMount={setMathField}
         />
-        <YStack
-          ai='center'
-          jc='flex-start'
-          pos='relative'
-          width='100%'
-        >
+        <YStack ai='center' jc='flex-start' pos='relative' width='100%'>
           <Button
             animation='bouncy'
             position='absolute'
@@ -137,4 +128,4 @@ export function MathTermInput(props: React.PropsWithRef<MathQuillInputProps>) {
       </YStack>
     </ScrollOver>
   )
-}
+})

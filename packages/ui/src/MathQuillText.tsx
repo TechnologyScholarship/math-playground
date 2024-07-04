@@ -1,18 +1,15 @@
 'use client'
-import { SizableText, SizableTextProps, TamaguiElement, useThemeName, View } from '@t4/ui';
+import { SizableText, SizableTextProps } from '@t4/ui';
 import dynamic from 'next/dynamic'
 
-import React, { ReactElement, useRef } from 'react'
-import { createRoot } from 'react-dom/client';
-import { config } from '@t4/ui/src/tamagui.config';
-import { MathField } from 'react-mathquill';
+import React from 'react';
+import { createPortal } from 'react-dom';
+import { isServer, useDidFinishSSR } from 'tamagui';
 
 const StaticMathField = dynamic(
   () => import('react-mathquill').then((mod) => mod.StaticMathField),
   { ssr: false }
 )
-
-type MathQuillInputField = Omit<ReactElement, ''>
 
 function onPropReady<T, P extends string>(object: Record<P, T>, prop: P, callback: (value: T) => void) {
   if (Object.hasOwn(object, prop)) {
@@ -38,19 +35,43 @@ interface MathQuillInstance {
   registerEmbed(name: string, embed: (id: string) => { htmlString: string, text(): string, latex(): string; });
 }
 
-const MATHQUILL_NULL = 'mqnull';
-export const MATHQUILL_NULL_TOKEN = `\\embed{${MATHQUILL_NULL}}[0]`;
 const MATHQUILL_CUSTOM_EMBED = 'customhtmlembed';
 const MATHQUILL_CUSTOM_EMBED_IDX = id => `${MATHQUILL_CUSTOM_EMBED}-${id}`;
-export const MathQuillText: React.FunctionComponent<
-SizableTextProps & { children: string | (string | MathQuillInputField)[]; unselectable?: boolean; }
-> = (props) => {
-  const theme = useThemeName();
-  const { unselectable, children, ...textProps } = props;
-  const [embedContainer, setEmbedContainer] = React.useState<TamaguiElement | null>();
-  const [mathField, setMathField] = React.useState<MathField>();
+const MATHQUILL_NULL = 'mqnull';
+export const MATHQUILL_NULL_TOKEN = `\\embed{${MATHQUILL_NULL}}[0]`;
+
+export type MathQuillTextProps =
+  Omit<SizableTextProps, 'children'> & React.PropsWithChildren<{
+    unselectable?: boolean;
+  }>;
+export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props) => {
+  const { unselectable, children, ...textProps }: MathQuillTextProps = props;
+  const didFinishSSR = useDidFinishSSR();
+  const [portalTargets, setPortalTargets] = React.useState<HTMLElement[]>();
+
   React.useEffect(() => {
     import('react-mathquill').then((mq) => mq.addStyles())
+    // Patch CSS to provide an alternate .mq-root-block class with the same styles
+    // but which is not accessed by the MathQuill event Controller, for unselectable
+    // static math text blocks
+    if (!global.MATHQUILL_CSS_PATCHED) {
+      global.MATHQUILL_CSS_PATCHED = true;
+      for (let i = 0; i < document.styleSheets.length; i++) {
+        const sheet = document.styleSheets.item(i) as CSSStyleSheet;
+        for (let j = 0; j < sheet.cssRules.length; j++) {
+          const rule = sheet.cssRules.item(j) as CSSRule;
+          if (!(rule instanceof CSSStyleRule)) continue;
+          // rule.selectorText = rule.selectorText.replace(
+          //   /(^|,)([^,{]*?)\.mq-root-block([^,{]*?)([,{])/g,
+          //   "$1$2.mq-root-block$3,$2.mq-unselectable-root-block$3$4"
+          // );
+          rule.selectorText = rule.selectorText.split(',').flatMap(selector => {
+            if (!selector.includes('mq-root-block')) return selector;
+            return [selector, selector.replaceAll('mq-root-block', 'mq-unselectable-root-block')];
+          }).join(',');
+        }
+      }
+    }
     // Patch MathQuill loader to register embed
     onPropReady(global as any, 'MathQuill', (MathQuill: MathQuillInstance) => {
       MathQuill._MATHQUILL_PATCH_getInterface = MathQuill.getInterface;
@@ -77,28 +98,29 @@ SizableTextProps & { children: string | (string | MathQuillInputField)[]; unsele
       });
     });
   }, [])
+
   let latex = '';
-  const embedded: MathQuillInputField[] = [];
-  const c: (MathQuillInputField | string)[] = typeof children === 'string' ? [children] : children;
-  for (const e of c) {
-    if (typeof e === 'string') {
-      latex += e;
+  const embedComps: React.ReactElement[] = [];
+  // biome-ignore lint/complexity/noForEach: react children forEach
+  React.Children.forEach(children, child => {
+    if (child == null || typeof child === 'undefined') {
+      // continue
+    } else if (React.isValidElement(child)) {
+      // Use portal to embed element
+      latex += `\\embed{${MATHQUILL_CUSTOM_EMBED}}[${embedComps.length}]`;
+      embedComps.push(child);
+    } else if (typeof child === 'string' || typeof child === 'number' || typeof child === 'boolean') {
+      // Render as latex
+      latex += child;
     } else {
-      latex += `\\embed{${MATHQUILL_CUSTOM_EMBED}}[${embedded.length}]`;
-      embedded.push(e);
+      // const x: never = child;
+      throw new TypeError(`Did not expect: ${child}`);
     }
-  }
-  React.useEffect(() => {
-    for (let i = 0; i < embedded.length; i++) {
-      if (!(embedContainer as HTMLElement)?.children.length) break;
-      mathField?.el()?.querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i)}`)
-        ?.appendChild((embedContainer as HTMLElement)?.children[0]);
-    }
-    mathField?.reflow();
-  }, [mathField, embedContainer])
+  });
+
   return (
     <>
-      <SizableText whiteSpace='nowrap' unstyled {...textProps}>
+      <SizableText unstyled {...textProps}>
         <style dangerouslySetInnerHTML={{
           __html: `
         .mq-root-block, .mq-math-mode {
@@ -113,22 +135,29 @@ SizableTextProps & { children: string | (string | MathQuillInputField)[]; unsele
           style={unselectable ? {
             cursor: 'inherit',
           } : undefined}
-          onMouseDownCapture={unselectable ? (e) => e.stopPropagation() : undefined}
-          mathquillDidMount={setMathField}
+          mathquillDidMount={math => {
+            if (unselectable) {
+              // Replace mq-root-block class with style-identical replica
+              const root = math.el().querySelector(':scope .mq-root-block');
+              root?.classList?.remove('mq-root-block');
+              root?.classList?.add('mq-unselectable-root-block');
+              // Remove MathQuill's mouse handlers
+              if (global.jQuery) global.jQuery(math.el()).off('mousedown');
+            }
+            const portals: HTMLElement[] = [];
+            for (let i = 0; i < embedComps.length; i++) {
+              portals.push(math?.el()?.querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i)}`) as HTMLElement);
+            }
+            setPortalTargets(portals);
+          }}
         >
           {latex}
         </StaticMathField>
       </SizableText>
-      <View display='none' ref={setEmbedContainer}>
-        {...embedded}
-        {/* {...embedded.map((comp, i) => React.cloneElement(comp, {
-          key: i,
-          ref: el => {
-            mathField?.el()?.querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i)}`)
-              ?.appendChild(el);
-          }
-        }))} */}
-      </View>
+      {...(
+        isServer || !didFinishSSR ? embedComps // On first render, render components directly
+          : portalTargets ? embedComps.map((comp, i) => createPortal(comp, portalTargets[i]))
+            : [])}
     </>
   )
 }
