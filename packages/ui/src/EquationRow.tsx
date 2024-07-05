@@ -1,18 +1,15 @@
-import { Button, ButtonProps, SizableText, SizableTextProps, View, ViewProps } from '@t4/ui'
-import React from 'react'
-import { MathQuillText } from './MathQuillText'
+import { Button, ButtonProps, MathQuillText, MathQuillTextProps } from '@t4/ui';
+import React from 'react';
 import { Undo2 } from '@tamagui/lucide-icons'
+import { } from './MathQuillText';
 
 export type EquationRowProps = {
   children: string | [string, string]
-  color?: SizableTextProps['color']
-  fontSize?: SizableTextProps['size']
+  color?: MathQuillTextProps['color'];
+  fontSize?: MathQuillTextProps['size']
   onRemove?: ButtonProps['onPress']
 }
 
-// export class EquationRow extends View {
-
-// }
 export const EquationRow: React.FunctionComponent<EquationRowProps> = (props) => {
   const [lhs, rhs]: [string, string] =
     typeof props.children === 'string'

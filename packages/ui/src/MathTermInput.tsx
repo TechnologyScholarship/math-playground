@@ -1,7 +1,6 @@
-import { Button, Circle, View } from '@t4/ui'
+import { Button, Circle, MathQuillInput, MathQuillInputProps } from '@t4/ui';
 import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
-import React from 'react'
-import { MathQuillInput, MathQuillInputProps } from './MathQuillInput'
+import React from 'react';
 import { ScrollOver } from './ScrollOver'
 import { Platform } from 'react-native'
 import { getVariable, SizableText, SizableTextProps, TamaguiElement, XStack, YStack } from 'tamagui'

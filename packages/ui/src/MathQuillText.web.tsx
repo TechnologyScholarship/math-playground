@@ -1,15 +1,15 @@
-'use client'
-import { SizableText, SizableTextProps } from '@t4/ui';
-import dynamic from 'next/dynamic'
+'use client';
+import { SizableText, isServer, useDidFinishSSR } from '@t4/ui';
+import dynamic from 'next/dynamic';
 
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { isServer, useDidFinishSSR } from 'tamagui';
+import { MathQuillTextProps } from './MathQuillText';
 
 const StaticMathField = dynamic(
   () => import('react-mathquill').then((mod) => mod.StaticMathField),
   { ssr: false }
-)
+);
 
 function onPropReady<T, P extends string>(object: Record<P, T>, prop: P, callback: (value: T) => void) {
   if (Object.hasOwn(object, prop)) {
@@ -31,8 +31,8 @@ function onPropReady<T, P extends string>(object: Record<P, T>, prop: P, callbac
 
 interface MathQuillInstance {
   getInterface(version: any);
-  _MATHQUILL_PATCH_getInterface(version: any);
-  registerEmbed(name: string, embed: (id: string) => { htmlString: string, text(): string, latex(): string; });
+  _MATHQUILL_PATCH_getInterface(version: any): void;
+  registerEmbed(name: string, embed: (id: string) => { htmlString: string, text(): string, latex(): string; }): void;
 }
 
 const MATHQUILL_CUSTOM_EMBED = 'customhtmlembed';
@@ -40,17 +40,13 @@ const MATHQUILL_CUSTOM_EMBED_IDX = id => `${MATHQUILL_CUSTOM_EMBED}-${id}`;
 const MATHQUILL_NULL = 'mqnull';
 export const MATHQUILL_NULL_TOKEN = `\\embed{${MATHQUILL_NULL}}[0]`;
 
-export type MathQuillTextProps =
-  Omit<SizableTextProps, 'children'> & React.PropsWithChildren<{
-    unselectable?: boolean;
-  }>;
 export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props) => {
   const { unselectable, children, ...textProps }: MathQuillTextProps = props;
   const didFinishSSR = useDidFinishSSR();
   const [portalTargets, setPortalTargets] = React.useState<HTMLElement[]>();
 
   React.useEffect(() => {
-    import('react-mathquill').then((mq) => mq.addStyles())
+    import('react-mathquill').then((mq) => mq.addStyles());
     // Patch CSS to provide an alternate .mq-root-block class with the same styles
     // but which is not accessed by the MathQuill event Controller, for unselectable
     // static math text blocks
@@ -97,7 +93,7 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
         },
       });
     });
-  }, [])
+  }, []);
 
   let latex = '';
   const embedComps: React.ReactElement[] = [];
@@ -142,11 +138,11 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
               root?.classList?.remove('mq-root-block');
               root?.classList?.add('mq-unselectable-root-block');
               // Remove MathQuill's mouse handlers
-              if (global.jQuery) global.jQuery(math.el()).off('mousedown');
+              if (global.jQuery) global.jQuery(math.el()).off();
             }
             const portals: HTMLElement[] = [];
             for (let i = 0; i < embedComps.length; i++) {
-              portals.push(math?.el()?.querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i)}`) as HTMLElement);
+              portals.push(math.el().querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i)}`) as HTMLElement);
             }
             setPortalTargets(portals);
           }}
@@ -159,5 +155,5 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
           : portalTargets ? embedComps.map((comp, i) => createPortal(comp, portalTargets[i]))
             : [])}
     </>
-  )
-}
+  );
+};

@@ -7,3 +7,5 @@ export * from './list'
 export * from './EquationStack'
 export * from './Draggable'
 export * from './ScrollOver'
+export * from './MathQuillInput';
+export * from './MathQuillText';

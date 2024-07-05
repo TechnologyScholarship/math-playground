@@ -31,41 +31,10 @@ export function EquationHistory() {
       { key: 5, item: ['x^2 + 2x - 1', '0'] },
     ]
   )
-  // const [current, setCurrent] = React.useState<[string, string]>(['x', '14']);
-  // const [currentKey, setCurrentKey] = React.useState<number | null>(null);
+
   return (
     <EquationStack>
       <AnimatePresence initial={false}>
-        {
-          // <EquationRow
-          //   size='$7'
-          //   onPress={e => {
-          //     updateHistory({
-          //       type: 'push',
-          //       item: { key, item: current },
-          //     });
-          //     setKey(key + 1);
-          //     setCurrentKey(null);
-          //   }}
-          //   // onMouseUp={e => updateHistory({ type: 'pop' })}
-          //   // onPress={(e) => {
-          //   //   /* needed for onMouse<Dir> to work *apparently* */
-          //   // }}
-          //   onRemove={
-          //     history?.length
-          //       ? (e) => {
-          //         e.stopPropagation();
-          //         setCurrent(history[0].item);
-          //         setCurrentKey(history[0].key);
-          //         updateHistory({ type: 'pop' });
-          //       }
-          //       : undefined
-          //   }
-          //   key={currentKey == null ? key : currentKey}
-          // >
-          //   {current}
-          // </EquationRow>
-        }
         {...(history ?? []).map((eq, i) => (
           <View
             key={eq.key}
