@@ -65,13 +65,13 @@ export function HomeScreen() {
         <Action transformer={(l, { x }) => `${l} - ${x}`}>
           {MATHQUILL_NULL_TOKEN} - <Term>1</Term>
         </Action>
-        <Action transformer={(l, { x }) => `(${l}) \\times ${x}`}>
+        <Action transformer={(l, { x }) => `\\left(${l}\\right) \\times ${x}`}>
           {MATHQUILL_NULL_TOKEN} \times <Term>2</Term>
         </Action>
         <Action transformer={(l, { x }) => `\\frac{${l}}{${x}}`}>
           {MATHQUILL_NULL_TOKEN} \div <Term>2</Term>
         </Action>
-        <Action transformer={(l, { x }) => `(${l})^{${x}}`}>
+        <Action transformer={(l, { x }) => `\\left(${l}\\right)^{${x}}`}>
           (\ellipsis)^<Term>2</Term>
         </Action>
         <Action transformer={(l, { x }) => `\\sqrt[${x}]{${l}}`}>
