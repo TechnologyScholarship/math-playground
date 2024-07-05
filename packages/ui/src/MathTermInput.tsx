@@ -1,20 +1,22 @@
-import { Button, Circle, MathQuillInput, MathQuillInputProps } from '@t4/ui';
+import { Button, Circle, MathQuillInput, MathQuillInputProps, TamaguiElement, XStack, YStack } from '@t4/ui';
 import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
 import React from 'react';
 import { ScrollOver } from './ScrollOver'
 import { Platform } from 'react-native'
-import { getVariable, SizableText, SizableTextProps, TamaguiElement, XStack, YStack } from 'tamagui'
-import { MathField } from 'react-mathquill'
 
-export const MathTermInput = React.forwardRef<TamaguiElement, MathQuillInputProps>((props, ref) => {
-  const [expression, setExpression] = React.useState<string>(props.children)
-  const [mathField, setMathField] = React.useState<MathField>()
-  const shiftExpression = (delta) => {
-    const value = parseFloat(expression.trim() || '0')
+export const MathTermInput = React.forwardRef<
+  TamaguiElement,
+  Omit<MathQuillInputProps, 'children' | 'latex'> & { expressionState: ReturnType<typeof React.useState<string>>; }
+>(({ expressionState, ...props }, ref) => {
+  const [expression, setExpression] = expressionState;
+
+  const shiftExpression = (delta: number) => {
+    const value = parseFloat(expression?.trim() || '0')
     setExpression(
-      (expression.trim() || '0').replace(/^[+-]?[0-9_]+(\.[0-9]+)?/g, (value + delta).toString())
+      (expression?.trim() || '0').replace(/^[+-]?[0-9_]+(\.[0-9]+)?/g, (value + delta).toString())
     )
   }
+
   return (
     <ScrollOver
       onMouseWheel={(e) => {
@@ -93,14 +95,14 @@ export const MathTermInput = React.forwardRef<TamaguiElement, MathQuillInputProp
           fb={0}
           {...props}
           onChange={(math) => {
+            console.log(expression, typeof expression, math.latex())
             if (expression !== math.latex()) {
               setExpression(math.latex())
               if (props.onChange) props.onChange(math)
               // mathField?.reflow();
             }
           }}
-          latex={expression}
-          mathquillDidMount={setMathField}
+          latex={(expression || ' ' /* apparently non-empty string is more sensible default */)}
         />
         <YStack ai='center' jc='flex-start' pos='relative' width='100%'>
           <Button

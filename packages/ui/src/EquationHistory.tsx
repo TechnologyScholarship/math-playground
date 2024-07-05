@@ -1,9 +1,10 @@
-import { AnimatePresence, styled, View } from '@t4/ui'
+import { AnimatePresence, View, isWeb } from '@t4/ui';
 import React from 'react'
 import { EquationStack } from './EquationStack'
 import { EquationRow } from './EquationRow'
+import { EquationDropHandler, EquationTransformer } from './EquationAction';
 
-export function EquationHistory() {
+export function EquationHistory(props: { dropHandler: ReturnType<typeof React.useRef<EquationDropHandler | undefined>>; }) {
   const [key, setKey] = React.useState(6)
 
   function stackReducer<T>(
@@ -32,49 +33,55 @@ export function EquationHistory() {
     ]
   )
 
+  const onDragOver = (e: { stopPropagation: () => void; }) => {
+    e.stopPropagation();
+    props.dropHandler.current = (transformer: EquationTransformer) => {
+      updateHistory({
+        type: 'push',
+        item: { key, item: history[0].item.map(transformer) as [string, string] },
+      });
+      setKey(key + 1);
+    };
+  }
+
   return (
-    <EquationStack>
-      <AnimatePresence initial={false}>
-        {...(history ?? []).map((eq, i) => (
-          <View
-            key={eq.key}
-            animation='bouncy'
-            enterStyle={{
-              y: '-100%',
-            }}
-            exitStyle={{
-              y: '-100%',
-              opacity: 0,
-            }}
-            onPress={
-              i === 0
-                ? (e) => {
-                    updateHistory({
-                      type: 'push',
-                      item: { key, item: history[0].item },
-                    })
-                    setKey(key + 1)
-                  }
-                : undefined
-            }
-          >
-            <EquationRow
-              fontSize='$7'
-              color={i !== 0 ? '$placeholderColor' : undefined}
-              onRemove={
-                i === 0 && history?.length > 1
-                  ? (e) => {
-                      e.stopPropagation()
-                      updateHistory({ type: 'pop' })
-                    }
-                  : undefined
-              }
+    <View
+      onPointerEnter={onDragOver}
+      {...(isWeb ? { onDragOver } : {})}
+      onPointerLeave={e => { props.dropHandler.current = undefined; }}
+    >
+      <EquationStack>
+        <AnimatePresence initial={false}>
+          {...(history ?? []).map((eq, i) => (
+            <View
+              key={eq.key}
+              animation='bouncy'
+              enterStyle={{
+                y: '-100%',
+              }}
+              exitStyle={{
+                y: '-100%',
+                opacity: 0,
+              }}
             >
-              {eq.item}
-            </EquationRow>
-          </View>
-        ))}
-      </AnimatePresence>
-    </EquationStack>
+              <EquationRow
+                fontSize='$7'
+                color={i !== 0 ? '$placeholderColor' : undefined}
+                onRemove={
+                  i === 0 && history?.length > 1
+                  ? (e) => {
+                    e.stopPropagation();
+                    updateHistory({ type: 'pop' });
+                    }
+                    : undefined
+                }
+              >
+                {eq.item}
+              </EquationRow>
+            </View>
+          ))}
+        </AnimatePresence>
+      </EquationStack>
+    </View >
   )
 }
