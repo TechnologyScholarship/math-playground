@@ -1,13 +1,14 @@
-'use client';
-import dynamic from 'next/dynamic';
+'use client'
+import dynamic from 'next/dynamic'
 
-import { Text, useTheme, MathQuillInputProps } from '@t4/ui';
-import React from 'react';
+import { Text, useTheme, MathQuillInputProps } from '@t4/ui'
+import React from 'react'
+import { MATHQUILL_MAX_DEPTH } from './constants'
 
 const EditableMathField = dynamic(
   () => import('react-mathquill').then((mod) => mod.EditableMathField),
   { ssr: false }
-);
+)
 
 export const MathQuillInput: React.FunctionComponent<MathQuillInputProps> = ({
   onChange,
@@ -16,14 +17,15 @@ export const MathQuillInput: React.FunctionComponent<MathQuillInputProps> = ({
   mathquillDidMount,
   ...textProps
 }) => {
-  const theme = useTheme();
+  const theme = useTheme()
   React.useEffect(() => {
-    import('react-mathquill').then((mq) => mq.addStyles());
-  }, []);
+    import('react-mathquill').then((mq) => mq.addStyles())
+  }, [])
   return (
     <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .mq-editable-field.mq-focused {
           background-color: ${theme.backgroundFocus.get()};
         }
@@ -34,16 +36,17 @@ export const MathQuillInput: React.FunctionComponent<MathQuillInputProps> = ({
           border-color: ${theme.borderColorFocus.get()};
         }
       `,
-      }} />
+        }}
+      />
       <Text
         borderStyle='solid'
         borderWidth={1}
         borderColor='$borderColor'
         hoverStyle={{
-          borderColor: '$borderColorHover'
+          borderColor: '$borderColorHover',
         }}
         focusStyle={{
-          borderColor: '$borderColorFocus'
+          borderColor: '$borderColorFocus',
         }}
         className='math-editable-field-container'
         {...textProps}
@@ -51,7 +54,7 @@ export const MathQuillInput: React.FunctionComponent<MathQuillInputProps> = ({
         <EditableMathField
           style={{
             paddingInline: '4px',
-            border: 'none'
+            border: 'none',
           }}
           config={{
             spaceBehavesLikeTab: true,
@@ -60,13 +63,14 @@ export const MathQuillInput: React.FunctionComponent<MathQuillInputProps> = ({
             charsThatBreakOutOfSupSub: '+-=<>',
             autoSubscriptNumerals: true,
             autoCommands: 'pi infinity theta sqrt sum int',
-            maxDepth: 10,
+            maxDepth: MATHQUILL_MAX_DEPTH,
             ...config,
           }}
           latex={latex || textProps.children}
           onChange={onChange}
-          mathquillDidMount={mathquillDidMount} />
+          mathquillDidMount={mathquillDidMount}
+        />
       </Text>
     </>
-  );
-};
+  )
+}

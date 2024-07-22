@@ -1,13 +1,13 @@
 import React from 'react'
 import { DraggableProps } from './Draggable'
-import { View, DragEvent } from '@t4/ui';
+import { View, DragEvent } from '@t4/ui'
 
 export function asIntermediate(e: React.DragEvent<HTMLDivElement>): DragEvent {
   return {
     x: e.pageX,
     y: e.pageY,
-    ...e
-  };
+    ...e,
+  }
 }
 
 export function Draggable(props: DraggableProps) {
@@ -16,14 +16,14 @@ export function Draggable(props: DraggableProps) {
       <div
         draggable
         style={{ userSelect: 'none', cursor: 'grab' }}
-        onDrag={props.onDrag ? e => props.onDrag?.(asIntermediate(e)) : undefined}
+        onDrag={props.onDrag ? (e) => props.onDrag?.(asIntermediate(e)) : undefined}
         onDragStart={(e) => {
           /* for any web-specific styling */
-          (e.target as HTMLDivElement).classList.add('draggable-dragging');
+          ;(e.target as HTMLDivElement).classList.add('draggable-dragging')
           props.onDragStart?.(asIntermediate(e))
         }}
         onDragEnd={(e) => {
-          (e.target as HTMLDivElement).classList.remove('draggable-dragging');
+          ;(e.target as HTMLDivElement).classList.remove('draggable-dragging')
           props.onDragEnd?.(asIntermediate(e))
         }}
       >

@@ -40,7 +40,10 @@
     "clean:next": "cd apps/next && bun clean",
     "clean:expo": "cd apps/expo && bun clean"
   },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@biomejs/biome": "1.3.3",
@@ -48,6 +51,7 @@
     "@nderscore/tamagui-typescript-plugin": "^0.6.0",
     "@supabase/supabase-js": "^2.38.4",
     "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.3.0",
     "check-dependency-version-consistency": "^4.1.0",
     "npm-run-all": "^4.1.5",
     "react-mathquill": "^1.0.3",
@@ -56,5 +60,12 @@
     "typescript": "^5.2.2",
     "workerd": "1.20231218.0"
   },
-  "trustedDependencies": ["@biomejs/biome", "@swc/core", "@t4/api", "es5-ext", "esbuild", "workerd"]
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "@swc/core",
+    "@t4/api",
+    "es5-ext",
+    "esbuild",
+    "workerd"
+  ]
 }

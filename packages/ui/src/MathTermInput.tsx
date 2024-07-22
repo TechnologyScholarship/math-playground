@@ -1,14 +1,24 @@
-import { Button, Circle, MathQuillInput, MathQuillInputProps, TamaguiElement, XStack, YStack } from '@t4/ui';
+import {
+  Button,
+  Circle,
+  MathQuillInput,
+  MathQuillInputProps,
+  TamaguiElement,
+  XStack,
+  YStack,
+} from '@t4/ui'
 import { ChevronUp, ChevronDown } from '@tamagui/lucide-icons'
-import React from 'react';
+import React from 'react'
 import { ScrollOver } from './ScrollOver'
 import { Platform } from 'react-native'
 
 export const MathTermInput = React.forwardRef<
   TamaguiElement,
-  Omit<MathQuillInputProps, 'children' | 'latex'> & { expressionState: ReturnType<typeof React.useState<string>>; }
+  Omit<MathQuillInputProps, 'children' | 'latex'> & {
+    expressionState: ReturnType<typeof React.useState<string>>
+  }
 >(({ expressionState, ...props }, ref) => {
-  const [expression, setExpression] = expressionState;
+  const [expression, setExpression] = expressionState
 
   const shiftExpression = (delta: number) => {
     const value = parseFloat(expression?.trim() || '0')
@@ -102,7 +112,7 @@ export const MathTermInput = React.forwardRef<
               // mathField?.reflow();
             }
           }}
-          latex={(expression || ' ' /* apparently non-empty string is more sensible default */)}
+          latex={expression || ' ' /* apparently non-empty string is more sensible default */}
         />
         <YStack ai='center' jc='flex-start' pos='relative' width='100%'>
           <Button

@@ -1,8 +1,11 @@
 import { FunctionComponent, PropsWithChildren } from 'react'
 import { GestureResponderEvent } from 'react-native'
 
-export type DragEvent = Pick<GestureResponderEvent | React.DragEvent<HTMLDivElement>, keyof GestureResponderEvent & keyof React.DragEvent<HTMLDivElement>> & {
-  x: number,
+export type DragEvent = Pick<
+  GestureResponderEvent | React.DragEvent<HTMLDivElement>,
+  keyof GestureResponderEvent & keyof React.DragEvent<HTMLDivElement>
+> & {
+  x: number
   y: number
 }
 export type DraggableProps = PropsWithChildren<{

@@ -1,10 +1,13 @@
-import { AnimatePresence, View, isWeb } from '@t4/ui';
+import { AnimatePresence, View, isWeb } from '@t4/ui'
 import React from 'react'
 import { EquationStack } from './EquationStack'
 import { EquationRow } from './EquationRow'
-import { EquationDropHandler, EquationTransformer } from './EquationAction';
+import { EquationDropHandler, EquationTransformer } from './EquationAction'
+import { tidy } from './latexutil'
 
-export function EquationHistory(props: { dropHandler: ReturnType<typeof React.useRef<EquationDropHandler | undefined>>; }) {
+export function EquationHistory(props: {
+  dropHandler: React.MutableRefObject<EquationDropHandler | undefined>
+}) {
   const [key, setKey] = React.useState(6)
 
   function stackReducer<T>(
@@ -33,22 +36,24 @@ export function EquationHistory(props: { dropHandler: ReturnType<typeof React.us
     ]
   )
 
-  const onDragOver = (e: { stopPropagation: () => void; }) => {
-    e.stopPropagation();
+  const onDragOver = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation()
     props.dropHandler.current = (transformer: EquationTransformer) => {
       updateHistory({
         type: 'push',
-        item: { key, item: history[0].item.map(transformer) as [string, string] },
-      });
-      setKey(key + 1);
-    };
+        item: { key, item: history[0].item.map(transformer).map(tidy) as [string, string] },
+      })
+      setKey(key + 1)
+    }
   }
 
   return (
     <View
       onPointerEnter={onDragOver}
       {...(isWeb ? { onDragOver } : {})}
-      onPointerLeave={e => { props.dropHandler.current = undefined; }}
+      onPointerLeave={(e) => {
+        props.dropHandler.current = undefined
+      }}
     >
       <EquationStack>
         <AnimatePresence initial={false}>
@@ -69,10 +74,20 @@ export function EquationHistory(props: { dropHandler: ReturnType<typeof React.us
                 color={i !== 0 ? '$placeholderColor' : undefined}
                 onRemove={
                   i === 0 && history?.length > 1
-                  ? (e) => {
-                    e.stopPropagation();
-                    updateHistory({ type: 'pop' });
-                    }
+                    ? (e) => {
+                        updateHistory({ type: 'pop' })
+                      }
+                    : undefined
+                }
+                simplifyHandler={
+                  i === 0
+                    ? (latex) => {
+                        updateHistory({
+                          type: 'push',
+                          item: { key, item: latex.map(tidy) as [string, string] },
+                        })
+                        setKey(key + 1)
+                      }
                     : undefined
                 }
               >
@@ -82,6 +97,6 @@ export function EquationHistory(props: { dropHandler: ReturnType<typeof React.us
           ))}
         </AnimatePresence>
       </EquationStack>
-    </View >
+    </View>
   )
 }

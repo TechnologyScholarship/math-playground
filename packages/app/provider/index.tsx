@@ -1,5 +1,5 @@
-import { Session } from '@supabase/supabase-js'
-import { CustomToast, ToastProvider } from '@t4/ui'
+import { AuthSession } from '@supabase/supabase-js'
+import { CustomToast, PortalProvider, ToastProvider } from '@t4/ui'
 import { AuthProvider } from './auth'
 import { SafeAreaProvider } from './safe-area'
 import { SolitoImageProvider } from './solito-image'
@@ -13,9 +13,10 @@ export function Provider({
   initialSession,
 }: {
   children: React.ReactNode
-  initialSession: Session | null
+  initialSession: AuthSession | null
 }) {
   return (
+    // <PortalProvider shouldAddRootHost>
     <TamaguiThemeProvider>
       <TamaguiProvider>
         <SafeAreaProvider>
@@ -31,5 +32,6 @@ export function Provider({
         </SafeAreaProvider>
       </TamaguiProvider>
     </TamaguiThemeProvider>
+    // </PortalProvider>
   )
 }
