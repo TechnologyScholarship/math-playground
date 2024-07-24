@@ -45,6 +45,13 @@ export function Tooltip({ position = 'top-center', children, ...viewProps }: Too
         borderRadius='$1'
         {...viewProps}
         opacity={0}
+        shadowColor='black'
+        shadowOffset={{
+          width: 5,
+          height: 5
+        }}
+        shadowOpacity={0.8}
+        shadowRadius={10}
         $group-action-hover={{
           opacity: 1,
           x:

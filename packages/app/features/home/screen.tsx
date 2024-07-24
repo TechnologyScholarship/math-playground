@@ -1,12 +1,17 @@
-import { XStack, YStack, ScrollView, isWeb, isServer, useDidFinishSSR } from '@t4/ui'
-import { EquationAction, EquationDropHandler } from '@t4/ui/src/EquationAction'
+import {
+  XStack,
+  YStack,
+  ScrollView,
+  isWeb,
+  RawMathQuillText,
+} from '@t4/ui';
+import { DragContext, EquationAction, EquationDropHandler } from '@t4/ui/src/EquationAction';
 import { EquationHistory } from '@t4/ui/src/EquationHistory'
 import { MATHQUILL_NULL_TOKEN, MathQuillText, MathQuillTextProps } from '@t4/ui/src/MathQuillText'
-import { MathSimplifiableExpression } from '@t4/ui/src/MathSimplifiableExpression'
+import { HorizontalScroller } from '@t4/ui/src/HorizontalScroller';
 import { MathTermInput } from '@t4/ui/src/MathTermInput'
+import { SelectMath } from '@t4/ui/src/SelectMath';
 import React, { useEffect, useRef } from 'react'
-
-const ExpressionTermsContext = React.createContext<{ [key: string]: string }>({})
 
 function strongerThanExponent(term: string) {
   return /^(\d+|\w|\\\w+|(\\left)?\(.*(\\right)?\))$/.test(term)
@@ -19,36 +24,7 @@ function paranthesisUnless(term: string, condition: (term: string) => boolean) {
 }
 
 export function HomeScreen() {
-  const dropListener = useRef<EquationDropHandler | undefined>(undefined)
-  const didFinishSSR = useDidFinishSSR()
-
-  function Action(props: {
-    transformer: (latex: string, terms: { [key: string]: string }) => string
-    children: MathQuillTextProps['children']
-  }) {
-    const states = useRef<{ [key: string]: string }>({})
-    return (
-      <ExpressionTermsContext.Provider value={states.current}>
-        <EquationAction
-          listener={dropListener}
-          transformer={(l) => props.transformer(l, states.current)}
-        >
-          <MathQuillText size='$5' unselectable>
-            {props.children}
-          </MathQuillText>
-        </EquationAction>
-      </ExpressionTermsContext.Provider>
-    )
-  }
-
-  const Term = (props: { id?: string; children: string | (() => string) }) => {
-    const ctx = React.useContext(ExpressionTermsContext)
-    const state = React.useState<string>(props.children)
-    useEffect(() => {
-      ctx[props.id || 'x'] = state[0]
-    }, [ctx, state, props.id])
-    return <MathTermInput expressionState={state} />
-  }
+  const dropListener = useRef<EquationDropHandler>(() => { })
 
   return (
     <YStack
@@ -58,60 +34,71 @@ export function HomeScreen() {
       {...(isWeb
         ? {
             onDragOver: (_) => {
-              dropListener.current = undefined
+            dropListener.current = () => { }
             },
           }
         : {})}
     >
-      {isServer || !didFinishSSR ? (
-        <MathSimplifiableExpression display='none' replaceHandler={() => {}}>
-          0 {/* Needed to load styles? */}
-        </MathSimplifiableExpression>
-      ) : null}
-      <ScrollView
-        f={1}
-        padding='$5'
-        margin='$2'
-        marginBottom={0}
-        borderRadius='$5'
-        boc='$borderColor'
-        borderWidth='$1'
-        jc='space-around'
-      >
+      <DragContext.Provider value={dropListener}>
         <EquationHistory dropHandler={dropListener} />
-      </ScrollView>
-      <XStack
-        ai='center'
-        marginHorizontal='auto'
-        paddingVertical='$2'
-        maxWidth='100%'
-        overflowInline='auto'
-      >
-        <Action transformer={(l, { x }) => `${l} + ${x}`}>
-          {MATHQUILL_NULL_TOKEN} + <Term>1</Term>
-        </Action>
-        <Action transformer={(l, { x }) => `${l} - ${x}`}>
-          {MATHQUILL_NULL_TOKEN} - <Term>1</Term>
-        </Action>
-        <Action
-          transformer={(l, { x }) => `${paranthesisUnless(l, strongerThanProduct)} \\times ${x}`}
+        <HorizontalScroller
+          f={0}
+          flexShrink={0}
+          maxWidth='100%'
+          marginHorizontal='auto'
         >
-          {MATHQUILL_NULL_TOKEN} \times <Term>2</Term>
-        </Action>
-        <Action transformer={(l, { x }) => `\\frac{${l}}{${x}}`}>
-          {MATHQUILL_NULL_TOKEN} \div <Term>2</Term>
-        </Action>
-        <Action transformer={(l, { x }) => `${paranthesisUnless(l, strongerThanExponent)}^{${x}}`}>
-          (\ellipsis)^<Term>2</Term>
-        </Action>
-        <Action
-          transformer={(l, { x }) =>
-            parseFloat(x ?? '') === 2 ? `\\sqrt{${l}}` : `\\sqrt[${x}]{${l}}`
-          }
-        >
-          \sqrt[<Term>2</Term>]{'{\\ellipsis}'}
-        </Action>
-      </XStack>
+          <XStack ai='center' paddingVertical='$2'>
+            <EquationAction transformer={(l, [x]) => `${l} + ${x}`}>
+              {MATHQUILL_NULL_TOKEN} + <MathTermInput>1</MathTermInput>
+            </EquationAction>
+            <EquationAction transformer={(l, [x]) => `${l} - ${x}`}>
+              {MATHQUILL_NULL_TOKEN} - <MathTermInput>1</MathTermInput>
+            </EquationAction>
+            <EquationAction
+              transformer={(l, [x]) => `${paranthesisUnless(l, strongerThanProduct)} \\times ${x}`}
+            >
+              {MATHQUILL_NULL_TOKEN} \times <MathTermInput>2</MathTermInput>
+            </EquationAction>
+            <EquationAction transformer={(l, [x]) => `\\frac{${l}}{${x}}`}>
+              {MATHQUILL_NULL_TOKEN} \div <MathTermInput>2</MathTermInput>
+            </EquationAction>
+            <EquationAction
+              transformer={(l, [x]) => `${paranthesisUnless(l, strongerThanExponent)}^{${x}}`}
+            >
+              (\ellipsis)^<MathTermInput>2</MathTermInput>
+            </EquationAction>
+            <EquationAction
+              transformer={(l, [x]) =>
+                parseFloat(x ?? '') === 2 ? `\\sqrt{${l}}` : `\\sqrt[${x}]{${l}}`
+              }
+            >
+              \sqrt[<MathTermInput>2</MathTermInput>]{'{\\ellipsis}'}
+            </EquationAction>
+            <EquationAction transformer={(l, { functions }) => `${functions}\\left(${l}\\right)`}>
+              <SelectMath name='Functions' defaultValue='log'>
+                <RawMathQuillText>log</RawMathQuillText>
+                <RawMathQuillText>ln</RawMathQuillText>
+                <RawMathQuillText>sin</RawMathQuillText>
+                <RawMathQuillText>cos</RawMathQuillText>
+                <RawMathQuillText>tan</RawMathQuillText>
+                <RawMathQuillText>{'sin^{-1}'}</RawMathQuillText>
+                <RawMathQuillText>{'cos^{-1}'}</RawMathQuillText>
+                <RawMathQuillText>{'tan^{-1}'}</RawMathQuillText>
+                <RawMathQuillText>cosec</RawMathQuillText>
+                <RawMathQuillText>sec</RawMathQuillText>
+                <RawMathQuillText>cot</RawMathQuillText>
+                <RawMathQuillText>sinh</RawMathQuillText>
+                <RawMathQuillText>cosh</RawMathQuillText>
+                <RawMathQuillText>tanh</RawMathQuillText>
+                <RawMathQuillText>{'sinh^{-1}'}</RawMathQuillText>
+                <RawMathQuillText>{'cosh^{-1}'}</RawMathQuillText>
+                <RawMathQuillText>{'tanh^{-1}'}</RawMathQuillText>
+              </SelectMath>
+              (\ellipsis)
+            </EquationAction>
+          </XStack>
+        </HorizontalScroller>
+      </DragContext.Provider>
     </YStack>
   )
 }

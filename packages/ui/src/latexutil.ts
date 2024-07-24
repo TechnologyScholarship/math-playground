@@ -66,7 +66,7 @@ export function matchingPairParts(input: string) {
 }
 
 export type RxMatch = string[] & { [key: string]: string } & { index: number }
-export function replacer<T extends RxMatch,>(replacer: (match: T) => string) {
+export function replacer<T extends RxMatch>(replacer: (match: T) => string) {
   return (...args: [string, ...any[]] | [RegExpExecArray | RegExpMatchArray]) => {
     if (typeof args[0] === 'object') {
       const result = args[0]

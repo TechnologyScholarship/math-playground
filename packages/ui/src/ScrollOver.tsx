@@ -1,4 +1,3 @@
-import { Paragraph, YStack } from '@t4/ui'
 import React from 'react'
 
 export type ScrollOverProps = React.PropsWithChildren<{

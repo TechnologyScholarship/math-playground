@@ -33,6 +33,16 @@ export default class Document extends NextDocument {
           }),
         }}
       />,
+      <style
+        key='bugfix'
+        dangerouslySetInnerHTML={{
+          __html: `
+          #__next > span {
+            display: contents;
+          }
+          `,
+        }}
+      />
     ]
 
     return { ...page, styles: Children.toArray(styles) }

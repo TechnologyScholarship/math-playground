@@ -1,4 +1,4 @@
-import { FunctionComponent, PropsWithChildren } from 'react'
+import React, { FunctionComponent, PropsWithChildren } from 'react'
 import { GestureResponderEvent } from 'react-native'
 
 export type DragEvent = Pick<
@@ -13,4 +13,5 @@ export type DraggableProps = PropsWithChildren<{
   onDrag?: (e: DragEvent) => void
   onDragEnd?: (e: DragEvent) => void
 }>
+
 export const Draggable: FunctionComponent<DraggableProps>
