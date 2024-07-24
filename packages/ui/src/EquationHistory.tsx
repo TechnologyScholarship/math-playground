@@ -1,4 +1,4 @@
-import { AnimatePresence, ScrollView, View, isWeb } from '@t4/ui';
+import { AnimatePresence, ScrollView, View, isWeb } from '@t4/ui'
 import React from 'react'
 import { EquationStack } from './EquationStack'
 import { EquationRow } from './EquationRow'
@@ -6,7 +6,7 @@ import { EquationDropHandler, EquationTransformer } from './EquationAction'
 import { tidy } from './latexutil'
 
 export function EquationHistory(props: {
-  dropHandler: React.MutableRefObject<EquationDropHandler>;
+  dropHandler: React.MutableRefObject<EquationDropHandler>
 }) {
   const [key, setKey] = React.useState(6)
 
@@ -53,7 +53,7 @@ export function EquationHistory(props: {
       onPointerEnter={onDragOver}
       {...(isWeb ? { onDragOver } : {})}
       onPointerLeave={(e) => {
-        props.dropHandler.current = () => { };
+        props.dropHandler.current = () => {}
       }}
     >
       <ScrollView
@@ -85,19 +85,19 @@ export function EquationHistory(props: {
                   onRemove={
                     i === 0 && history?.length > 1
                       ? (e) => {
-                        updateHistory({ type: 'pop' });
-                      }
+                          updateHistory({ type: 'pop' })
+                        }
                       : undefined
                   }
                   simplifyHandler={
                     i === 0
                       ? (latex) => {
-                        updateHistory({
-                          type: 'push',
-                          item: { key, item: latex.map(tidy) as [string, string] },
-                        });
-                        setKey(key + 1);
-                      }
+                          updateHistory({
+                            type: 'push',
+                            item: { key, item: latex.map(tidy) as [string, string] },
+                          })
+                          setKey(key + 1)
+                        }
                       : undefined
                   }
                 >

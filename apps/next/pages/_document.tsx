@@ -42,7 +42,7 @@ export default class Document extends NextDocument {
           }
           `,
         }}
-      />
+      />,
     ]
 
     return { ...page, styles: Children.toArray(styles) }

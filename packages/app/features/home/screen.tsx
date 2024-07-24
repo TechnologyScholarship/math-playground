@@ -1,16 +1,10 @@
-import {
-  XStack,
-  YStack,
-  ScrollView,
-  isWeb,
-  RawMathQuillText,
-} from '@t4/ui';
-import { DragContext, EquationAction, EquationDropHandler } from '@t4/ui/src/EquationAction';
+import { XStack, YStack, ScrollView, isWeb, RawMathQuillText } from '@t4/ui'
+import { DragContext, EquationAction, EquationDropHandler } from '@t4/ui/src/EquationAction'
 import { EquationHistory } from '@t4/ui/src/EquationHistory'
 import { MATHQUILL_NULL_TOKEN, MathQuillText, MathQuillTextProps } from '@t4/ui/src/MathQuillText'
-import { HorizontalScroller } from '@t4/ui/src/HorizontalScroller';
+import { HorizontalScroller } from '@t4/ui/src/HorizontalScroller'
 import { MathTermInput } from '@t4/ui/src/MathTermInput'
-import { SelectMath } from '@t4/ui/src/SelectMath';
+import { SelectMath } from '@t4/ui/src/SelectMath'
 import React, { useEffect, useRef } from 'react'
 
 function strongerThanExponent(term: string) {
@@ -24,7 +18,7 @@ function paranthesisUnless(term: string, condition: (term: string) => boolean) {
 }
 
 export function HomeScreen() {
-  const dropListener = useRef<EquationDropHandler>(() => { })
+  const dropListener = useRef<EquationDropHandler>(() => {})
 
   return (
     <YStack
@@ -34,19 +28,14 @@ export function HomeScreen() {
       {...(isWeb
         ? {
             onDragOver: (_) => {
-            dropListener.current = () => { }
+              dropListener.current = () => {}
             },
           }
         : {})}
     >
       <DragContext.Provider value={dropListener}>
         <EquationHistory dropHandler={dropListener} />
-        <HorizontalScroller
-          f={0}
-          flexShrink={0}
-          maxWidth='100%'
-          marginHorizontal='auto'
-        >
+        <HorizontalScroller f={0} flexShrink={0} maxWidth='100%' marginHorizontal='auto'>
           <XStack ai='center' paddingVertical='$2'>
             <EquationAction transformer={(l, [x]) => `${l} + ${x}`}>
               {MATHQUILL_NULL_TOKEN} + <MathTermInput>1</MathTermInput>

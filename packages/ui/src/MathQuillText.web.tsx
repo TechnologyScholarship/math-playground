@@ -1,9 +1,9 @@
 import { isServer, useDidFinishSSR } from '@t4/ui'
 
-import React from 'react';
-import { createPortal } from 'react-dom';
-import { MathQuillTextProps } from './MathQuillText';
-import { RawMathQuillText } from './RawMathQuillText';
+import React from 'react'
+import { createPortal } from 'react-dom'
+import { MathQuillTextProps } from './MathQuillText'
+import { RawMathQuillText } from './RawMathQuillText'
 import { MathField } from 'react-mathquill'
 
 function onPropReady<T, P extends string>(
@@ -25,30 +25,30 @@ function onPropReady<T, P extends string>(
       }
       this.value = v
     },
-  });
+  })
 }
 
 interface MathQuillInstance {
-  getInterface(version: any);
+  getInterface(version: any)
   _MATHQUILL_PATCH_getInterface(version: any): void
   registerEmbed(
     name: string,
-    embed: (id: string) => { htmlString: string; text(): string; latex(): string; }
-  ): void;
+    embed: (id: string) => { htmlString: string; text(): string; latex(): string }
+  ): void
 }
 
-const MATHQUILL_CUSTOM_EMBED = 'customhtmlembed';
-const MATHQUILL_CUSTOM_EMBED_IDX = (id) => `${MATHQUILL_CUSTOM_EMBED}-${id}`;
-const MATHQUILL_NULL = 'mqnull';
+const MATHQUILL_CUSTOM_EMBED = 'customhtmlembed'
+const MATHQUILL_CUSTOM_EMBED_IDX = (id) => `${MATHQUILL_CUSTOM_EMBED}-${id}`
+const MATHQUILL_NULL = 'mqnull'
 export const MATHQUILL_NULL_TOKEN = `\\embed{${MATHQUILL_NULL}}[0]`
 
 export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props) => {
-  const { children, ...textProps }: MathQuillTextProps = props;
-  const didFinishSSR = useDidFinishSSR();
-  const [portalTargets, setPortalTargets] = React.useState<HTMLElement[]>();
-  const [latex, setLatex] = React.useState<string>();
-  const [mathField, setMathField] = React.useState<MathField>();
-  const [baseId, setBaseId] = React.useState(0);
+  const { children, ...textProps }: MathQuillTextProps = props
+  const didFinishSSR = useDidFinishSSR()
+  const [portalTargets, setPortalTargets] = React.useState<HTMLElement[]>()
+  const [latex, setLatex] = React.useState<string>()
+  const [mathField, setMathField] = React.useState<MathField>()
+  const [baseId, setBaseId] = React.useState(0)
   const childComponents = React.useRef<React.ReactElement[]>(
     React.Children.toArray(children).filter(React.isValidElement)
   )
@@ -58,7 +58,7 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
     // but which is not accessed by the MathQuill event Controller, for unselectable
     // static math text blocks
     if (!(global as any)._MATHQUILL_CSS_PATCHED) {
-      ; (global as any)._MATHQUILL_CSS_PATCHED = true
+      ;(global as any)._MATHQUILL_CSS_PATCHED = true
       for (let i = 0; i < document.styleSheets.length; i++) {
         const sheet = document.styleSheets.item(i) as CSSStyleSheet
         for (let j = 0; j < sheet.cssRules.length; j++) {
@@ -71,7 +71,7 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
           rule.selectorText = rule.selectorText
             .split(',')
             .flatMap((selector) => {
-              if (!selector.includes('mq-root-block')) return selector;
+              if (!selector.includes('mq-root-block')) return selector
               return [selector, selector.replaceAll('mq-root-block', 'mq-unselectable-root-block')]
             })
             .join(',')
@@ -96,38 +96,38 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
               )}"></span>`,
               text: () => 'test', //(global as any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.text?.() ?? '[?]',
               latex: () => 'test', //(global as any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.latex?.() ?? '[?]',
-            }));
+            }))
             return result
           }
         },
         set(v) {
           this._MATHQUILL_PATCH_getInterface = v
         },
-      });
+      })
     })
   }, [])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
-    ; (global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER =
-      (global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER ?? 0;
-    let latex = '';
-    const embedComps: React.ReactElement[] = [];
+    ;(global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER =
+      (global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER ?? 0
+    let latex = ''
+    const embedComps: React.ReactElement[] = []
     let elementCount = 0
     // biome-ignore lint/complexity/noForEach: react children
     React.Children.forEach(children, (el) => {
-      if (React.isValidElement(el)) elementCount++;
+      if (React.isValidElement(el)) elementCount++
     })
     // biome-ignore lint/suspicious/noAssignInExpressions: atomic
-    const baseId = ((global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER += elementCount)
-      - elementCount
+    const baseId =
+      ((global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER += elementCount) - elementCount
     // biome-ignore lint/complexity/noForEach: react children forEach
     React.Children.forEach(children, (child) => {
       if (child == null || typeof child === 'undefined') {
         // continue
       } else if (React.isValidElement(child)) {
         // Use portal to embed element
-        latex += `\\embed{${MATHQUILL_CUSTOM_EMBED}}[${embedComps.length + baseId}]`;
+        latex += `\\embed{${MATHQUILL_CUSTOM_EMBED}}[${embedComps.length + baseId}]`
         embedComps.push(child)
       } else if (
         typeof child === 'string' ||
@@ -140,36 +140,38 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
         // const x: never = child;
         throw new TypeError(`Did not expect: ${child}`)
       }
-    });
-    setBaseId(baseId);
-    setLatex(latex);
-    childComponents.current = embedComps;
+    })
+    setBaseId(baseId)
+    setLatex(latex)
+    childComponents.current = embedComps
   }, [children])
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   React.useEffect(() => {
     const portals: HTMLElement[] = []
     // Observe for portal mount
-    if (!mathField) return;
+    if (!mathField) return
     const observer = new MutationObserver(() => mathField.reflow())
     for (let i = 0; i < childComponents.current.length; i++) {
       const portalHost = mathField
         .el()
-        .querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i + baseId)}`) as HTMLElement;
+        .querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i + baseId)}`) as HTMLElement
       if (!portalHost) {
-        return; // Fail gracefully
+        return // Fail gracefully
       }
-      ; (global as any)._MATHQUILL_EMBED_CALLBACKS = (global as any)._MATHQUILL_EMBED_CALLBACKS ?? {}
-        ; (global as any)._MATHQUILL_EMBED_CALLBACKS[i + baseId] = {
+      ;(global as any)._MATHQUILL_EMBED_CALLBACKS = (global as any)._MATHQUILL_EMBED_CALLBACKS ?? {}
+      ;(global as any)._MATHQUILL_EMBED_CALLBACKS[i + baseId] = {
         text: childComponents.current[i].props.toString,
-          latex: childComponents.current[i].props.toLatex,
-        }
-      portals.push(portalHost);
-      observer.observe(portalHost, { attributes: false, childList: true, subtree: false });
+        latex: childComponents.current[i].props.toLatex,
+      }
+      portals.push(portalHost)
+      observer.observe(portalHost, { attributes: false, childList: true, subtree: false })
     }
-    setPortalTargets(portals);
-  }, [mathField, childComponents /* TODO: may need updated after delay? */, baseId]);
-  React.useLayoutEffect(() => { mathField?.reflow?.(); }, [mathField])
+    setPortalTargets(portals)
+  }, [mathField, childComponents /* TODO: may need updated after delay? */, baseId])
+  React.useLayoutEffect(() => {
+    mathField?.reflow?.()
+  }, [mathField])
 
   return (
     <RawMathQuillText
@@ -183,5 +185,5 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
     >
       {latex ?? ''}
     </RawMathQuillText>
-  );
-};
+  )
+}

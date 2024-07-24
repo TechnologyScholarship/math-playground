@@ -48,7 +48,7 @@ export function Tooltip({ position = 'top-center', children, ...viewProps }: Too
         shadowColor='black'
         shadowOffset={{
           width: 5,
-          height: 5
+          height: 5,
         }}
         shadowOpacity={0.8}
         shadowRadius={10}

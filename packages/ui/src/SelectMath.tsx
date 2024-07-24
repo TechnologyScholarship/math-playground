@@ -7,24 +7,29 @@ import {
   SelectValueExtraProps,
   Sheet,
   YStack,
-} from '@t4/ui';
-import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons';
-import { LinearGradient } from 'tamagui/linear-gradient';
-import React from 'react';
-import { ActionTermsContext } from '@t4/ui/src/EquationAction';
+} from '@t4/ui'
+import { Check, ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
+import { LinearGradient } from 'tamagui/linear-gradient'
+import React from 'react'
+import { ActionTermsContext } from '@t4/ui/src/EquationAction'
 
 export type SelectMathProps = React.PropsWithChildren<SelectProps> & {
-  name: string;
-  key?: string | number;
-  placeholder?: SelectValueExtraProps['placeholder'];
-};
+  name: string
+  key?: string | number
+  placeholder?: SelectValueExtraProps['placeholder']
+}
 
-export function SelectMath({ name, placeholder = undefined, key = undefined, ...props }: SelectMathProps) {
-  const ctx = React.useContext(ActionTermsContext);
-  const [value, setValue] = React.useState(props.defaultValue);
+export function SelectMath({
+  name,
+  placeholder = undefined,
+  key = undefined,
+  ...props
+}: SelectMathProps) {
+  const ctx = React.useContext(ActionTermsContext)
+  const [value, setValue] = React.useState(props.defaultValue)
   React.useEffect(() => {
-    if (ctx) ctx[key ?? name.toLowerCase()] = value ?? '';
-  }, [ctx, value, key, name]);
+    if (ctx) ctx[key ?? name.toLowerCase()] = value ?? ''
+  }, [ctx, value, key, name])
   return (
     <Select size='$2' value={value} onValueChange={setValue} {...props}>
       <Select.Trigger icon={ChevronDown}>
@@ -86,7 +91,7 @@ export function SelectMath({ name, placeholder = undefined, key = undefined, ...
             {React.useMemo(
               () =>
                 React.Children.map(props.children, (child, i: number) => {
-                  const item = child as { props: { key: React.Key; } | { children: string; }; };
+                  const item = child as { props: { key: React.Key } | { children: string } }
                   return (
                     <Select.Item
                       index={i}
@@ -100,7 +105,7 @@ export function SelectMath({ name, placeholder = undefined, key = undefined, ...
                         <Check size={16} />
                       </Select.ItemIndicator>
                     </Select.Item>
-                  );
+                  )
                 }),
               [props.children]
             )}
@@ -142,5 +147,5 @@ export function SelectMath({ name, placeholder = undefined, key = undefined, ...
         </Select.ScrollDownButton>
       </Select.Content>
     </Select>
-  );
+  )
 }
