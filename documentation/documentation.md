@@ -8,49 +8,26 @@ Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They
 - Visually appealing to maintain student interest
 
 ## Solution
-I intend to create a web application with an intuitive, drag-and-drop based UI (similar to scratch.mit.edu) allowing students to play with operating on mathematical equations and expressions, allowing them to gain understanding and find solutions to different algebraic equations. A web application has the benefit that it is easily accessible from any device with an internet connection, or even without, using PWAs.
+I intend to create a web application with an intuitive, drag-and-drop based UI (similar to (scratch.mit.edu)[]) allowing students to play with operating on mathematical equations and expressions, allowing them to gain understanding and find solutions to different algebraic equations. A web application has the benefit that it is easily accessible from any device with an internet connection, or even without, using PWAs.
 
 ## Technologies
 ### Server Backends
-| Technology               |         Pros                      |                          Cons     |
-|--------------------------|-----------------------------------|-----------------------------------|
-| ASP.NET                  | Reasonably scalable               | Made by Microsoft                 |
-|                          |-----------------------------------|-----------------------------------|
-|                          | Type safe                         | C#, which is made by Microsoft    |
-|                          |-----------------------------------|-----------------------------------|
-|                          | Easy-to-use routers               | Doesn’t have support for the more |
-|                          |                                   | modern JS frameworks              |
-|--------------------------|-----------------------------------|-----------------------------------|
-| Flask                    | Easy routers                      | Its python (ew) i.e. not very     |
-| (/ other python servers) |                                   | fast or scalable                  |
-|                          |-----------------------------------|-----------------------------------|
-|                          | Fast to develop                   | Again, very little support for    |
-|                          |                                   | modern js frameworks (react)      |
-|                          |-----------------------------------|-----------------------------------|
-|                          | Very janky SSR/templating         | Code duplication between client/  |
-|                          |                                   | server as cant do python in web   |
-|--------------------------|-----------------------------------|-----------------------------------|
-| Next.js                  | Suitable integration for modern   | Js, so may be slower              |
-|                          | web frameworks e.g. react         |                                   |
-|                          |-----------------------------------|-----------------------------------|
-|                          | Easy routers, with support for    | Supported by cloudflare for free  |
-|                          | passing information to react      | hosting                           |
-|                          |-----------------------------------|                                   |
-|                          | Server-Side Rendering, beneficial |                                   |
-|                          | for client performance            |                                   |
-|                          |-----------------------------------|                                   |
-|                          | Type safe using typescript        |                                   |
-|                          |-----------------------------------|                                   |
-|                          | Using same language on client/    |                                   |
-|                          | server allows for some code       |                                   |
-|                          | deduplication in shared code      |                                   |
-|--------------------------|-----------------------------------|-----------------------------------|
-| NodeJS http.server       | Low-level                         | Slow development                  |
-|                          |-----------------------------------|-----------------------------------|
-|                          | Powerful for any needed low-level | Manual routing and handling       |
-|                          | packet management                 |                                   |
-|                          |                                   |-----------------------------------|
-|                          |                                   | Code duplication                  |
-|                          |                                   |-----------------------------------|
-|                          |                                   | Hard to scale                     |
-|--------------------------|-----------------------------------|-----------------------------------|
+| Technology                     |         Pros                      |                          Cons     |
+| ASP.NET                        | Reasonably scalable               | Made by Microsoft                 |
+|                                | Type safe                         | C#, which is made by Microsoft    |
+|                                | Easy-to-use routers               | Doesn’t have support for the more modern JS frameworks |
+| Flask (/ other python servers) | Easy routers                      | Its python (ew) i.e. not very fast or scalable |
+|                                | Fast to develop                   | Again, very little support for modern js frameworks (e.g. react) |
+|                                | Very janky SSR/templating         | Code duplication between client/server as cant do python in web |
+| Next.js                        | Suitable integration for modern web frameworks e.g. react | Js, so may be slower              |
+|                                | Easy routers, with support for passing information to react | Supported by cloudflare for free hosting |
+|                                | Server-Side Rendering, beneficial for client performance ||
+|                                | Type safe using typescript        |                                   |
+|                                | Using same language on client/    |                                   |
+|                                | server allows for some code       |                                   |
+|                                | deduplication in shared code      |                                   |
+| NodeJS http.server             | Low-level                         | Slow development                  |
+|                                | Powerful for any needed low-level | Manual routing and handling       |
+|                                | packet management                 |                                   |
+|                                |                                   | Code duplication                  |
+|                                |                                   | Hard to scale                     |
