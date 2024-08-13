@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 
 import React from 'react'
 import { RawMathQuillTextProps } from './RawMathQuillText'
+import { MathField } from 'react-mathquill'
 
 const StaticMathField = dynamic(
   () => import('react-mathquill').then((mod) => mod.StaticMathField),
@@ -15,10 +16,15 @@ export const RawMathQuillText: React.FunctionComponent<RawMathQuillTextProps> = 
   const [errored, setErrored] = React.useState(false)
   const childrenString =
     typeof children === 'string' ? children : children.map((x) => x ?? '').join('')
+  const [mathField, setMathField] = React.useState<MathField>()
 
   React.useEffect(() => {
     import('react-mathquill').then((mq) => mq.addStyles())
   }, [])
+
+  React.useLayoutEffect(() => {
+    mathField?.reflow?.()
+  }, [mathField])
 
   return (
     <SizableText unstyled color={errored ? 'red' : undefined} {...textProps}>
@@ -51,6 +57,7 @@ export const RawMathQuillText: React.FunctionComponent<RawMathQuillTextProps> = 
           }
           mathquillDidMount={(math) => {
             setTimeout(() => {
+              setMathField(math)
               // TODO: less jank plz
               if (math.el().querySelector(':scope .mq-selectable')?.textContent === '$$')
                 setErrored(true)

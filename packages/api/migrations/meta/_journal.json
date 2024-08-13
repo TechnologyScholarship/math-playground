@@ -29,6 +29,20 @@
       "when": 1699079033736,
       "tag": "0003_hot_ultragirl",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1723529806366,
+      "tag": "0004_sparkling_sunspot",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1723542782988,
+      "tag": "0005_graceful_stellaris",
+      "breakpoints": true
     }
   ]
 }

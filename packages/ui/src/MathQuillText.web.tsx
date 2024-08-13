@@ -118,8 +118,8 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
     React.Children.forEach(children, (el) => {
       if (React.isValidElement(el)) elementCount++
     })
-    // biome-ignore lint/suspicious/noAssignInExpressions: atomic
     const baseId =
+      // biome-ignore lint/suspicious/noAssignInExpressions: atomic
       ((global as any)._MATHQUILL_EMBEDS_GLOBAL_ID_COUNTER += elementCount) - elementCount
     // biome-ignore lint/complexity/noForEach: react children forEach
     React.Children.forEach(children, (child) => {
@@ -169,9 +169,6 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
     }
     setPortalTargets(portals)
   }, [mathField, childComponents /* TODO: may need updated after delay? */, baseId])
-  React.useLayoutEffect(() => {
-    mathField?.reflow?.()
-  }, [mathField])
 
   return (
     <RawMathQuillText
