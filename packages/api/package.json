@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "wrangler dev",
-    "generate": "drizzle-kit generate --out ./migrations",
+    "generate": "drizzle-kit generate --schema ./drizzle.config.ts --dialect sqlite --out ./migrations",
     "migrate": "wrangler d1 migrations apply production",
     "migrate:local": "wrangler d1 migrations apply production --local",
     "seed": "wrangler d1 execute production --file=./seed/seed.sql",
