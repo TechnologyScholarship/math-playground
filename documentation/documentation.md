@@ -150,4 +150,31 @@ I recommend to use Tamagui due to it's high level of interopebility with React (
     - Integration with react already supported through [react-mathquill](https://www.npmjs.com/package/react-mathquill) wrapper.
     - Supports embedding custom renderers within the math, which will be aligned properly. Useful (flexible) for embedding our own UI within the math.
 
-##
+## Build
+
+![Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations](./images/main.png)
+> Please note the expressions shown are for testing and may not  be mathmatically correct (x does not = 14)
+
+I chose to layout the toolbar along the bottom, as here there is the most space, and it also feels intuitive to drag stuff from down there. A horizontal scroller was used in case this should overflow, but this behaviour could also be replaced with wrapping if preferred by the stakeholder (wrapping could, however, become a problem on screens that are small in width *and* height). I experimented with a solution that would wrap up until a certain maximum height, before switching to a horizontal scrollbar, but such a solution was limited by the reduced capabilities of react native web. The rest of the content consists of a *stack*, containing the history of the solving of the equation. I chose to layout the whole history so that the user can at any point look back upon their working to see how they got where they are. The most recent equation is emphasised by highlighting it in a more contrasting color than the others, to subtly indicate where users should focus most. The most recent row also offers an "undo" button to revert the state to the previous row.
+
+![Equation working stack, with a scrollbar when overflowing the page height](./images/scrolling.png)
+The "equation stack" is hosted in it's own scrolling container so that the toolbar always sticks to  the bottom, even if the stack overflows the screen height. This container is outlined to provide and indicator of its bounds, which also defines the drop region for the draggable equation elements. Such a visual indicator of the bounds makes the drag-and-drop UI a lot more intuitive. The implementation is quite flexible, so future expansion could see multiple of these regions, having two equation stacks side-by-side, allowing for simultaneous viewing & working on both.
+
+![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng)
+I chose to use the drag-and-drop UI because it fit my stakeholder's needs of being intuitive for students to understand and "playful" in a way that would keep younger studdents interested. Additionally, you can see the animations presented upon dropping the action - the equation fluently jumps down from it's previous state. A future extension could see more work into this animation - it would be excessive effort, but transmorphing the text in an almost fluid-like manner could be very cool! Overall, I think the animation is clean enough to make the UI feel fluent, and the drag-and-drop nature really sells the idea that the "actions" in the toolbar are things that you can *totally* just apply whenever you want, so long as you ensure to apply it to both sides (as enforced by the design).
+
+### Build details
+
+#### Rendering equations
+
+
+
+#### The draggable UI
+
+The draggable UI was implemented using an abstract React component which implemented draggable behaviour. Due to the difference between how dragging is implemented natively on mobile and on web, this behaviour doesn't come for free. However, by using an abstract React component, we can implement the underlying behaviour differently for each platform. The `<Draggable>` component can then be used elsewhere throughout the codebase *without* having to worry about how it's actually implemented (treating it as a black box that simply does what we want). This means that, while no mobile support is currently available, if it was later required by my stakeholder then it *could* be quite easily achived due to the flexability and extensibility of the application and React Native Web.
+
+#### Equation actions
+
+Additionally, some extra information needs carried with the dragged element, namely, *exactly what should it do when it is dropped on the equation?* As such, an "equation action" component also exists, composed of a `<Draggable>`, but also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation.
+
+#### E
