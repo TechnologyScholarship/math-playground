@@ -1,4 +1,5 @@
 # Prototyping Documentation
+> Callum Hynes
 
 ## Plan
 
@@ -152,15 +153,15 @@ I recommend to use Tamagui due to it's high level of interopebility with React (
 
 ## Build
 
-![Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations](./images/main.png)
+![Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations](./images/main.png) \
 > Please note the expressions shown are for testing and may not  be mathmatically correct (x does not = 14)
 
 I chose to layout the toolbar along the bottom, as here there is the most space, and it also feels intuitive to drag stuff from down there. A horizontal scroller was used in case this should overflow, but this behaviour could also be replaced with wrapping if preferred by the stakeholder (wrapping could, however, become a problem on screens that are small in width *and* height). I experimented with a solution that would wrap up until a certain maximum height, before switching to a horizontal scrollbar, but such a solution was limited by the reduced capabilities of react native web. The rest of the content consists of a *stack*, containing the history of the solving of the equation. I chose to layout the whole history so that the user can at any point look back upon their working to see how they got where they are. The most recent equation is emphasised by highlighting it in a more contrasting color than the others, to subtly indicate where users should focus most. The most recent row also offers an "undo" button to revert the state to the previous row.
 
-![Equation working stack, with a scrollbar when overflowing the page height](./images/scrolling.png)
+![Equation working stack, with a scrollbar when overflowing the page height](./images/scrolling.png) \
 The "equation stack" is hosted in it's own scrolling container so that the toolbar always sticks to  the bottom, even if the stack overflows the screen height. This container is outlined to provide and indicator of its bounds, which also defines the drop region for the draggable equation elements. Such a visual indicator of the bounds makes the drag-and-drop UI a lot more intuitive. The implementation is quite flexible, so future expansion could see multiple of these regions, having two equation stacks side-by-side, allowing for simultaneous viewing & working on both.
 
-![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng)
+![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng) \
 I chose to use the drag-and-drop UI because it fit my stakeholder's needs of being intuitive for students to understand and "playful" in a way that would keep younger studdents interested. Additionally, you can see the animations presented upon dropping the action - the equation fluently jumps down from it's previous state. A future extension could see more work into this animation - it would be excessive effort, but transmorphing the text in an almost fluid-like manner could be very cool! Overall, I think the animation is clean enough to make the UI feel fluent, and the drag-and-drop nature really sells the idea that the "actions" in the toolbar are things that you can *totally* just apply whenever you want, so long as you ensure to apply it to both sides (as enforced by the design).
 
 ### Build details
@@ -183,8 +184,24 @@ The draggable UI was implemented using an abstract React component which impleme
 
 #### Equations
 
-Equations are internally expressed in LaTeX, which is what MathQuill directly uses. This means that when we are modifying the expressions, we have to manipulate the LaTeX string. To do this i have used Regular Expressions (regex), as, while regex has no support for the recusive nature of nesting (with paranthesis and {}, etc.), its an increadibly efficient and fast-to-develop option which can "get the job done" in an incredibly time and cost-effective manner. Well designed regex can be much more performant than other string manipulation techniques, as regex is implemented language-level as opposed to running as JavaScript (slow!). (there are definately no large companies who have recently downfallen due to the use of regex). 
+Equations are internally expressed in LaTeX, which is what MathQuill directly uses. This means that when we are modifying the expressions, we have to manipulate the LaTeX string. To do this i have used Regular Expressions (regex), as, while regex has no support for the recusive nature of nesting (with paranthesis and {}, etc.), its an increadibly efficient and fast-to-develop option which can "get the job done" in an incredibly time and cost-effective manner. Well designed regex can be much more performant than other string manipulation techniques, as regex is implemented language-level as opposed to running as JavaScript (slow!). (there are definately no large companies who have recently downfallen due to the use of regex).
 
 #### Equation actions
 
 For equation actions, some extra information is needed with the dragged element, namely, *exactly what should it do when it is dropped on the equation*? I have an equation action component,  which composed of a `<Draggable>` to gain the draggability behaviour, and also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. Equation actions also render using the aforementioned `<MathTermInput>` component to embed inputs to customise the action, e.g. setting the expression to be added/multiplied, etc.
+
+## Fitness for purpose
+
+My solution meets the designated specifications:
+- > Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions
+  
+  This specification is met with the drag-and-drop UI, \
+  ![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng) \
+  The UI layout differs slightly from Scratch's, but this is validated due to the layout considerations, as the bottom of the screen has more space on desktop, and is quick and easy to reach on both desktop and mobile. 
+- > Create a visually appealing design (e.g. with animations) that maintains student interest and engagement
+  
+  ![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng) \
+  This specification is met by the simlistic UI, and the fluent animations when interacting with the equations and the equation actions
+- Develop an intuitive interface that aids student understanding of algebra
+- Draggable equation operations to facilitate interactive learning
+- Should enable students to find solutions to different algebraic equations in a fun and interactive way
