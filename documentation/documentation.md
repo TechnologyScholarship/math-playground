@@ -3,7 +3,7 @@
 
 ## Plan
 
-Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They would like a tool to help teach student’s understanding of algebra, including the rearrangement and solving of systems of equations. Ideally, such teaching could be done in an intuitive and fun visual manner. Such a tool should ideally be accessible to all students and teachers alike. The target audience is students and teachers alike.
+Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They would like a tool to help better teach student's understanding of algebra, including the rearrangement and solving of systems of equations. Learning such concepts can often be boring and unappealing to students, so ideally such teaching could be done in an intuitive and fun visual manner. Such a tool should freely ideally be accessible to all students and teachers alike.
 
 ## Specs
 
@@ -12,10 +12,11 @@ Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They
 - Develop an intuitive interface that aids student understanding of algebra
 - Draggable equation operations to facilitate interactive learning
 - Should enable students to find solutions to different algebraic equations in a fun and interactive way
+- Support a customisable UI, with a customisable colour theme to appeal to student's preferances.
 
 ## Solution
 
-I intend to create a web application with an intuitive, drag-and-drop based UI (similar to <https://scratch.mit.edu>) allowing students to play with operating on mathematical equations and expressions, allowing them to gain understanding and find solutions to different algebraic equations. A web application has the benefit that it is easily accessible from any device with an internet connection, or even without, using PWAs.
+I intend to create a web application with an intuitive, drag-and-drop based UI (similar to <https://scratch.mit.edu>) allowing students to play with operating on mathematical equations and expressions and gain understanding to find solutions to different algebraic equations. A web application has the benefit that it is easily accessible from any device with an internet connection (or even without, using PWAs). The site will be a Single-Page Application consisting of a workspace where working can be done on an equation, and a toolbar with various operations which can be dragged onto the workspace to apply them to the equation.
 
 ## Technologies
 
@@ -197,6 +198,51 @@ The inputs for terms within the equations were designed with usability in mind, 
 
 The stack is implemented with a simple flexbox container of MathQuill fields. The equations themselves are internally stored in an array of strings, which contain the LaTeX representation of the expressions. React is used to dynamically match each element in the array with an actual rendered component. This way, React automatically handles updating the rendered HTML DOM whenever the equations array is updated, efficiently adding/removing elements as needed, as opposed to a naive solution which  would rerender everything every update.
 
+### Testing
+
+#### Testing equation actions
+
+The equation actions were tested to ensure all methods of tweaking the term values worked. Scrolling the mouse wheel over the input box worked as expected, tweaking the value based on the wheel delta. Using the arrow buttons also worked as expected, tweaking the value by one at a time. Typing into the input box also worked, allowing for any input, including fractional or decimal numbers, coefficients of pi, e, or other variables, or even more complex expressions.
+Additionally, using delta methods of tweaking the value (buttons and scroll wheel) was tested with more complex expressions already in the input box. If the input is composed of a simple coefficient of some expression, (e.g. `2x` or `8(x - 1)^2`), then the coefficient is tweaked. In any other case, nothing happens, as it may be unclear what should be adjusted. This worked as expected. This behavior may be slightly more effective by replacing the first number found in the expression, no matter where it appears. This may be considered in future iterations.
+The hover animations on the term inputs were also tested, and worked as expected, displaying on hover.
+Finally, the ability to drag and drop the expressions was tested. Clicking and dragging on any point within the bounds of the action should initiate a drag (unless that part has an alternative click action, e.g. the buttons or text input). This also worked as expected.
+
+#### Testing drop targets
+
+When dropping an equation action on the equation stack, the appropriate action should be applied to the most recent equation. This works as expected for all actions. The drop handling should apply if the action is dropped anywhere within the bounds of the bordered drop target box. This also works as expected.
+
+#### Color theme
+
+![Main page in light mode](./images/light.png)
+![Main page in dark mode](./images/main.png) \
+The site should support both a light and dark theme, based upon the current system theme. All of the fonts, UI elements, etc... should be clearly visible with appropriate contrast that they should be clearly distinguishable to most users, even with minor visual disabilities. The system-theme based theme selection works as expected, and there seem sto be sufficient contrast in both modes.
+
+### Stakeholder feedback
+
+Showing the site to my stakeholders, they give the following feedback:
+
+- Some hints could be given on how to use the UI, as it can be quite unclear on what to do on first glance.
+- Sometimes actions can have an effect that may feel unintuituve to a user (e.g. square-rooting both sides introducing a plus or minus). Such situations should have some kind of information card giving a more in-depth explaination of what is occuring.
+- The color themes are neat, but there should be some toggle to switch between them at user will, as many users are unaware of the configuration they can make within their system/browser settings.
+
+### Changes to make
+
+- Scroll- and button-based action term tweaking should tweak the first number found *anywhere* within the expression, not just at the beginning.
+- Dark mode theme toggle.
+- UI popovers to give a tutorial on how to use the page
+- UI popovers to give further information on some unintuitive situations which may need explaination
+
+With these changes, the specifications should become:
+
+- Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions
+- Create a visually appealing design (e.g. with animations) that maintains student interest and engagement
+- Develop an intuitive interface that aids student understanding of algebra, with clear instruction on how to use the interface.
+- Draggable equation operations to facilitate interactive learning
+- Should enable students to find solutions to different algebraic equations in a fun and interactive way, guided by explainations at any possibly unintuitive points.
+- Support a customisable UI with easy configuuration, with a customisable colour theme to appeal to student's preferances.
+
+## Build V2
+
 ## Fitness for purpose
 
 My solution meets the designated specifications:
@@ -245,4 +291,16 @@ Overall, the state of the final product is relatively stable. Thanks to  Cloudfl
 
 #### Health and Safety
 
-As a developer, health and safety during development is a major concern. As humans, we work best on a calmer, clear mind, so it is beneficial to take periodic breaks, as this allows us to think thinks over, and not get too stressed or angry working on one thing all at once. Maintaining a good mental health like this increases productivity and overall means the project can be developed faster, the code will be more well-thought-out and better quality. As well as mental health, there is the concern of physical health - problems like posture issues, dehydration, and RSI
+As a developer, health and safety during development is a major concern. As humans, we work best on a calmer, clear mind, so it is beneficial to take periodic breaks, as this allows us to think thinks over, and not get too stressed or angry working on one thing all at once. Maintaining a good mental health like this increases productivity and overall means the project can be developed faster, the code will be more well-thought-out and better quality. As well as mental health, there is the concern of physical health - problems like posture issues, dehydration, and RSI are increadibly common among developers. As such I have ensured to frequently check my posture, and take breaks to avoid straining myself physically, and to get drinks (coffee all too often '~'). Additionally in terms of end-user safety, we want to avoid things like high-frequency flashing, in case of users with photo-sensative epilepsy. Additionally, we want to avoid rapid or extraneous movement, to again avoid RSI. This was especially considered during the layout stage - we want the most heavily used stuff to be placed in an optimal location to minimise effort for the user to reach it.
+
+#### Manufacturing practices
+
+A major consideration is the permissions and licencing for all the content used in the production of the product. All images used are self-created, as we are primarily using them to inform users how to use the site, and so liscensing is not a concern. When hosting these images on the web, it is also important to consider the size of files, as bandwith can be a concern for users *and* for hosting alike, so ideally the smaller the file, the better. Additionally, the larger files will take longer do load, decreasing the feeling of "responsiveness" of the site, and detracting from the user experience. The Solito image library provides a great solution for hosting images - it runs on the edge to scale images to various resolutions, and serves the images based upon a variety of factors, e.g. initially loading lower-resolution images for fast load speed, and later upgrading the resolution if the client network is idling. This way the user gets the best case experience - a fast initial load, and sufficient resolution as the image has time to load fully. Another concern is font size for text readability - the majority of text is maths rendered with MathQuill. I chose a reasonably large base font size, as it fits the clean and simplistic aesthetic. The font sizes are all defined using relative units, so the user's browser font size preferences are also taken into account, making the site more accessible for users with hardness of sight or visual disabilities. On the backend, best practices have been constantly considered during the manufacturing and development process. Typescript for type safety and Biome for linting has been used to ensure the code is high quality and follows the conventional standards. This also provides the benefit of increased maintainability. All aspects of the product have also been extensively tested in order to  ensure their utmost quality.
+
+#### Sustainability
+
+Another consideration when determining which technologies to use is how easy it is to upgrade those dependancies and how those dependancies might change in future. By using a package manager (bun), all these dependancies can be managed through a JSON dependancy list (package.json). Package managers often also provide many CLI tools to make maintaining and updating dependancies a breeze for speedy development (e.g. in this project `bun deps:update` could be used to check for and update dependancies). This makes maintaining the project over time very simple and swift, so that future developers/maintainers time can be saved. The codebase is kept clean, again through the use of typescript and linting, and also through following conventions and using sensible names for components and variables. Hosting for everything is handled entirely through external services like Cloudflare, meaning there is very little extra maintanence needed to keep the site up and online, making the solution very sustainable - it could last an extremely long time with absolutely no maintanence, until any major changes were made in Cloudflare (unlikely to their size and publicity) or any breaking changes in web standards (unlikely, as Tamagui and React Web Native compile to reasonably basic HTML and CSS features, which are unlikely to be changed al all as that would break the maajority of the web).
+
+#### Project Lifecycle
+
+All content used by the site is self-hosted, so we have control over all the material used. The nature of the project and it's uses for education make it safe to keep the content on the internet endlessly - the material will always be relevant and usable for the forseeable future, so there is no concern of needing to remove the content in the case it becomes outdated. The nature of the web is to generally maintain backwards-compatability - websites made back in the days of HTML4 still function today! As such, the project should survive into future versions of browsers, servers, node.js (since dependancies are listed with specific versions), etc. (so long as we don't have another `leftpad` incident).
