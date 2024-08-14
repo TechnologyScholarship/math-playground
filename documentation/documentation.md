@@ -13,7 +13,6 @@ Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They
 - Draggable equation operations to facilitate interactive learning
 - Should enable students to find solutions to different algebraic equations in a fun and interactive way
 
-
 ## Solution
 
 I intend to create a web application with an intuitive, drag-and-drop based UI (similar to <https://scratch.mit.edu>) allowing students to play with operating on mathematical equations and expressions, allowing them to gain understanding and find solutions to different algebraic equations. A web application has the benefit that it is easily accessible from any device with an internet connection, or even without, using PWAs.
@@ -151,9 +150,9 @@ I recommend to use Tamagui due to it's high level of interopebility with React (
     - Integration with react already supported through [react-mathquill](https://www.npmjs.com/package/react-mathquill) wrapper.
     - Supports embedding custom renderers within the math, which will be aligned properly. Useful (flexible) for embedding our own UI within the math.
 
-## Build
+## Build V1
 
-![Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations](./images/main.png) \
+![Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations](./images/main.png)
 > Please note the expressions shown are for testing and may not  be mathmatically correct (x does not = 14)
 
 I chose to layout the toolbar along the bottom, as here there is the most space, and it also feels intuitive to drag stuff from down there. A horizontal scroller was used in case this should overflow, but this behaviour could also be replaced with wrapping if preferred by the stakeholder (wrapping could, however, become a problem on screens that are small in width *and* height). I experimented with a solution that would wrap up until a certain maximum height, before switching to a horizontal scrollbar, but such a solution was limited by the reduced capabilities of react native web. The rest of the content consists of a *stack*, containing the history of the solving of the equation. I chose to layout the whole history so that the user can at any point look back upon their working to see how they got where they are. The most recent equation is emphasised by highlighting it in a more contrasting color than the others, to subtly indicate where users should focus most. The most recent row also offers an "undo" button to revert the state to the previous row.
@@ -190,18 +189,60 @@ Equations are internally expressed in LaTeX, which is what MathQuill directly us
 
 For equation actions, some extra information is needed with the dragged element, namely, *exactly what should it do when it is dropped on the equation*? I have an equation action component,  which composed of a `<Draggable>` to gain the draggability behaviour, and also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. Equation actions also render using the aforementioned `<MathTermInput>` component to embed inputs to customise the action, e.g. setting the expression to be added/multiplied, etc.
 
+#### Action term inputs
+
+The inputs for terms within the equations were designed with usability in mind, allowing for many different forms of intuitive input, e.g. buttons appear on hover to increment/decrement the value (assuming it is simply numeric); on web scrolling over the input field also quickly changes the value (intended for "power-users" who are fluent with the interface and prefer fast shortcuts), and of course, manually typing in an expression. Providing all of these options allows the user to tweak the values in whichever way feels most comfortable to them, making the user experience a lot smoother.
+
+#### Equation stack
+
+The stack is implemented with a simple flexbox container of MathQuill fields. The equations themselves are internally stored in an array of strings, which contain the LaTeX representation of the expressions. React is used to dynamically match each element in the array with an actual rendered component. This way, React automatically handles updating the rendered HTML DOM whenever the equations array is updated, efficiently adding/removing elements as needed, as opposed to a naive solution which  would rerender everything every update.
+
 ## Fitness for purpose
 
 My solution meets the designated specifications:
+
 - > Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions
   
   This specification is met with the drag-and-drop UI, \
   ![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng) \
-  The UI layout differs slightly from Scratch's, but this is validated due to the layout considerations, as the bottom of the screen has more space on desktop, and is quick and easy to reach on both desktop and mobile. 
+  The UI layout differs slightly from Scratch's, but this is validated due to the layout considerations, as the bottom of the screen has more space on desktop, and is quick and easy to reach on both desktop and mobile.
 - > Create a visually appealing design (e.g. with animations) that maintains student interest and engagement
+
+  ![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng) \
+  ![Animation showing the hover animation on the equation actions](./images/actions.apng) \
+  This specification is met by the simplistic UI, using a clean, simple, and customisable solid background and a well-thought-out layout. Additionally the fluent animations when interacting with the equations and the equation actions makes using the product feel very smooth  and keeps the user engaged.
+- > Develop an intuitive interface that aids student understanding of algebra
+
+  ![Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations](./images/main.png) \
+  The equation stack layout is very effective at conveying the process, showing each step along the way in a similar layout as you might see in handwritten working. The nature of the way the drag-and-drop interface works forces the user to  make actions to both sides of the equation, really reinforcing the idea that actions must be made to both sides to maintain equivilence.
+- > Draggable equation operations to facilitate interactive learning.
   
   ![Animation showing the equation actions being dragged onto the equation](./images/dragging.apng) \
-  This specification is met by the simlistic UI, and the fluent animations when interacting with the equations and the equation actions
-- Develop an intuitive interface that aids student understanding of algebra
-- Draggable equation operations to facilitate interactive learning
-- Should enable students to find solutions to different algebraic equations in a fun and interactive way
+  The drag-and-drop UI is very intuitive, especially for younger learners, as it feels very natural to simply "grab" onto the things that you need and "put" them where you need them. It is very interactive in a way that can be captivating for user engagement.
+
+- > Should enable students to find solutions to different algebraic equations in a fun and interactive way
+  
+  ![Animation showing the hover animation on the equation actions](./images/actions.apng) \
+  The system of having a toolbar where the user can access any operations really gives the user some freedom to find the solution *their* way, so that they can really make sense of what is happening and come to the solution in their own way.
+  ![Animation showing cancelling terms being simplified](./images/simplifying.apng) \
+  The UI also helps them along the way by offering simplifications which can be made, so that the user can make their way back down to the final answer. These features give the user a wonderful opportunity to learn as they find the solution and to do so in an engaging and intuitive manner.
+
+### Integration
+
+Overall, I think the techniques integrate together quite well to make an overall fun, intuitive UI. The drag-and-drop nature works really well with the animations in order to create a very fluent design, which feels very natural to use. This keeps the user engaged; meanwhile the way the interface is thought out is constricting enough that the user cannot make any fatal errors, while still giving enough freedom allowing the user to find their own way to the solution, which is a fundamental aspect to their learning. The technologies used to create the product have integrated really nicely as well, Tamagui for UI has offered a lot to make the interface as visually appealing as it is, and has worked rewally well with React Native Web, making the codebase incredibly flexible while remaining perfectly clean and type-safe code. The majority of the UI is already in a state to support future expansions to native desktop or mobile apps (only really lacking support for rendering math natively). React has also worked very nicely with the Next.js backend, the interactions between the two are near seamless. Along with using Cloudflare for hosting, building and deploying has been incredibly seamless, using Continuous Integration on Github and some VSCode extensions, I can deploy right from my IDE. Additionally, Next.js and Cloudflare have great support for local development, overall giving a very clean and tidy developer experience, and greatly benefiting the speed at which I could develop this for the stakeholder. I think the setup with Next.js - Cloudflare - React was certainly the best option for hosting and serving, as they are a relatively well known combo (2024 is know among javascript devs as the "year of serverlessness", refering to hosting everything on the edge using e.g. Cloudflare workers), with great support from community and frequent updates. React is by far the largest modern JS framework and has come to be industry standard, being used for almost anything nowadays.
+
+### Considerations
+
+#### Technical and Social acceptability
+
+Much consideration has been put into the code aspect to ensure it adheres to modern-day technical conventions. Typescript was used, which ensures that code is type-safe, ensuring the code is clean and easy to  understand. Using typescript properly can prevent bugs and make maintanence much easier further down the line. Conventions for frameworks were also followed, such as prefering functional components for React over class-based ones. *Biome* (a code linter, which checks code safety  and styling conventions) was also used in order to maintain the readability and consistency in the code styling.
+
+Social considerations were also considered, especially concerning how the users (targeting younger learners) would be affected by the UI. The drag-and-drop style especially, was chosen due to how clear and intuitive it is especially to younger audiences, who (especially in modern generations) have grown especially used to touchscreen and the idea of dragging things around exacly where they want them should meet their expectations for how the UI would work. Commonly understood styling hints were also used to support this, such as the border around the drop zone, the dotted underline on the simplifiable expressions.
+
+#### Maintainablility
+
+Overall, the state of the final product is relatively stable. Thanks to  Cloudflare's free hosting, there is no running cost to the project, so the site could be extremely long-lived even with no maintenence support, although preferably the project would be atleast periodically maintained. Thanks to it being open-source on Github, the community can make contributions or forks of the project, so that even if it dies, another person could pick up the project and update it. The packages we are using are constantly changing as they are modern and always looking at new ways to do things, but by using a package manager and specifying versions, theoretically the codebase could remain stable in a frozen state, however I would still recommend periodic maintanence to upgrade dependancies to ensure the tamagui-compiled UI is stable across the ever-changing browser standards and to mitigate any security vulnerabilities found in any of the server framework. Maintaining and managin the project is easy due to  it's presence on Github, along with the Continuous Integration that allows easy deployment to Cloudflare. Bugs can be reported on the Github issue tracker and even the solutions contributed by the community through a pull request. Overall, open-sourcing on Github is a great and easy solution to ensure the project remains in a maintainable state. The product has been designed in a very maintainable manner, using abstraction and encapsulation to organise the code, allowing for very easy changes, and also the use of Typescript helps, as it gives maintainers a much clearer indication of what is happening within the code.
+
+#### Health and Safety
+
+As a developer, health and safety during development is a major concern. As humans, we work best on a calmer, clear mind, so it is beneficial to take periodic breaks, as this allows us to think thinks over, and not get too stressed or angry working on one thing all at once. Maintaining a good mental health like this increases productivity and overall means the project can be developed faster, the code will be more well-thought-out and better quality. As well as mental health, there is the concern of physical health - problems like posture issues, dehydration, and RSI
