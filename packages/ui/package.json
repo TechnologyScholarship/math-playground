@@ -17,7 +17,6 @@
     "clean": "rm -rf dist types node_modules .turbo"
   },
   "dependencies": {
-    "@react-native/assets-registry": "^0.74.87",
     "@shopify/flash-list": "^1.6.3",
     "@supabase/supabase-js": "^2.38.4",
     "@t4/api": "workspace:*",

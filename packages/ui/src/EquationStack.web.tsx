@@ -6,6 +6,9 @@ export const EquationStack = (props) => {
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            .eq-stack {
+              width: max-content;
+            }
             .eq-stack > * {
               display: grid !important;
               grid-template-columns: 1fr min-content 1fr ${getToken('$2', 'size', true)};

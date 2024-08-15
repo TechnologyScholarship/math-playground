@@ -1,4 +1,5 @@
 # Prototyping Documentation
+
 > Callum Hynes
 
 ## Plan
@@ -53,7 +54,7 @@ I intend to create a web application with an intuitive, drag-and-drop based UI (
   - Cons:
     - Manual routing and handling due to the lack of any  higher-level routers etc. to handle processing. This would greatly extend the development time as a lot of development focus would need to be spent on this low-level packet management rather than on the actual product. This would also lead to more code duplication, which would end up being harder to maintain into the future.
     - Hard to scale, in case high traffic becomes an issue, scaling would have to be handled completely manually, creating more opportunity for bugs and more time/cost to develop.
- 
+
 Overall, I will use Next.js because it is supported by Cloudflare, allowing for free hosting, protection protection from DDoSes and other common vulnerabilities for free. NextJS and Cloudflare are both incredibly scalable for any future expansion or big traffic. It also has suitible integration with frontend technologies which can make development easier and faster, so that the product would be released sooner for my stakeholders.
 
 ### Frontend frameworks
@@ -120,7 +121,7 @@ Overrall, I recommend React Native Web for clean, organised, flexible and extens
     - IDE support for type-hinting, benefitting developer experience and decreasing development time
     - Well documented and large community, meaning support is readily available, increasing development speed
   - Cons
-    - Doesn’t naturally support native/mobile (outside of tailwind-react-native-css), decreasing scalability (likely forcing a complete rewrite for mobile) in case 
+    - Doesn’t naturally support native/mobile (outside of tailwind-react-native-css), decreasing scalability (likely forcing a complete rewrite for mobile) in case of future expansion to native and mobile.
     - Hard-to-use, everything in the library is mostly is acronyms that developers must simply remember, which can be intimidating for ne wdevelopers, and would increase the amount of time spent in development.
 
 I recommend to use Tamagui due to it's high level of interopebility with React (Native Web) and Next.js, meaning that development should go reasonably smoothly, and the result should be easily expansible for possible future native/mobile support. Tamagui is also highly extensible and abstractable using styled() to inherit and style components in a polymorphic-like manner. Covers most UI use-cases with cross-platform code, but has extensive support for platform-dependance as well. Compiles to CSS on web, making very performant for web users. Also compiles to native android/ios UI elements when available, increasing interopability with their system’s native UI.
@@ -179,6 +180,7 @@ result.registerEmbed(MATHQUILL_CUSTOM_EMBED, (index) => ({
   latex: () => (global as any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.latex?.() ?? '[?]',
 }))
 ```
+
 > This sets up the embed within the MathQuill library, with a class so that the embed can be identified by the portal code. The text and latex methods define how the embed should be stringified, e.g. on copy/paste.
 
 ```jsx
@@ -202,6 +204,7 @@ React.Children.forEach(children, (child) => {
   }
 })
 ```
+
 > This section of code maps the children props to the final latex to be passed to MathQuill. Any direct text nodes are treated as pure latex, but any React element children are stored in a list for later rendering, and a `\embed` is added to the latex to invoke MathQuill's custom embed renderer, which will be hooked for later use.
 
 ```jsx
@@ -221,6 +224,7 @@ for (let i = 0; i < childComponents.current.length; i++) {
 }
 setPortalTargets(portals)
 ```
+
 > This code finds the elements that were injected by MathQuill, and stores them to later be set up as portal hosts for the embeds.
 
 ```jsx
@@ -238,6 +242,7 @@ return (
   </RawMathQuillText>
 )
 ```
+
 > Finally, this code composes the MathQuill renderer to render the latex, and additionally passes the portal children to ensure thet are renderered alongside in the React tree. The portals are setup using `createPortal`, linking the React components to the elements they should be rendered to.
 
 This way I could still use React to render and update the embeds, while still rendering them inside of MathQuill elements.
@@ -251,6 +256,7 @@ export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props
   /* ... */
 }
 ```
+
 This functionality was entirely wrapped up in a custom wrapper component, `<MathQuillText>`, so that all of the complex integration to make this work was hidden behind an abstraction layer, and so that elsewhere in my code, all it took was passing this prop the standard latex input, *and* any HTML embeds directly as children! e.g.
 
 ```jsx
@@ -265,9 +271,10 @@ would render the square root, with an ellipsis inside, and would *directly* rend
 
 The draggable UI was implemented using an abstract React component which implemented draggable behaviour. Due to the difference between how dragging is implemented natively on mobile and on web, this behaviour doesn't come for free. However, by using an abstract React component, we can implement the underlying behaviour differently for each platform. The `<Draggable>` component can then be used elsewhere throughout the codebase *without* worrying about how it's actually implemented (treating it as a black box that simply does what we want).
 
-The code for this is implemented across two different files - one is loaded for web, and the other on native mobile. 
+The code for this is implemented across two different files - one is loaded for web, and the other on native mobile.
 
 The web version contains the following code:
+
 ```jsx
 export function Draggable(props: DraggableProps) {
   return (
@@ -292,6 +299,7 @@ export function Draggable(props: DraggableProps) {
   )
 }
 ```
+
 which defers the draggability behaviour to a `<div draggable>` element, and defers the event handling to the caller as needed. The mobile version defers to the 'react-native-draggable' library:
 
 ```jsx
@@ -330,11 +338,50 @@ This means that, while no mobile support is currently available, if it was later
 
 #### Equations
 
-Equations are internally expressed in LaTeX, which is what MathQuill directly uses. This means that when we are modifying the expressions, we have to manipulate the LaTeX string. To do this i have used Regular Expressions (regex), as, while regex has no support for the recusive nature of nesting (with paranthesis and {}, etc.), its an increadibly efficient and fast-to-develop option which can "get the job done" in an incredibly time and cost-effective manner. Well designed regex can be much more performant than other string manipulation techniques, as regex is implemented language-level as opposed to running as JavaScript (slow!). (there are definately no large companies who have recently downfallen due to the use of regex).
+Equations are internally expressed in LaTeX, which is what MathQuill directly uses. This means that when we are modifying the expressions, we have to manipulate the LaTeX string. To do this I have used Regular Expressions (regex), as, while regex has no support for the recusive nature of nesting (with paranthesis and {}, etc.), its an increadibly efficient and fast-to-develop option which can "get the job done" in an incredibly time and cost-effective manner. Well designed regex can be much more performant than other string manipulation techniques, as regex is implemented language-level as opposed to running as JavaScript (slow!). (there are definately no large companies who have recently downfallen due to the use of regex ^-^). This modification of latex was used, for example, to clean up the expressions after modification (e.g. removing redundant brackets and duplicate signs):
+
+```js
+export function tidy(latex: string) {
+  let result = latex.trim()
+  result = result.replace(
+    rx`(?<=^|${weakerThanMultOp}\s*)(${numPattern}?${symbolPattern}*${matchingPairPattern})\s*\\times\s*(${numPattern}?${symbolPattern}*)`,
+    replacer(([_, group, term]) => `${term} \\times ${group}`)
+  )
+  // Roots
+  result = result.replace(
+    rx`(?<base>${matchingPairPattern}|${numPattern}|${symbolPattern})\s*\^\s*${frac(
+      rx`0*1(?:\.0+)?`,
+      rx`[^}]*`
+    )}`,
+    replacer(({ base, b }) => {
+      const { begin, end, pair } = matchingPairParts(base)
+      return `${begin}\\sqrt${parseFloat(b) === 2 ? '' : `[${b}]`}{${pair}}${end}`
+    })
+  )
+  // Redundant brackets
+  result = result.replace(
+    rx`(?<=^|${sumOp}\s*)${lParen}[^+-]${rParen}(?=$|\s*${sumOp})`,
+    replacer(({ base, b }) => {
+      const { begin, end, pair } = matchingPairParts(base)
+      return `${begin}\\sqrt${parseFloat(b) === 2 ? '' : `[${b}]`}{${pair}}${end}`
+    })
+  )
+  // Double operators
+  result = result.replaceAll(/([+-])\s*\1/g, '+')
+  result = result.replaceAll(/[+-]\s*[+-]/g, '-')
+  // Leading +
+  result = result.replaceAll(/(^|[[{(])\s*\+/g, '$1')
+  // +/- 0
+  result = result.replaceAll(/(?:[+-]|^)\s*0+(?:\.0+)?(\s*[+-]|$)/g, '$1')
+  return result
+}
+```
+
+Some additional regex utilities are used to easily construct regex from other sub-expressions. All of these regex are used to manipulate the latex string and clean it up for nicer viewing. Using regex is an incredibly simple and fast-to-develop solution to these kinds of string manipulation problems.
 
 #### Equation actions
 
-For equation actions, some extra information is needed with the dragged element, namely, *exactly what should it do when it is dropped on the equation*? I have an equation action component,  which composed of a `<Draggable>` to gain the draggability behaviour, and also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. This makes defining new actions increadibly simplistic at a higher level e.g.
+For equation actions, some extra information is needed with the dragged element, namely, *exactly what should it do when it is dropped on the equation*? I have an equation action component,  which composed of a `<Draggable>` to gain the draggability behaviour, and also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. This makes defining new actions incredibly simplistic at a higher level e.g.
 
 ```jsx
 <EquationAction transformer={(l, [x]) => `${l} + ${x}`}>
@@ -349,17 +396,131 @@ For equation actions, some extra information is needed with the dragged element,
   {MATHQUILL_NULL_TOKEN} \times <MathTermInput>2</MathTermInput>
 </EquationAction>
 ```
-A transform prop is defined with a function taking the latex and any additional inputs
 
-Equation actions also render using the aforementioned `<MathTermInput>` component to embed inputs to customise the action, e.g. setting the expression to be added/multiplied, etc. 
+A transform prop is defined with a function taking the latex and any additional inputs, and returning the new latex. The additional inputs are collected from `<MathTermInput>` components, using React's `Context.Provider`s. These allow a context to be defined at a node in the React tree, and give subnodes the ability to access it. Each `EquationAction` provides a context for the children `<MathTermInput>`s to attatch and update their content value to. This context is then passed into the transformer. This is implemented as such:
+
+```jsx
+export const MathTermInput = React.forwardRef<
+  TamaguiElement,
+  Omit<MathQuillInputProps, 'children' | 'latex'> & {
+    children: string
+    key?: string | number
+  }
+>(({ children, key = 0, ...props }, ref) => {
+  const ctx = React.useContext(ActionTermsContext)
+  const [expression, setExpression] = React.useState<string>(children)
+  React.useEffect(() => {
+    if (ctx) ctx[key] = expression
+  }, [ctx, expression, key])
+  /* ... */
+});
+```
+
+`React.useContext` is used to obtain a handle on the nearest `ActionTermContext.Provider` in the React tree, and then `React.useEffect` is used to update the value stored in the context whenever the expression value changes. The `<EquationAction>` component then collects these values and passes them to the transformer as follows:
+
+```jsx
+const listener = React.useContext(DragContext)
+const state = React.useRef<ActionTerms>([] as any /* just use js weirdness */)
+return (
+  <ActionTermsContext.Provider value={state.current}>
+    <Draggable
+      onDragEnd={(e) => {
+        listener?.current?.((expr) => transformer(expr, state.current))
+      }}
+    >
+      <XStack group='action' paddingHorizontal='$6' paddingVertical='$4' ai='center' {...props}>
+        <MathQuillText size='$5' unselectable>
+          {children}
+        </MathQuillText>
+      </XStack>
+    </Draggable>
+  </ActionTermsContext.Provider>
+)
+```
+
+This sets up a `ActionTermsContext.Provider` to collect the `<MathTermInput>` values, and a drop handler which calls the transformer with the current context state.
+This way, the context that the child nodes provide is performantly and efficiently passed up the React tree, in a way that is neatly encapsulated within the respectful  components, so that in the higher-level code which defines all the equation actions, the internal details of implementation can be hidden away, making the code cleaner and more readable.
 
 #### Action term inputs
 
-The inputs for terms within the equations were designed with usability in mind, allowing for many different forms of intuitive input, e.g. buttons appear on hover to increment/decrement the value (assuming it is simply numeric); on web scrolling over the input field also quickly changes the value (intended for "power-users" who are fluent with the interface and prefer fast shortcuts), and of course, manually typing in an expression. Providing all of these options allows the user to tweak the values in whichever way feels most comfortable to them, making the user experience a lot smoother.
+The inputs for terms within the equations were designed with usability in mind, allowing for many different forms of intuitive input, e.g. buttons appear on hover to increment/decrement the value (assuming simply numeric value). The hover animation for the buttons makes use of Tamagui "groups" to wrap the field and buttons, so that the hover is detected when hovering any elements in the group. This type of styling is implemented in Tamagui with a `$group-<groupname>-hover` prop, somewhat like this:
+
+```jsx
+<View group='action'>
+  /* ... */
+    <Circle
+      animation='bouncy'
+      backgroundColor='$backgroundTransparent'
+      outlineColor='$backgroundTransparent'
+      outlineStyle='solid'
+      outlineWidth='$size.1'
+      $pointerCoarse={{ outlineWidth: '$size.2' }}
+      scale={0}
+      $group-action-hover={{
+        scale: 1,
+        backgroundColor: '$backgroundHover',
+        outlineColor: '$backgroundHover',
+      }}
+    />
+  /* ... */
+</View>
+```
+
+On web scrolling over the input field also quickly changes the value (intended for "power-users" who are fluent with the interface and prefer fast shortcuts).
+Since this functionality makes sense only on web (and not mobile), it is implimented with a component with a spoof implementation for mobile, and a seperate, true  implementation for web, which simply defers to the browser wheel event handler:
+
+```jsx
+export function ScrollOver(props) {
+  return <span onWheel={props.onMouseWheel}>{props.children}</span>
+}
+```
+
+Finally, of course, manually typing in an expression into the input box. Providing all of these options allows the user to tweak the values in whichever way feels most comfortable to them, making the user experience a lot smoother.
 
 #### Equation stack
 
-The stack is implemented with a simple flexbox container of MathQuill fields. The equations themselves are internally stored in an array of strings, which contain the LaTeX representation of the expressions. React is used to dynamically match each element in the array with an actual rendered component. This way, React automatically handles updating the rendered HTML DOM whenever the equations array is updated, efficiently adding/removing elements as needed, as opposed to a naive solution which  would rerender everything every update.
+The stack is implemented with a simple flexbox container of MathQuill fields. The equations themselves are internally stored in an array of strings, which contain the LaTeX representation of the expressions. React is used to dynamically match each element in the array with an actual rendered component.
+
+```jsx
+function stackReducer<T>(
+  array: T[],
+  action: { type: 'push' | 'modify'; item: T } | { type: 'pop' }
+): T[] {
+  switch (action.type) {
+    case 'push':
+      return [action.item, ...array]
+    case 'pop':
+      return array.slice(1) || []
+    case 'modify':
+      return [action.item, ...(array.slice(1) || [])]
+  }
+}
+
+const [history, updateHistory] = React.useReducer(
+  stackReducer<{ key: number; item: [string, string] }>,
+  [
+    { key: 0, item: ['x', '14'] },
+    { key: 1, item: ['x + 1', '\\sqrt{2}'] },
+    { key: 2, item: ['\\frac{(x + 1)^2}{2}', '1'] },
+    { key: 3, item: ['(x + 1)^2', '2'] },
+    { key: 4, item: ['(x + 1)^2 - 2', '0'] },
+    { key: 5, item: ['x^2 + 2x - 1', '0'] },
+  ]
+)
+
+/* ... */
+<EquationStack>
+  {...(history ?? []).map((eq, i) => (
+    /* ... */
+      <EquationRow /* ... */>
+        {eq.item}
+      </EquationRow>
+    /* ... */
+  ))}
+</EquationStack>
+```
+
+The `stackReducer` defines a React reducer, which allows for more structured control over the mutation of states. In this case it is used to enforce the way the stack is mutated - updates can only be dispatched as pushes, pops, etc. to the stack. This approach helps maintain safety of the stored data, ensuring its type safety, and that the information is not accidentily replaced. The history stack is later mapped to a list of React elements which get included in the final render. This way, React automatically handles updating the rendered HTML DOM whenever the equations array is updated, efficiently adding/removing elements as needed, as opposed to a naive solution which would rerender everything each update.
 
 ### Testing
 
@@ -402,9 +563,54 @@ With these changes, the specifications should become:
 - Develop an intuitive interface that aids student understanding of algebra, with clear instruction on how to use the interface.
 - Draggable equation operations to facilitate interactive learning
 - Should enable students to find solutions to different algebraic equations in a fun and interactive way, guided by explainations at any possibly unintuitive points.
-- Support a customisable UI with easy configuuration, with a customisable colour theme to appeal to student's preferances.
+- Support a customisable UI with easy configuration, with a customisable colour theme to appeal to student's preferances.
 
 ## Build V2
+
+### Tutorial guide
+
+![First tutorial help card](./images/tutorial1.png) \
+![Second tutorial help card](./images/tutorial2.png) \
+These screenshots show the tutorial cards which help new users get started with the interface, covering the basics of how the site can be used.
+
+### Implementation details
+
+#### Tutorial guide
+
+The tutorial guide was implimented using Tamagui's provided `<Popover>` component as follows:
+
+```jsx
+<Popover open={tutorialOpen2} onOpenChange={setTutorialOpen2} placement='right'>
+  <Popover.Arrow />
+  <Popover.Content padding='$3' maxWidth='30vw' borderColor='$borderColor' borderStyle='solid' borderWidth='$1'>
+    <SolitoImage
+      width={getVariableValue('$20', 'size')}
+      height={getVariableValue('$15', 'size')}
+      src='/tutorial.apng'
+      alt='Tutorial image showing how operations can be dropped onto the equation' />
+    <Text>Drop the operations onto the equation in order to rearrange and solve the equation.</Text>
+    <Popover.Close position='absolute' top='$2' right='$2'>
+      <Button size='$1' icon={<X />} />
+    </Popover.Close>
+    <XStack marginTop='$2' width='100%' justifyContent='flex-end' columnGap='$1'>
+      <Popover.Close>
+        <Button
+          size='$2'
+          iconAfter={<ChevronRight />}
+          backgroundColor='$blue6'
+          hoverStyle={{ backgroundColor: '$blue7' }}
+          pressStyle={{ backgroundColor: '$blue8' }}
+        >Next</Button>
+      </Popover.Close>
+    </XStack>
+  </Popover.Content>
+  <Popover.Anchor zIndex={2}>
+    /* ... */
+  </Popover.Anchor>
+</Popover>
+```
+
+The component is split into many seperate parts
 
 ## Fitness for purpose
 
