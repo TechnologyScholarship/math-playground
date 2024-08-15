@@ -168,19 +168,165 @@ I chose to use the drag-and-drop UI because it fit my stakeholder's needs of bei
 
 #### Rendering math
 
-For some features, it was *ideal* to be able to embed custom content *within* MathQuill's math fields. To do this, I used MathQuill's ability to embed custom "renderers" to create a target to render the embedded fields to, and then in order to maintain interopability with React components, I used React portals, which allowed the React components to remain in the React DOM while simultaneously existing in a different place in the true HTML DOM. This way I could still use React to render and update the embeds, while still rendering them inside of MathQuill elements. This functionality was entirely wrapped up in a custom wrapper component, `<MathQuillText>`, so that all of the complex integration to make this work was hidden behind an abstraction layer, and so that elsewhere in my code, all it took was passing this prop the standard latex input, *and* any HTML embeds directly as children! e.g.
+For some features, it was *ideal* to be able to embed custom content *within* MathQuill's math fields. To do this, I used MathQuill's ability to embed custom "renderers" to create a target to render the embedded fields to, and then in order to maintain interopability with React components, I used React portals, which allowed the React components to remain in the React DOM while simultaneously existing in a different place in the true HTML DOM. This was implemented with the following code:
 
-```tsx
+```jsx
+result.registerEmbed(MATHQUILL_CUSTOM_EMBED, (index) => ({
+  htmlString: `<span style="display: inline-block;" class="${MATHQUILL_CUSTOM_EMBED_IDX(
+    index
+  )}"></span>`,
+  text: () => (global as any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.text?.() ?? '[?]',
+  latex: () => (global as any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.latex?.() ?? '[?]',
+}))
+```
+> This sets up the embed within the MathQuill library, with a class so that the embed can be identified by the portal code. The text and latex methods define how the embed should be stringified, e.g. on copy/paste.
+
+```jsx
+React.Children.forEach(children, (child) => {
+  if (child == null || typeof child === 'undefined') {
+    // continue
+  } else if (React.isValidElement(child)) {
+    // Use portal to embed element
+    latex += `\\embed{${MATHQUILL_CUSTOM_EMBED}}[${embedComps.length + baseId}]`
+    embedComps.push(child)
+  } else if (
+    typeof child === 'string' ||
+    typeof child === 'number' ||
+    typeof child === 'boolean'
+  ) {
+    // Render as latex
+    latex += child
+  } else {
+    // const x: never = child;
+    throw new TypeError(`Did not expect: ${child}`)
+  }
+})
+```
+> This section of code maps the children props to the final latex to be passed to MathQuill. Any direct text nodes are treated as pure latex, but any React element children are stored in a list for later rendering, and a `\embed` is added to the latex to invoke MathQuill's custom embed renderer, which will be hooked for later use.
+
+```jsx
+for (let i = 0; i < childComponents.current.length; i++) {
+  const portalHost = mathField
+    .el()
+    .querySelector(`:scope .${MATHQUILL_CUSTOM_EMBED_IDX(i + baseId)}`) as HTMLElement
+  if (!portalHost) {
+    return // Fail gracefully
+  }
+  ;(global as any)._MATHQUILL_EMBED_CALLBACKS = (global as any)._MATHQUILL_EMBED_CALLBACKS ?? {}
+  ;(global as any)._MATHQUILL_EMBED_CALLBACKS[i + baseId] = {
+    text: childComponents.current[i].props.toString,
+    latex: childComponents.current[i].props.toLatex,
+  }
+  portals.push(portalHost)
+}
+setPortalTargets(portals)
+```
+> This code finds the elements that were injected by MathQuill, and stores them to later be set up as portal hosts for the embeds.
+
+```jsx
+return (
+  <RawMathQuillText
+    {...textProps}
+    mathquillDidMount={setMathField}
+    _additionalRawChildren={
+      isServer || !didFinishSSR || !portalTargets
+        ? childComponents.current // On first render, render components directly
+        : childComponents.current.map((comp, i) => createPortal(comp, portalTargets[i]))
+    }
+  >
+    {latex ?? ''}
+  </RawMathQuillText>
+)
+```
+> Finally, this code composes the MathQuill renderer to render the latex, and additionally passes the portal children to ensure thet are renderered alongside in the React tree. The portals are setup using `createPortal`, linking the React components to the elements they should be rendered to.
+
+This way I could still use React to render and update the embeds, while still rendering them inside of MathQuill elements.
+
+```jsx
+export type MathQuillTextProps = Omit<SizableTextProps, 'children'> & React.PropsWithChildren<{
+  unselectable?: boolean
+}>
+
+export const MathQuillText: React.FunctionComponent<MathQuillTextProps> = (props) => {
+  /* ... */
+}
+```
+This functionality was entirely wrapped up in a custom wrapper component, `<MathQuillText>`, so that all of the complex integration to make this work was hidden behind an abstraction layer, and so that elsewhere in my code, all it took was passing this prop the standard latex input, *and* any HTML embeds directly as children! e.g.
+
+```jsx
 (<MathQuillText>
   \sqrt[<MathTermInput>2</MathTermInput>]{'{\\ellipsis}'}
 </MathQuillText>)
 ```
 
-would render the square root, with an ellipsis inside, and would *directly* render the `<MathTermInput>` component in the upper left, *n*-th root position. This is used e.g. in the equation actions in order to render the input fields within the static math. By abstracting this comploex logic into a simple, easy-to-use component, this gave the freedom to focus on higher-level details.
+would render the square root, with an ellipsis inside, and would *directly* render the `<MathTermInput>` component in the upper left, *n*-th root position. This is used e.g. in the equation actions in order to render the input fields within the static math. By abstracting this complex logic into a simple, easy-to-use component, this gave the freedom to focus on higher-level details.
 
 #### The draggable UI
 
-The draggable UI was implemented using an abstract React component which implemented draggable behaviour. Due to the difference between how dragging is implemented natively on mobile and on web, this behaviour doesn't come for free. However, by using an abstract React component, we can implement the underlying behaviour differently for each platform. The `<Draggable>` component can then be used elsewhere throughout the codebase *without* worrying about how it's actually implemented (treating it as a black box that simply does what we want). This means that, while no mobile support is currently available, if it was later required by my stakeholder then it *could* be quite easily achived due to the flexability and extensibility of the application and React Native Web.
+The draggable UI was implemented using an abstract React component which implemented draggable behaviour. Due to the difference between how dragging is implemented natively on mobile and on web, this behaviour doesn't come for free. However, by using an abstract React component, we can implement the underlying behaviour differently for each platform. The `<Draggable>` component can then be used elsewhere throughout the codebase *without* worrying about how it's actually implemented (treating it as a black box that simply does what we want).
+
+The code for this is implemented across two different files - one is loaded for web, and the other on native mobile. 
+
+The web version contains the following code:
+```jsx
+export function Draggable(props: DraggableProps) {
+  return (
+    <View group='dragging'>
+      <div
+        draggable
+        style={{ userSelect: 'none', cursor: 'grab' }}
+        onDrag={props.onDrag ? e => props.onDrag?.(asIntermediate(e)) : undefined}
+        onDragStart={e => {
+          /* for any web-specific styling */
+          ;(e.target as HTMLDivElement).classList.add('draggable-dragging')
+          props.onDragStart?.(asIntermediate(e))
+        }}
+        onDragEnd={(e) => {
+          ;(e.target as HTMLDivElement).classList.remove('draggable-dragging')
+          props.onDragEnd?.(asIntermediate(e))
+        }}
+      >
+        {props.children}
+      </div>
+    </View>
+  )
+}
+```
+which defers the draggability behaviour to a `<div draggable>` element, and defers the event handling to the caller as needed. The mobile version defers to the 'react-native-draggable' library:
+
+```jsx
+export function Draggable(props: DraggableProps) {
+  const dragging = React.useRef(false) // Spoof implementation of onDragStart
+  return (
+    <View group='dragging'>
+      <NativeDraggable.default
+        onDrag={
+          props.onDragStart
+            ? (e) => {
+                if (!dragging.current) {
+                  dragging.current = true
+                  props.onDragStart?.(asIntermediate(e))
+                } else props.onDrag?.(asIntermediate(e))
+              }
+            : (e) => props.onDrag?.(asIntermediate(e))
+        }
+        onDragRelease={
+          props.onDragStart
+            ? (e) => {
+                dragging.current = false
+                props.onDragEnd?.(asIntermediate(e))
+              }
+            : (e) => props.onDragEnd?.(asIntermediate(e))
+        }
+      >
+        {props.children}
+      </NativeDraggable.default>
+    </View>
+  )
+}
+```
+
+This means that, while no mobile support is currently available, if it was later required by my stakeholder then it *could* be quite easily achived due to the flexability and extensibility of the application and React Native Web.
 
 #### Equations
 
@@ -188,7 +334,24 @@ Equations are internally expressed in LaTeX, which is what MathQuill directly us
 
 #### Equation actions
 
-For equation actions, some extra information is needed with the dragged element, namely, *exactly what should it do when it is dropped on the equation*? I have an equation action component,  which composed of a `<Draggable>` to gain the draggability behaviour, and also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. Equation actions also render using the aforementioned `<MathTermInput>` component to embed inputs to customise the action, e.g. setting the expression to be added/multiplied, etc.
+For equation actions, some extra information is needed with the dragged element, namely, *exactly what should it do when it is dropped on the equation*? I have an equation action component,  which composed of a `<Draggable>` to gain the draggability behaviour, and also carrying a "transformer" function (`(input: string) -> string`) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. This makes defining new actions increadibly simplistic at a higher level e.g.
+
+```jsx
+<EquationAction transformer={(l, [x]) => `${l} + ${x}`}>
+  {MATHQUILL_NULL_TOKEN} + <MathTermInput>1</MathTermInput>
+</EquationAction>
+<EquationAction transformer={(l, [x]) => `${l} - ${x}`}>
+  {MATHQUILL_NULL_TOKEN} - <MathTermInput>1</MathTermInput>
+</EquationAction>
+<EquationAction
+  transformer={(l, [x]) => `${paranthesisUnless(l, strongerThanProduct)} \\times ${x}`}
+>
+  {MATHQUILL_NULL_TOKEN} \times <MathTermInput>2</MathTermInput>
+</EquationAction>
+```
+A transform prop is defined with a function taking the latex and any additional inputs
+
+Equation actions also render using the aforementioned `<MathTermInput>` component to embed inputs to customise the action, e.g. setting the expression to be added/multiplied, etc. 
 
 #### Action term inputs
 
@@ -295,7 +458,7 @@ As a developer, health and safety during development is a major concern. As huma
 
 #### Manufacturing practices
 
-A major consideration is the permissions and licencing for all the content used in the production of the product. All images used are self-created, as we are primarily using them to inform users how to use the site, and so liscensing is not a concern. When hosting these images on the web, it is also important to consider the size of files, as bandwith can be a concern for users *and* for hosting alike, so ideally the smaller the file, the better. Additionally, the larger files will take longer do load, decreasing the feeling of "responsiveness" of the site, and detracting from the user experience. The Solito image library provides a great solution for hosting images - it runs on the edge to scale images to various resolutions, and serves the images based upon a variety of factors, e.g. initially loading lower-resolution images for fast load speed, and later upgrading the resolution if the client network is idling. This way the user gets the best case experience - a fast initial load, and sufficient resolution as the image has time to load fully. Another concern is font size for text readability - the majority of text is maths rendered with MathQuill. I chose a reasonably large base font size, as it fits the clean and simplistic aesthetic. The font sizes are all defined using relative units, so the user's browser font size preferences are also taken into account, making the site more accessible for users with hardness of sight or visual disabilities. On the backend, best practices have been constantly considered during the manufacturing and development process. Typescript for type safety and Biome for linting has been used to ensure the code is high quality and follows the conventional standards. This also provides the benefit of increased maintainability. All aspects of the product have also been extensively tested in order to  ensure their utmost quality.
+A major consideration is the permissions and licencing for all the content used in the production of the product. All images used are self-created, as we are primarily using them to inform users how to use the site, and so liscensing is not a concern. When hosting these images on the web, it is also important to consider the size of files, as bandwith can be a concern for users *and* for hosting alike, so ideally the smaller the file, the better. Additionally, the larger files will take longer do load, decreasing the feeling of "responsiveness" of the site, and detracting from the user experience. The Solito image library provides a great solution for hosting images - it runs on the edge to scale images to various resolutions, and serves the images based upon a variety of factors, e.g. initially loading lower-resolution images for fast load speed, and later upgrading the resolution if the client network is idling. This way the user gets the best case experience - a fast initial load, and sufficient resolution as the image has time to load fully. Another concern is font size for text readability - the majority of text is maths rendered with MathQuill. I chose a reasonably large base font size, as it fits the clean and simplistic aesthetic. The font sizes are all defined using relative units, so the user's browser font size preferences are also taken into account, making the site more accessible for users with hardness of sight or visual disabilities. On the backend, best practices have been constantly considered during the manufacturing and development process. Typescript for type safety and Biome for linting has been used to ensure the code is high quality and follows the conventional standards. This also provides the benefit of increased maintainability. All aspects of the product have also been extensively tested in order to ensure their utmost quality.
 
 #### Sustainability
 
