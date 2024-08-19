@@ -5,61 +5,77 @@ import { EquationRow } from './EquationRow'
 import { EquationDropHandler, EquationTransformer } from './EquationAction'
 import { tidy } from './latexutil'
 
-
 function stackReducer<T>(
   array: T[],
-  action: { type: 'push' | 'modify'; item: T; } | { type: 'pop'; }
+  action: { type: 'push' | 'modify' | 'set'; item: T } | { type: 'pop' }
 ): T[] {
   switch (action.type) {
     case 'push':
-      return [action.item, ...array];
+      return [action.item, ...array]
     case 'pop':
-      return array.slice(1) || [];
+      return array.slice(1) || []
     case 'modify':
-      return [action.item, ...(array.slice(1) || [])];
+      return [action.item, ...(array.slice(1) || [])]
+    case 'set':
+      return [action.item]
   }
 }
 
-type StackReducer = Parameters<typeof stackReducer<{ key: number; item: [string, string]; }>>;
-type StackType = StackReducer[0];
-type StackDispatchType = (action: StackReducer[1]) => void;
+type StackReducer = Parameters<typeof stackReducer<{ key: number; item: [string, string] }>>
+type StackType = StackReducer[0]
+type StackDispatchType = (action: StackReducer[1]) => void
 
 const EquationHistoryContext = React.createContext<{
-  key: [number, (value: number) => void],
+  key: [number, (value: number) => void]
   history: [StackType, StackDispatchType]
 }>({
-  key: [0, () => { throw new TypeError("Unexpected context"); }],
-  history: [[], () => {throw new TypeError("Unexpected context")}]
-});
+  key: [
+    0,
+    () => {
+      throw new TypeError('Unexpected context')
+    },
+  ],
+  history: [
+    [],
+    () => {
+      throw new TypeError('Unexpected context')
+    },
+  ],
+})
 
-export function EquationHistoryHost({children, dropHandler, ...props}: React.PropsWithChildren<{
-  dropHandler: React.MutableRefObject<EquationDropHandler>;
-}> & ViewProps) {
-  const keyState = React.useState(6);
-  const [key, setKey] = keyState;
+export function EquationHistoryHost({
+  children,
+  dropHandler,
+  base,
+  ...props
+}: React.PropsWithChildren<{
+  dropHandler: React.MutableRefObject<EquationDropHandler>
+  base: { lhs: string, rhs: string }
+}> &
+  ViewProps) {
+  const keyState = React.useState(1)
+  const [key, setKey] = keyState
 
-  const historyState = React.useReducer(
-    stackReducer<{ key: number; item: [string, string]; }>,
-    [
-      { key: 0, item: ['x', '14'] },
-      { key: 1, item: ['x + 1', '\\sqrt{2}'] },
-      { key: 2, item: ['\\frac{(x + 1)^2}{2}', '1'] },
-      { key: 3, item: ['(x + 1)^2', '2'] },
-      { key: 4, item: ['(x + 1)^2 - 2', '0'] },
-      { key: 5, item: ['x^2 + 2x - 1', '0'] },
-    ]
-  );
-  const [history, updateHistory] = historyState;
+  const historyState = React.useReducer(stackReducer<{ key: number; item: [string, string] }>, [
+    { key: 0, item: [base.lhs, base.rhs] },
+  ])
+  const [history, updateHistory] = historyState
 
-  const onDragOver = (e: { stopPropagation: () => void; }) => {
-    e.stopPropagation();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: i know what im doing
+  React.useEffect(() => {
+    updateHistory({ type: 'set', item: { key: key, item: [base.lhs, base.rhs] } })
+    setKey(key + 1)
+  }, [base])
+
+  const onDragOver = (e: { stopPropagation: () => void }) => {
+    e.stopPropagation()
     dropHandler.current = (transformer: EquationTransformer) => {
       updateHistory({
         type: 'push',
         item: { key, item: history[0].item.map(transformer).map(tidy) as [string, string] },
-      });
-      setKey(key + 1);
-    };
+      })
+      setKey(key + 1)
+    }
   }
 
   return (
@@ -68,14 +84,16 @@ export function EquationHistoryHost({children, dropHandler, ...props}: React.Pro
       onPointerEnter={onDragOver}
       {...(isWeb ? { onDragOver } : {})}
       onPointerLeave={(e) => {
-        dropHandler.current = () => { };
+        dropHandler.current = () => {}
       }}
       {...props}
     >
-      <EquationHistoryContext.Provider value={{
-        key: keyState,
-        history: historyState
-      }}>
+      <EquationHistoryContext.Provider
+        value={{
+          key: keyState,
+          history: historyState,
+        }}
+      >
         <ScrollView
           padding='$5'
           margin='$2'
@@ -97,9 +115,9 @@ export function EquationHistoryHost({children, dropHandler, ...props}: React.Pro
 export function EquationHistoryStack() {
   const {
     key: [key, setKey],
-    history: [history, updateHistory]
-  } = React.useContext(EquationHistoryContext);
-return (
+    history: [history, updateHistory],
+  } = React.useContext(EquationHistoryContext)
+  return (
     <EquationStack>
       <AnimatePresence initial={false}>
         {...(history ?? []).map((eq, i) => (

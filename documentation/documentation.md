@@ -2,6 +2,8 @@
 
 > Callum Hynes
 
+NOTE: Viewing in PDF will not display animations! You can view the HTML version in your browser.
+
 ## Plan
 
 Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They would like a tool to help better teach student's understanding of algebra, including the rearrangement and solving of systems of equations. Learning such concepts can often be boring and unappealing to students, so ideally such teaching could be done in an intuitive and fun visual manner. Such a tool should freely ideally be accessible to all students and teachers alike.
@@ -447,7 +449,7 @@ The inputs for terms within the equations were designed with usability in mind, 
 
 ```jsx
 <View group='action'>
-  /* ... */
+  {/* ... */}
     <Circle
       animation='bouncy'
       backgroundColor='$backgroundTransparent'
@@ -462,7 +464,7 @@ The inputs for terms within the equations were designed with usability in mind, 
         outlineColor: '$backgroundHover',
       }}
     />
-  /* ... */
+  {/* ... */}
 </View>
 ```
 
@@ -547,12 +549,10 @@ Showing the site to my stakeholders, they give the following feedback:
 
 - Some hints could be given on how to use the UI, as it can be quite unclear on what to do on first glance.
 - Sometimes actions can have an effect that may feel unintuituve to a user (e.g. square-rooting both sides introducing a plus or minus). Such situations should have some kind of information card giving a more in-depth explaination of what is occuring.
-- The color themes are neat, but there should be some toggle to switch between them at user will, as many users are unaware of the configuration they can make within their system/browser settings.
 
 ### Changes to make
 
 - Scroll- and button-based action term tweaking should tweak the first number found *anywhere* within the expression, not just at the beginning.
-- Dark mode theme toggle.
 - UI popovers to give a tutorial on how to use the page
 - UI popovers to give further information on some unintuitive situations which may need explaination
 
@@ -563,15 +563,19 @@ With these changes, the specifications should become:
 - Develop an intuitive interface that aids student understanding of algebra, with clear instruction on how to use the interface.
 - Draggable equation operations to facilitate interactive learning
 - Should enable students to find solutions to different algebraic equations in a fun and interactive way, guided by explainations at any possibly unintuitive points.
-- Support a customisable UI with easy configuration, with a customisable colour theme to appeal to student's preferances.
 
 ## Build V2
-
-### Tutorial guide
 
 ![First tutorial help card](./images/tutorial1.png) \
 ![Second tutorial help card](./images/tutorial2.png) \
 These screenshots show the tutorial cards which help new users get started with the interface, covering the basics of how the site can be used.
+
+![Simplifying expressions using helper](./images/simplify.apng) \
+This portion of the interface hints to users what parts of the expression may be simplifiable, and allows them to simplify their expression in order to move forward with solving it. It also provides additional information explaining the process in cases the user may need further information.
+
+![Small indicator for additional info being available](./images/info-hidden.png) \
+![Explanatory popup to describe more complicated actions](./images/info.png) \
+This screenshot shows the new interface that displays for some more complex concepts that may need description to aid user understanding. This popup is non-intrusive - a small info button is shown in any places where this information is available (minimised further to a small blue circular indicator until hovered, unless on mobile for accessibility), and the full popup is then only shown on press.
 
 ### Implementation details
 
@@ -581,8 +585,8 @@ The tutorial guide was implimented using Tamagui's provided `<Popover>` componen
 
 ```jsx
 <Popover open={tutorialOpen2} onOpenChange={setTutorialOpen2} placement='right'>
-  <Popover.Arrow />
   <Popover.Content padding='$3' maxWidth='30vw' borderColor='$borderColor' borderStyle='solid' borderWidth='$1'>
+    <Popover.Arrow borderColor='$borderColor' borderStyle='solid' borderWidth='$1'/>
     <SolitoImage
       width={getVariableValue('$20', 'size')}
       height={getVariableValue('$15', 'size')}
@@ -605,12 +609,301 @@ The tutorial guide was implimented using Tamagui's provided `<Popover>` componen
     </XStack>
   </Popover.Content>
   <Popover.Anchor zIndex={2}>
-    /* ... */
+    <View onFocus={e => e.stopPropagation()}>
+      {/* ... */}
+    </View>
   </Popover.Anchor>
 </Popover>
 ```
 
-The component is split into many seperate parts
+The Popover component is split into two main parts: the `<Popover.Anchor>` wwhich defines the content which the popover should try and attach to, and the `<Popover.Content>` which houses the actual content of the popover itself. Close buttons for the popover are implemented using `<Popover.Close>`, as well as any other additional event listeners for other special behaviour (e.g. opening next popover with next button). An additional wrapper `<View>` element was needed within the `<Popover.Anchor>`, as the default behavior for popovers was to open the popover whenever any element within the `<Popover.Anchor>` is focused. The additional `<View>` consumes these events to avoid this behaviour, as such behaviour is unexpected (otherwise causing the tutorial to show up whenever any field on the page is used).
+
+#### Simplifying expressions
+
+The simplifiable sub-expressions first had to be identified and selected, which was implemented using the pre-existing regex setup for working with the underlying latex expressions. A number of "rules" were set up to identify expressions that could be simplified and describe how to apply those simplifications, as well as providing markup to be rendered as an explanation. The functionality for this was set up in a `<MathSimplifyHelper>` component, which encapsulated all the underlying implementation so that defining the rules was incredibly simple, e.g.:
+
+```jsx
+const constProductPattern = rx`(?<!\^\s*)(${numPattern})\s*\\times\s*(${numPattern})(?!\s*\^)`
+
+/* ... */
+
+replace(constProductPattern, ([_, a, b]) => `${asNumber(a) * asNumber(b)}`)
+replace(
+  rx`(${numPattern}?\s*(?:${symbolPattern}\s*)*)\\times\s*(${matchingPairPattern})`,
+  ([_, coefficient, term]) => {
+    // Replace e.g. 2(x^2 + 3x + 2) -> 2x^2 + 6x + 4
+    const { begin, end, pair } = matchingPairParts(term)
+    return `${begin}\\left(${distribute(
+      OpType.PRODUCT,
+      coefficient,
+      pair.replace(unwrapBracketPair.regexFull(), '$1')
+    )}\\right)${end}`
+  },
+  () => <>
+      <Heading size='$2'>Expanding brackets</Heading>
+      A product of a bracket can be expanded by distributing the product over each of the summed
+      terms within the bracket. E.g., taking 
+      <MathQuillText>
+        3\times\left(x^2 + 2x + 1\right)
+      </MathQuillText>
+      and splitting the terms within the bracket, we can multiply each by the term outside the
+      bracket individually, as such:
+      <MathQuillText>
+        = 3\times x^2 + 3\times 2x + 3\times 1
+      </MathQuillText>
+      <MathQuillText>
+        = 3x^2 + 6x + 3
+      </MathQuillText>
+    </>
+)
+```
+
+The `replace` function handles all the actual logic for finding and substituting the matches. It takes only three arguments: the regular expression to match the expression (e.g. the `constProductPattern` which defines a product between two constant numbers (e.g. '2 &times; 2')), a replacer function, which accepts some pre-defined sections in the matched pattern (e.g. the two numbers being multiplied) and returns a suitable replacement that would be simpler (e.g. the actual product of the two constants). Optionally, a JSX Markup can also be included, which wil be rendered in an informational popup (see next section).
+The simplifiable content is now wrapped in a `<MathSimplifiableExpression>` component, which provides the rendering with the animated hover effect, the (optional) info section, etc. The `replace` method also attaches a click event listener, so that upon clicking the sub-expression, the simplification is made and the new equation is added to the stack:
+
+```jsx
+/* ... */
+  replaceHandler={() => {
+    // `replaceHandler` here propogates replaced content up tree to the `<EquationStack>`
+    replaceHandler(
+      latex.substring(0, replaceAt) +
+        replaceWith +
+        latex.substring(replaceAt + replaceLength)
+    )
+  }}
+/* ... */
+```
+
+#### Explanation popups
+
+The explanation popups were implemented in a similar fashion to the tutorial, using Tamagui's `<Popover>` component. The content for them is provided by the `<MathSimplifyHelper>`'s replacement rules (above). This content is embedded within the popover, by passing the embedded content as a prop to the React component:
+
+```jsx
+{infoContent ? 
+  <Popover placement='top-end'>
+    {/* ... */}
+    <Popover.Content
+      /* styling... */
+      borderColor='$borderColor'
+      borderStyle='solid'
+      borderWidth='$1'
+    >
+      {infoContent}
+      <Popover.Close position='absolute' top='$2' right='$2'>
+        <Button size='$1' icon={<X />} />
+      </Popover.Close>
+      <Popover.Arrow borderColor='$borderColor' borderStyle='solid' borderWidth='$1' />
+    </Popover.Content>
+    <Popover.Trigger asChild>
+      <Button
+        animation='bouncy'
+        zIndex={1000}
+        color='$blue6'
+        icon={<Info />}
+        /* styling... */
+      />
+    </Popover.Trigger>
+  </Popover> : null}
+```
+
+By wrapping in `{infoContent ? ... : null}`, the popover is only included when some content is provided to the `infoContent` prop. The popover is then included, with the `{infoContent}` substituted in. Some additional template code is needed, such as the `<Popover.Close>` component to provide a close button, and the `<Popover.Trigger>` to include a button to open the popup.
+
+### Testing
+
+The tutorial guide was tested to ensure it showed up on page load, could be looked through or also skipped appropriately.
+
+The simplifying expressions were tested for all implemented simplifications available. The subexpressions were matched correctly and the clickable UI was correctly inserted.
+
+Finally, the explaination popups were tested to make sure they showed up in all places where they were defined.
+
+### Stakeholder feedback V2
+
+The stakeholder made the following comments on this version of the product
+
+- The color themes are neat, but there should be some toggle to switch between them at user will, as many users are unaware of the configuration they can make within their system/browser settings.
+- Need to be able to set the base equation to work from. Also ideally share a link which shares to this initial setup.
+
+To accommodate this, I will adjust the specs to the following:
+
+- Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions
+- Create a visually appealing design (e.g. with animations) that maintains student interest and engagement
+- Develop an intuitive interface that aids student understanding of algebra, with clear instruction on how to use the interface.
+- Draggable equation operations to facilitate interactive learning
+- Should enable students to find solutions to different algebraic equations in a fun and interactive way, guided by explainations at any possibly unintuitive points.
+- Support a customisable UI with easy configuration, with a customisable colour theme to appeal to student's preferances.
+- Should allow teachers to share an initial state for students to be able to work from.
+
+### Acceptance
+
+There are still a few minor tweaks that could be made, so I will not accept this version as the final version. I will add a theme toggle button for user customisation, and a system allowing users to change the initial equation to work from. This should also provide the capability to provide a link to share with other users which should bring them to the same initial state.
+
+## Version 3
+
+![Animation showing the theme switcher UI](./images/theme.apng)
+This shows the theme switcher, which toggles between three different options - light, dark, and system.
+
+![Animation showing initial equation selector and sharing capabilities](./images/share.apng)
+This shows the editor for the initial equations, and the share utility which shares a link that other users can use to get the same initial equation - useful for teachers sharing a question with students.
+
+### Implementation detail
+
+#### Theme switcher button >.<
+
+The theme switcher button is a Tamagui `<Button>` which integrates tightly with Tamagui's theme system in order to switch the rendered theme:
+
+```jsx
+  const themeSetting = useThemeSetting()
+  const [clientTheme, setClientTheme] = useState('system')
+
+  useIsomorphicLayoutEffect(() => {
+    setClientTheme(themeSetting.current || 'system')
+  }, [themeSetting.current])
+```
+
+The `useThemeSetting` provides a handle to mutate the current theme, which the button press is designed to toggle. A React `useEffect` is used to call `setClientTheme`, which handles updating all the components with the new style.
+
+#### Initial equation editor
+
+```js
+export function BaseEquationSelector({
+  setExpression,
+  base,
+  ...props
+}: {
+  setExpression: (eq: { lhs: string, rhs: string }) => void
+  base: { lhs: string, rhs: string }
+} & ButtonProps) {
+  const [leftExpr, setLeftExpr] = React.useState(base.lhs)
+  const [rightExpr, setRightExpr] = React.useState(base.rhs)
+  const rightField = React.useRef<MathField>()
+  return (
+    <Dialog modal>
+      <Dialog.Trigger asChild>
+        <Button icon={<Settings />} {...props}>
+          Change Starting Equations
+        </Button>
+      </Dialog.Trigger>
+
+      {/* ... */}
+        <Dialog.Content
+          bordered
+          elevate
+          key='content'
+          animateOnly={['transform', 'opacity']}
+          animation='bouncy'
+          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+          gap='$4'
+        >
+          <Dialog.Title>Set Initial Equation</Dialog.Title>
+          <Dialog.Description>
+            Change the initial equation, from which you can work from to find a solution.
+          </Dialog.Description>
+          <XStack columnGap='$1' jc='center' ai='center'>
+            <MathQuillInput /* ... *//>
+            <RawMathQuillText>=</RawMathQuillText>
+            <MathQuillInput /* ... *//>
+          </XStack>
+
+          <XStack alignSelf='flex-end' columnGap='$2'>
+            <Dialog.Close displayWhenAdapted asChild>
+              <Button size='$3' aria-label='Close'>
+                Cancel
+              </Button>
+            </Dialog.Close>
+            <Dialog.Close displayWhenAdapted asChild>
+              <Button
+                theme='blue'
+                size='$3'
+                aria-label='Close'
+                onPress={(e) => setExpression({ lhs: leftExpr, rhs: rightExpr })}
+              >
+                Save changes
+              </Button>
+            </Dialog.Close>
+          </XStack>
+
+          <Dialog.Close asChild>
+            <Button position='absolute' top='$3' right='$3' size='$2' icon={<X />} />
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog>
+  )
+}
+```
+
+The config itself is a Tamagui dialog, which is hooked into the passed base expression state using the `setExpression` and `base` props, which pass a "getter" (`base`) and "setter" `setExpression` to the component. The components calls `setExpression` in the submit button, which propogates the new information to the parent nodes, which also pass it down to the `<EquationHistoryHost/>` component, which then resets it's state based on the new value:
+
+```jsx
+React.useEffect(() => {
+  updateHistory({ type: 'set', item: { key: key, item: [base.lhs, base.rhs] } })
+  setKey(key + 1)
+}, [base])
+```
+
+This hooks a callback to whenever the `base` prop in the `<EquationHistoryHost/>` component is updated. The component responds by dispatching a 'set' event to the `Reducer` (see earlier), which resets the state to  just a single equation, the `base`'s LHS and RHS.
+
+#### Sharing with url
+
+The share UI was implemented with another Tamagui `<Dialog>` similar to the initial equation editor. This one contains a standard `<Input>` component, and a `<Button>` to copy the link. The copying uses the `@react-native-clipboard/clipboard` library, to maintain compatibility with web *and* native mobile:
+
+```jsx
+export function ShareDialog({
+  base,
+  ...props
+}: {
+  base: { lhs: string, rhs: string }
+} & ButtonProps) {
+  const [clip, setClip] = useClipboard()
+  const toast = useToastController()
+  const url = new URL(global.location?.href ?? 'https://math-playground.pages.dev/')
+  url.searchParams.set('lhs', base.lhs)
+  url.searchParams.set('rhs', base.rhs)
+
+  {/* ... */}
+    <Input
+      value={url.toString()}
+      onPress={isWeb ? (e) => (e.target as unknown as HTMLInputElement).select() : undefined}
+    />
+    <Button icon={<Copy />} position='absolute' right={0} onPress={e => {
+      setClip(url.toString())
+      toast.show("Copied to clipboard!", {
+        duration: 2000,
+      })
+    }}>
+  {/* ... */}
+```
+
+The `useClipboard` call accesses a handle to the clipboard data. The link is composed from the `location.href` as well as the `base` prop which  is passed by the parent.
+In order to load the shared data, the page has some initial code to parse the initial paramaters from the URL:
+
+```jsx
+const { useParams } = createParam<{ lhs?: string; rhs?: string }>()
+
+export function HomeScreen() {
+  const { params, setParams } = useParams();
+  const nParams = { lhs: params.lhs || '4x + 3', rhs: params.rhs || 'x + 12' };
+  /* ... */
+```
+
+The `useParams` accesses the passed query parameters in the URL, and then `nParams` simply fills the values with sensible defaults in case the page is accessed without this information.
+
+### Testing V3
+
+The initial equation setter was tested to ensure that equations could easily and fluently be typed into the field. E.g, as well as pressing `Tab` to advance to the next field, the user can press `=`, and the field will move to the RHS input, as seems intuitive. The dialog buttons were also tested to work as expected  - the 'save' button applies the changes as expected, while the 'cancel' and 'x' buttons close without applying the changes. Tamagui also by default allows for dialogs to  be cancelled with the `Escape` key.
+
+The equation sharing was tested so all links generated work when opened by another user or in another tab. The initial equation is also preserved on reload (although any further working isn't, which may/may not be intuituive (sometimes ppl would expect reload to be an easy way to reset, wheras other times users may accidentaly or otherwise reload without wanting the slate cleared)).
+
+The theme selector was tested to work for all the theme colors, and that the "system" setting reflected the user's system theme setting.
+
+### Stakeholder feedback V3
+
+The stakeholder says that they are pleased with the current state of the site. There is sufficient tools for the site to be usable in class and to feel intuitive for students to learn. While future expantion is possible (made plausible by the maintainability and extensibility of the solution), it is for now not needed. The stakeholder says they appreciate the site's logo in the navbar, as it suits nicely within the nature of the site.
+
+### Acceptability
+
+The solution is in a place where it could be suitably accepted. The product is in a usable state that could come to help many students with their learning.
 
 ## Fitness for purpose
 
@@ -638,9 +931,19 @@ My solution meets the designated specifications:
 - > Should enable students to find solutions to different algebraic equations in a fun and interactive way
   
   ![Animation showing the hover animation on the equation actions](./images/actions.apng) \
-  The system of having a toolbar where the user can access any operations really gives the user some freedom to find the solution *their* way, so that they can really make sense of what is happening and come to the solution in their own way.
-  ![Animation showing cancelling terms being simplified](./images/simplifying.apng) \
+  The system of having a toolbar where the user can access any operations really gives the user some freedom to find the solution *their* way, so that they can really make sense of what is happening and come to the solution in their own way. \
+  ![Animation showing cancelling terms being simplified](./images/simplify.apng) \
   The UI also helps them along the way by offering simplifications which can be made, so that the user can make their way back down to the final answer. These features give the user a wonderful opportunity to learn as they find the solution and to do so in an engaging and intuitive manner.
+
+- > Support a customisable UI with easy configuration, with a customisable colour theme to appeal to student's preferances.
+
+  ![Animation showing the theme switcher UI](./images/theme.apng)
+  This spec is met by the theme switcher button, which allows the user to customise the page appearencce to their liking.
+
+- > Should allow teachers to share an initial state for students to be able to work from.
+
+  ![Animation showing initial equation selector and sharing capabilities](./images/share.apng)
+  This spec is met through the use of the link sharing capabilities.
 
 ### Integration
 

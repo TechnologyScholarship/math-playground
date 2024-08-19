@@ -23,7 +23,9 @@ export const MathTermInput = React.forwardRef<
   const ctx = React.useContext(ActionTermsContext)
   const [expression, setExpression] = React.useState<string>(children)
   React.useEffect(() => {
-    if (ctx) ctx[key] = expression
+    if (ctx) {
+      ctx[key] = expression
+    }
   }, [ctx, expression, key])
 
   const shiftExpression = (delta: number) => {

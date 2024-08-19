@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>documentation.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="prototyping-documentation">Prototyping Documentation</h1>
+<blockquote>
+<p>Callum Hynes</p>
+</blockquote>
+<p>NOTE: Viewing in PDF will not display animations! You can view the HTML version in your browser.</p>
+<h2 id="plan">Plan</h2>
+<p>Mr. Gibson is a (Digitech and) mathematics teacher at Cashmere High School. They would like a tool to help better teach student's understanding of algebra, including the rearrangement and solving of systems of equations. Learning such concepts can often be boring and unappealing to students, so ideally such teaching could be done in an intuitive and fun visual manner. Such a tool should freely ideally be accessible to all students and teachers alike.</p>
+<h2 id="specs">Specs</h2>
+<ul>
+<li>Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions</li>
+<li>Create a visually appealing design (e.g. with animations) that maintains student interest and engagement</li>
+<li>Develop an intuitive interface that aids student understanding of algebra</li>
+<li>Draggable equation operations to facilitate interactive learning</li>
+<li>Should enable students to find solutions to different algebraic equations in a fun and interactive way</li>
+<li>Support a customisable UI, with a customisable colour theme to appeal to student's preferances.</li>
+</ul>
+<h2 id="solution">Solution</h2>
+<p>I intend to create a web application with an intuitive, drag-and-drop based UI (similar to <a href="https://scratch.mit.edu">https://scratch.mit.edu</a>) allowing students to play with operating on mathematical equations and expressions and gain understanding to find solutions to different algebraic equations. A web application has the benefit that it is easily accessible from any device with an internet connection (or even without, using PWAs). The site will be a Single-Page Application consisting of a workspace where working can be done on an equation, and a toolbar with various operations which can be dragged onto the workspace to apply them to the equation.</p>
+<h2 id="technologies">Technologies</h2>
+<h3 id="server-backends">Server Backends</h3>
+<ul>
+<li>ASP.NET
+<ul>
+<li>Pros:
+<ul>
+<li>Reasonably scalable, allowing for cost- and time-effective expansion in future, at the stakeholder's will.</li>
+<li>Type safe, decreasing the possibility for bugs to escape into production, eventuating a better user experience (avoiding unexpected errors or &quot;down for maintanence&quot;). Also more cost-effective by reducing maintanence cost.</li>
+<li>Easy-to-use routers, allowing for a fast development cycle and iteration process, so the application can be production-ready as fast as the stakeholder requires.</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>C#  and .NET are made by Microsoft, subject to their development ideologies, which are quite old (not modern-day industry standard) and &quot;feels weird&quot; - decreased developer experience working with older models like MVC (model-view-controller) which also require large amounts of bootstrap code, increasing time-to-prod.</li>
+<li>Doesn’t have great support for the more modern frameworks, such as React, decreasing interopability between server and client code, increasing development time (code duplication) and increasing the potential for bugs.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Flask (/ other python servers)
+<ul>
+<li>Pros:
+<ul>
+<li>Extremely easy routers allowing for extremely fast development iterations, meaning the stakeholder can expect to see feedback implemented extremely quickly.</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>Python is not very performant or scalable, with some, but not very good, support for multithreading etc. which would be required to allow the server to handle heavier traffic. Not neccesarily immediately relevant, but would mean that future expansion of the product market would require a rewrite.</li>
+<li>Again, very little support/interopability with modern js frameworks (e.g. react), increasing development time due to code duplication across sides, and increasing the chances of bugs between the two (e.g. parser differentials if the client/server handle a request differently).</li>
+<li>Only supports very janky templating, making dynamic content injection into sites risky (security-wise, possible vulnerabilities allowing users to inject malicious code to run on server/other clients).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Next.js
+<ul>
+<li>Pros:
+<ul>
+<li>Suitable integration for modern web frameworks e.g. react, allowing for suitable integration between client and server, reducing potential for bugs and increasing development speed.</li>
+<li>Easy routers, with excellent support for passing dynamic information from the server to the client, allowing for strong and safe integration between client and server data.</li>
+<li>Server-Side Rendering, decreasing the FPT - the time till first &quot;paint&quot;, when the user <em>sees</em> something. Decreasing the time the user has to wait till they see <em>something</em> on the site is good for the user experience and can drastically affect how many users leave your site before it loads, due to it &quot;being slow&quot;.</li>
+<li>Supported by Cloudflare (Worker + Pages), allowing for free hosting initially, including DDoS protection, as well as the option for scaling up easily with Cloudflare's paid plans, for possible future expansion.</li>
+<li>Type safe using typescript, enforcing safer code for less bugs which could break into production, and compile-time type checking allowing for faster development.</li>
+<li>Using same language on client/server allows for less code duplication in shared code, increasing development speed.</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>JavaScript is a JIT-ed language, thus isn't nessecarily known for being performant. Performance could become an issue if there is high traffic hitting the server. If needed, this could be mitigated by caching content to send to clients, and spreading the workload across multiple workers, or potentially moving the server to a more performant language (e.g. Rust) further down the line.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>NodeJS http.server
+<ul>
+<li>Pros:
+<ul>
+<li>Low-level interaction with packets, alowing for high levels of customisation and much more flexible capabilities on the server. This also allows more opportunity for optimising code.</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>Manual routing and handling due to the lack of any  higher-level routers etc. to handle processing. This would greatly extend the development time as a lot of development focus would need to be spent on this low-level packet management rather than on the actual product. This would also lead to more code duplication, which would end up being harder to maintain into the future.</li>
+<li>Hard to scale, in case high traffic becomes an issue, scaling would have to be handled completely manually, creating more opportunity for bugs and more time/cost to develop.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Overall, I will use Next.js because it is supported by Cloudflare, allowing for free hosting, protection protection from DDoSes and other common vulnerabilities for free. NextJS and Cloudflare are both incredibly scalable for any future expansion or big traffic. It also has suitible integration with frontend technologies which can make development easier and faster, so that the product would be released sooner for my stakeholders.</p>
+<h3 id="frontend-frameworks">Frontend frameworks</h3>
+<ul>
+<li>Svelte
+<ul>
+<li>Pros
+<ul>
+<li>Uses a component-based system, prefering abstraction for lessened code duplication, again decreasing development time.</li>
+<li>Is a relatively simple solution, with  its simplicity often keeping relatively clean code and easy to maintain, again decreasing development time.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Uses some unusual patterns and syntax, which would take longer to get accustomed to, increasing development time. (Additionally, it's just opinion but I dislike the patterns as it is often unclear exactly <em>how</em> Svelte is handling what you give it, and can lead to some unexpected outcomes).</li>
+<li>Relatively new, thus has a small community, so less documentation, support, and IDE integration.</li>
+<li>Not as scalable as other solutions, such as React, due to  it's simplistic nature. This is intially alright, and even leads to  faster development, but later down the line this could become an issue as Svelte may not support some features we require.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>React
+<ul>
+<li>Pros
+<ul>
+<li>Relies heavily on components, promoting abstraction to lessen duplicated code, improving development speed.</li>
+<li>Has wide support and integration for many other libraries and frameworks in the JavaScript ecosystem, decreasing the time cost should any additional functionality/features want added through the use of a library, making expansibility and maintainability increadibly flexible, even if the stakeholders' requirements change drastically.</li>
+<li>Internally uses complex procedures (hydration) to ensure minimal re-rendering, only updating components when neccesary, improving performance, and leading to a better user experience.</li>
+<li>Supports &quot;Server Components&quot;, rendering an initial version of the site on the server-side as HTML, allowing for a faster first paint (visual page load) on the client, benefiting the user experience (studies show that time to first contentful paint can drastically effect user experience, see <a href="https://web.dev/articles/fcp">https://web.dev/articles/fcp</a>). The React library then takes over rendering on the client for responsive rendering (as opposed to continually rendering on server, as some other frameworks do, which is slow).</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Compiles to web code, which could hinder future expansions to other platforms (native, mobile, etc.) compared to other solutions.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>React + React Native Web
+<ul>
+<li>Pros
+<ul>
+<li>Extends React, benefits from the same component-based patterns and server side rendering, etc.</li>
+<li>Compiles natively to Android and iOS, allowing for mobile support using shared code, allowing for very easy future expansion, for very little added time/cost.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Less flexible, as native does not support all the same UI components as web.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Vanilla (HTML, CSS, JS)
+<ul>
+<li>Pros
+<ul>
+<li>Small code size, for faster load times increasing user experience.</li>
+<li>Static serving, allowing for free hosting on simple hosts like Github or Cloudflare pages.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>No dynamic content outside of hosting seperate API endpoints</li>
+<li>Much code duplication, as HTML has no support for templating at compile time (runtime solutions exist, such as HTML &lt;template&gt; element, but has performance degradations).</li>
+<li>Incredibly unscalable when it comes to large projects, due to the lack of templating or imports for splitting HTML across files or reusing segments. Slows development, and heavily hinders maintainability opf the project, making future extensions increadibly inefficient and costly.</li>
+<li>Browser support varies for many web technologies, including a lot of CSS features needing prefixing to  work on all browsers, which must be done manually in vanilla CSS, whereas most frameworks automatically compile to all nessecary prefixes.</li>
+<li>Little/no support for third-party libraries outside of fully switching to some kind of bundler (at which point you might as well use a framework).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Overrall, I recommend React Native Web for clean, organised, flexible and extensible codebase, as well as leaving support for future expansion (e.g. to PWAs or Mobile apps (using Expo)) in case that should ever be needed. The build process can fully integrate with Next.js and expo to make deployment directly to cloudflare increadibly quick and efficient, so that the stakeholder can expect to see results to hotfix patches in good time (e.g. in the case of severe bug-fixes or expoit patches).</p>
+<h3 id="frontend-ui-frameworks">Frontend UI Frameworks</h3>
+<ul>
+<li>None (Custom built)
+<ul>
+<li>Pros
+<ul>
+<li>Less dependencies, decreasing project bundle size, which can affect hosting prices e.g. with Cloudflare, as well as load time, affecting the user experience.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Requires custom-built UI elements, increasing development time</li>
+<li>More likely to contain bugs, as the code will not have been as extensively tested</li>
+<li>Code may need to be written for each platform independently (no cross-platform guarantees for all features: see <a href="https://caniuse.com/">https://caniuse.com/</a>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Tamagui
+<ul>
+<li>Pros
+<ul>
+<li>Fully type safe with typescript support, also allowing for effective IDE integration, making development very fluid and increasing development speed.</li>
+<li>Offers many shorthands so more fluent developers get a faster development experience, increasing development speed.</li>
+<li>Naturally targets both mobile and web, allowing for easy expansibility to native and mobile in case of future expansion.</li>
+<li>Has many prebuilt GUI components such as dialogs, buttons and menus, SVG icons, as well as theming support</li>
+<li>Comes with great support for animations, offering three animation drivers to support all platforms, allowing for quick development (less development time) of fluent animations, benefitting user experience.</li>
+<li>Compiles to CSS for maximal performance on web, improving user experience.</li>
+<li>Very frequent updates and bug-fixes, improving developer experience, as bugs experienced are likely to be fixed library-end very quickly.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Doesn’t fully support all events cross-platform due to discrepencies between how events are gathered on platforms (e.g. mobile doesn't have mousewheel event, so platform-specific code is needed).</li>
+<li>Documentation not fully complete, increasing development time.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Tailwind css
+<ul>
+<li>Pros
+<ul>
+<li>Extensive support for CSS styles, allowing for maximal flexability in the capabilities of the UI.</li>
+<li>IDE support for type-hinting, benefitting developer experience and decreasing development time</li>
+<li>Well documented and large community, meaning support is readily available, increasing development speed</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Doesn’t naturally support native/mobile (outside of tailwind-react-native-css), decreasing scalability (likely forcing a complete rewrite for mobile) in case of future expansion to native and mobile.</li>
+<li>Hard-to-use, everything in the library is mostly is acronyms that developers must simply remember, which can be intimidating for ne wdevelopers, and would increase the amount of time spent in development.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>I recommend to use Tamagui due to it's high level of interopebility with React (Native Web) and Next.js, meaning that development should go reasonably smoothly, and the result should be easily expansible for possible future native/mobile support. Tamagui is also highly extensible and abstractable using styled() to inherit and style components in a polymorphic-like manner. Covers most UI use-cases with cross-platform code, but has extensive support for platform-dependance as well. Compiles to CSS on web, making very performant for web users. Also compiles to native android/ios UI elements when available, increasing interopability with their system’s native UI.</p>
+<h3 id="math-rendering-framework">Math Rendering Framework</h3>
+<ul>
+<li>Custom Built
+<ul>
+<li>Pros:
+<ul>
+<li>Full control over rendering, allowing for smooth and fluent interopability with other UI elements that we create.</li>
+</ul>
+</li>
+<li>Cons:
+<ul>
+<li>Requires a lot of time to  create a fully extensive solution that covers all our needs.</li>
+<li>More prone to bugs due to the less extensive testing we can put in over other  solutions, which are primarily made for math rendering and have undergone rigorous testing.</li>
+<li>We do not have the capacity to test all possible use cases over all browsers, so we might miss out on some bugs due to discrepencies in how browsers handle rendering.</li>
+<li>Requires our own constant support and maintanence for, as browsers update and change we will have to ensure the math rendering is always up-to-date.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MathJax
+<ul>
+<li>Pros
+<ul>
+<li>Tried and tested solution, would &quot;just work&quot;</li>
+<li>Well known, so plenty of documentation and community to  provide support, benefiting development speed.</li>
+</ul>
+</li>
+<li>Cons
+<ul>
+<li>Integration with React would not quite be seamless, requiring us to make a custom wrapper, which would take time and be prone to bugs.</li>
+<li>No support for math input fields, just output rendering, making a suboptimal user experience.</li>
+<li>In my experience, can be quite unperformant, deminishing user experience.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MathQuill
+<ul>
+<li>Pros
+<ul>
+<li>Well-known and well-tested, (used by Desmos)</li>
+<li>Open source, so free and we can contribute if any features are missing that we may need</li>
+<li>Support for input fields as well as static math rendering, allowing for a all-round clean, fluent user experience.</li>
+<li>Integration with react already supported through <a href="https://www.npmjs.com/package/react-mathquill">react-mathquill</a> wrapper.</li>
+<li>Supports embedding custom renderers within the math, which will be aligned properly. Useful (flexible) for embedding our own UI within the math.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="build-v1">Build V1</h2>
+<p><img src="./images/main.png" alt="Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations"></p>
+<blockquote>
+<p>Please note the expressions shown are for testing and may not  be mathmatically correct (x does not = 14)</p>
+</blockquote>
+<p>I chose to layout the toolbar along the bottom, as here there is the most space, and it also feels intuitive to drag stuff from down there. A horizontal scroller was used in case this should overflow, but this behaviour could also be replaced with wrapping if preferred by the stakeholder (wrapping could, however, become a problem on screens that are small in width <em>and</em> height). I experimented with a solution that would wrap up until a certain maximum height, before switching to a horizontal scrollbar, but such a solution was limited by the reduced capabilities of react native web. The rest of the content consists of a <em>stack</em>, containing the history of the solving of the equation. I chose to layout the whole history so that the user can at any point look back upon their working to see how they got where they are. The most recent equation is emphasised by highlighting it in a more contrasting color than the others, to subtly indicate where users should focus most. The most recent row also offers an &quot;undo&quot; button to revert the state to the previous row.</p>
+<p><img src="./images/scrolling.png" alt="Equation working stack, with a scrollbar when overflowing the page height"> <br>
+The &quot;equation stack&quot; is hosted in it's own scrolling container so that the toolbar always sticks to  the bottom, even if the stack overflows the screen height. This container is outlined to provide and indicator of its bounds, which also defines the drop region for the draggable equation elements. Such a visual indicator of the bounds makes the drag-and-drop UI a lot more intuitive. The implementation is quite flexible, so future expansion could see multiple of these regions, having two equation stacks side-by-side, allowing for simultaneous viewing &amp; working on both.</p>
+<p><img src="./images/dragging.apng" alt="Animation showing the equation actions being dragged onto the equation"> <br>
+I chose to use the drag-and-drop UI because it fit my stakeholder's needs of being intuitive for students to understand and &quot;playful&quot; in a way that would keep younger studdents interested. Additionally, you can see the animations presented upon dropping the action - the equation fluently jumps down from it's previous state. A future extension could see more work into this animation - it would be excessive effort, but transmorphing the text in an almost fluid-like manner could be very cool! Overall, I think the animation is clean enough to make the UI feel fluent, and the drag-and-drop nature really sells the idea that the &quot;actions&quot; in the toolbar are things that you can <em>totally</em> just apply whenever you want, so long as you ensure to apply it to both sides (as enforced by the design).</p>
+<h3 id="build-details">Build details</h3>
+<h4 id="rendering-math">Rendering math</h4>
+<p>For some features, it was <em>ideal</em> to be able to embed custom content <em>within</em> MathQuill's math fields. To do this, I used MathQuill's ability to embed custom &quot;renderers&quot; to create a target to render the embedded fields to, and then in order to maintain interopability with React components, I used React portals, which allowed the React components to remain in the React DOM while simultaneously existing in a different place in the true HTML DOM. This was implemented with the following code:</p>
+<pre class="hljs"><code><div>result.registerEmbed(MATHQUILL_CUSTOM_EMBED, (index) =&gt; ({
+  <span class="hljs-attr">htmlString</span>: <span class="hljs-string">`&lt;span style="display: inline-block;" class="<span class="hljs-subst">${MATHQUILL_CUSTOM_EMBED_IDX(
+    index
+  )}</span>"&gt;&lt;/span&gt;`</span>,
+  <span class="hljs-attr">text</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (global <span class="hljs-keyword">as</span> any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.text?.() ?? <span class="hljs-string">'[?]'</span>,
+  <span class="hljs-attr">latex</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (global <span class="hljs-keyword">as</span> any)._MATHQUILL_EMBED_CALLBACKS?.[index]?.latex?.() ?? <span class="hljs-string">'[?]'</span>,
+}))
+</div></code></pre>
+<blockquote>
+<p>This sets up the embed within the MathQuill library, with a class so that the embed can be identified by the portal code. The text and latex methods define how the embed should be stringified, e.g. on copy/paste.</p>
+</blockquote>
+<pre class="hljs"><code><div>React.Children.forEach(children, (child) =&gt; {
+  <span class="hljs-keyword">if</span> (child == <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span> child === <span class="hljs-string">'undefined'</span>) {
+    <span class="hljs-comment">// continue</span>
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (React.isValidElement(child)) {
+    <span class="hljs-comment">// Use portal to embed element</span>
+    latex += <span class="hljs-string">`\\embed{<span class="hljs-subst">${MATHQUILL_CUSTOM_EMBED}</span>}[<span class="hljs-subst">${embedComps.length + baseId}</span>]`</span>
+    embedComps.push(child)
+  } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (
+    <span class="hljs-keyword">typeof</span> child === <span class="hljs-string">'string'</span> ||
+    <span class="hljs-keyword">typeof</span> child === <span class="hljs-string">'number'</span> ||
+    <span class="hljs-keyword">typeof</span> child === <span class="hljs-string">'boolean'</span>
+  ) {
+    <span class="hljs-comment">// Render as latex</span>
+    latex += child
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-comment">// const x: never = child;</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">`Did not expect: <span class="hljs-subst">${child}</span>`</span>)
+  }
+})
+</div></code></pre>
+<blockquote>
+<p>This section of code maps the children props to the final latex to be passed to MathQuill. Any direct text nodes are treated as pure latex, but any React element children are stored in a list for later rendering, and a <code>\embed</code> is added to the latex to invoke MathQuill's custom embed renderer, which will be hooked for later use.</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; childComponents.current.length; i++) {
+  <span class="hljs-keyword">const</span> portalHost = mathField
+    .el()
+    .querySelector(<span class="hljs-string">`:scope .<span class="hljs-subst">${MATHQUILL_CUSTOM_EMBED_IDX(i + baseId)}</span>`</span>) <span class="hljs-keyword">as</span> HTMLElement
+  <span class="hljs-keyword">if</span> (!portalHost) {
+    <span class="hljs-keyword">return</span> <span class="hljs-comment">// Fail gracefully</span>
+  }
+  ;(global <span class="hljs-keyword">as</span> any)._MATHQUILL_EMBED_CALLBACKS = (global <span class="hljs-keyword">as</span> any)._MATHQUILL_EMBED_CALLBACKS ?? {}
+  ;(global <span class="hljs-keyword">as</span> any)._MATHQUILL_EMBED_CALLBACKS[i + baseId] = {
+    <span class="hljs-attr">text</span>: childComponents.current[i].props.toString,
+    <span class="hljs-attr">latex</span>: childComponents.current[i].props.toLatex,
+  }
+  portals.push(portalHost)
+}
+setPortalTargets(portals)
+</div></code></pre>
+<blockquote>
+<p>This code finds the elements that were injected by MathQuill, and stores them to later be set up as portal hosts for the embeds.</p>
+</blockquote>
+<pre class="hljs"><code><div><span class="hljs-keyword">return</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">RawMathQuillText</span>
+    {<span class="hljs-attr">...textProps</span>}
+    <span class="hljs-attr">mathquillDidMount</span>=<span class="hljs-string">{setMathField}</span>
+    <span class="hljs-attr">_additionalRawChildren</span>=<span class="hljs-string">{</span>
+      <span class="hljs-attr">isServer</span> || !<span class="hljs-attr">didFinishSSR</span> || !<span class="hljs-attr">portalTargets</span>
+        ? <span class="hljs-attr">childComponents.current</span> // <span class="hljs-attr">On</span> <span class="hljs-attr">first</span> <span class="hljs-attr">render</span>, <span class="hljs-attr">render</span> <span class="hljs-attr">components</span> <span class="hljs-attr">directly</span>
+        <span class="hljs-attr">:</span> <span class="hljs-attr">childComponents.current.map</span>((<span class="hljs-attr">comp</span>, <span class="hljs-attr">i</span>) =&gt;</span> createPortal(comp, portalTargets[i]))
+    }
+  &gt;
+    {latex ?? ''}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">RawMathQuillText</span>&gt;</span></span>
+)
+</div></code></pre>
+<blockquote>
+<p>Finally, this code composes the MathQuill renderer to render the latex, and additionally passes the portal children to ensure thet are renderered alongside in the React tree. The portals are setup using <code>createPortal</code>, linking the React components to the elements they should be rendered to.</p>
+</blockquote>
+<p>This way I could still use React to render and update the embeds, while still rendering them inside of MathQuill elements.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> type MathQuillTextProps = Omit&lt;SizableTextProps, <span class="hljs-string">'children'</span>&gt; &amp; React.PropsWithChildren&lt;{
+  unselectable?: boolean
+}&gt;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> MathQuillText: React.FunctionComponent&lt;MathQuillTextProps&gt; = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> {
+  <span class="hljs-comment">/* ... */</span>
+}
+</div></code></pre>
+<p>This functionality was entirely wrapped up in a custom wrapper component, <code>&lt;MathQuillText&gt;</code>, so that all of the complex integration to make this work was hidden behind an abstraction layer, and so that elsewhere in my code, all it took was passing this prop the standard latex input, <em>and</em> any HTML embeds directly as children! e.g.</p>
+<pre class="hljs"><code><div>(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MathQuillText</span>&gt;</span>
+  \sqrt[<span class="hljs-tag">&lt;<span class="hljs-name">MathTermInput</span>&gt;</span>2<span class="hljs-tag">&lt;/<span class="hljs-name">MathTermInput</span>&gt;</span>]{'{\\ellipsis}'}
+<span class="hljs-tag">&lt;/<span class="hljs-name">MathQuillText</span>&gt;</span></span>)
+</div></code></pre>
+<p>would render the square root, with an ellipsis inside, and would <em>directly</em> render the <code>&lt;MathTermInput&gt;</code> component in the upper left, <em>n</em>-th root position. This is used e.g. in the equation actions in order to render the input fields within the static math. By abstracting this complex logic into a simple, easy-to-use component, this gave the freedom to focus on higher-level details.</p>
+<h4 id="the-draggable-ui">The draggable UI</h4>
+<p>The draggable UI was implemented using an abstract React component which implemented draggable behaviour. Due to the difference between how dragging is implemented natively on mobile and on web, this behaviour doesn't come for free. However, by using an abstract React component, we can implement the underlying behaviour differently for each platform. The <code>&lt;Draggable&gt;</code> component can then be used elsewhere throughout the codebase <em>without</em> worrying about how it's actually implemented (treating it as a black box that simply does what we want).</p>
+<p>The code for this is implemented across two different files - one is loaded for web, and the other on native mobile.</p>
+<p>The web version contains the following code:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Draggable</span>(<span class="hljs-params">props: DraggableProps</span>) </span>{
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">group</span>=<span class="hljs-string">'dragging'</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>
+        <span class="hljs-attr">draggable</span>
+        <span class="hljs-attr">style</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">userSelect:</span> '<span class="hljs-attr">none</span>', <span class="hljs-attr">cursor:</span> '<span class="hljs-attr">grab</span>' }}
+        <span class="hljs-attr">onDrag</span>=<span class="hljs-string">{props.onDrag</span> ? <span class="hljs-attr">e</span> =&gt;</span> props.onDrag?.(asIntermediate(e)) : undefined}
+        onDragStart={e =&gt; {
+          /* for any web-specific styling */
+          ;(e.target as HTMLDivElement).classList.add('draggable-dragging')
+          props.onDragStart?.(asIntermediate(e))
+        }}
+        onDragEnd={(e) =&gt; {
+          ;(e.target as HTMLDivElement).classList.remove('draggable-dragging')
+          props.onDragEnd?.(asIntermediate(e))
+        }}
+      &gt;
+        {props.children}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p>which defers the draggability behaviour to a <code>&lt;div draggable&gt;</code> element, and defers the event handling to the caller as needed. The mobile version defers to the 'react-native-draggable' library:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Draggable</span>(<span class="hljs-params">props: DraggableProps</span>) </span>{
+  <span class="hljs-keyword">const</span> dragging = React.useRef(<span class="hljs-literal">false</span>) <span class="hljs-comment">// Spoof implementation of onDragStart</span>
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">group</span>=<span class="hljs-string">'dragging'</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">NativeDraggable.default</span>
+        <span class="hljs-attr">onDrag</span>=<span class="hljs-string">{</span>
+          <span class="hljs-attr">props.onDragStart</span>
+            ? (<span class="hljs-attr">e</span>) =&gt;</span> {
+                if (!dragging.current) {
+                  dragging.current = true
+                  props.onDragStart?.(asIntermediate(e))
+                } else props.onDrag?.(asIntermediate(e))
+              }
+            : (e) =&gt; props.onDrag?.(asIntermediate(e))
+        }
+        onDragRelease={
+          props.onDragStart
+            ? (e) =&gt; {
+                dragging.current = false
+                props.onDragEnd?.(asIntermediate(e))
+              }
+            : (e) =&gt; props.onDragEnd?.(asIntermediate(e))
+        }
+      &gt;
+        {props.children}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">NativeDraggable.default</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span></span>
+  )
+}
+</div></code></pre>
+<p>This means that, while no mobile support is currently available, if it was later required by my stakeholder then it <em>could</em> be quite easily achived due to the flexability and extensibility of the application and React Native Web.</p>
+<h4 id="equations">Equations</h4>
+<p>Equations are internally expressed in LaTeX, which is what MathQuill directly uses. This means that when we are modifying the expressions, we have to manipulate the LaTeX string. To do this I have used Regular Expressions (regex), as, while regex has no support for the recusive nature of nesting (with paranthesis and {}, etc.), its an increadibly efficient and fast-to-develop option which can &quot;get the job done&quot; in an incredibly time and cost-effective manner. Well designed regex can be much more performant than other string manipulation techniques, as regex is implemented language-level as opposed to running as JavaScript (slow!). (there are definately no large companies who have recently downfallen due to the use of regex ^-^). This modification of latex was used, for example, to clean up the expressions after modification (e.g. removing redundant brackets and duplicate signs):</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tidy</span>(<span class="hljs-params">latex: string</span>) </span>{
+  <span class="hljs-keyword">let</span> result = latex.trim()
+  result = result.replace(
+    rx<span class="hljs-string">`(?&lt;=^|<span class="hljs-subst">${weakerThanMultOp}</span>\s*)(<span class="hljs-subst">${numPattern}</span>?<span class="hljs-subst">${symbolPattern}</span>*<span class="hljs-subst">${matchingPairPattern}</span>)\s*\\times\s*(<span class="hljs-subst">${numPattern}</span>?<span class="hljs-subst">${symbolPattern}</span>*)`</span>,
+    replacer(<span class="hljs-function">(<span class="hljs-params">[_, group, term]</span>) =&gt;</span> <span class="hljs-string">`<span class="hljs-subst">${term}</span> \\times <span class="hljs-subst">${group}</span>`</span>)
+  )
+  <span class="hljs-comment">// Roots</span>
+  result = result.replace(
+    rx<span class="hljs-string">`(?&lt;base&gt;<span class="hljs-subst">${matchingPairPattern}</span>|<span class="hljs-subst">${numPattern}</span>|<span class="hljs-subst">${symbolPattern}</span>)\s*\^\s*<span class="hljs-subst">${frac(
+      rx<span class="hljs-string">`0*1(?:\.0+)?`</span>,
+      rx<span class="hljs-string">`[^}]*`</span>
+    )}</span>`</span>,
+    replacer(<span class="hljs-function">(<span class="hljs-params">{ base, b }</span>) =&gt;</span> {
+      <span class="hljs-keyword">const</span> { begin, end, pair } = matchingPairParts(base)
+      <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${begin}</span>\\sqrt<span class="hljs-subst">${<span class="hljs-built_in">parseFloat</span>(b) === <span class="hljs-number">2</span> ? <span class="hljs-string">''</span> : <span class="hljs-string">`[<span class="hljs-subst">${b}</span>]`</span>}</span>{<span class="hljs-subst">${pair}</span>}<span class="hljs-subst">${end}</span>`</span>
+    })
+  )
+  <span class="hljs-comment">// Redundant brackets</span>
+  result = result.replace(
+    rx<span class="hljs-string">`(?&lt;=^|<span class="hljs-subst">${sumOp}</span>\s*)<span class="hljs-subst">${lParen}</span>[^+-]<span class="hljs-subst">${rParen}</span>(?=$|\s*<span class="hljs-subst">${sumOp}</span>)`</span>,
+    replacer(<span class="hljs-function">(<span class="hljs-params">{ base, b }</span>) =&gt;</span> {
+      <span class="hljs-keyword">const</span> { begin, end, pair } = matchingPairParts(base)
+      <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${begin}</span>\\sqrt<span class="hljs-subst">${<span class="hljs-built_in">parseFloat</span>(b) === <span class="hljs-number">2</span> ? <span class="hljs-string">''</span> : <span class="hljs-string">`[<span class="hljs-subst">${b}</span>]`</span>}</span>{<span class="hljs-subst">${pair}</span>}<span class="hljs-subst">${end}</span>`</span>
+    })
+  )
+  <span class="hljs-comment">// Double operators</span>
+  result = result.replaceAll(<span class="hljs-regexp">/([+-])\s*\1/g</span>, <span class="hljs-string">'+'</span>)
+  result = result.replaceAll(<span class="hljs-regexp">/[+-]\s*[+-]/g</span>, <span class="hljs-string">'-'</span>)
+  <span class="hljs-comment">// Leading +</span>
+  result = result.replaceAll(<span class="hljs-regexp">/(^|[[{(])\s*\+/g</span>, <span class="hljs-string">'$1'</span>)
+  <span class="hljs-comment">// +/- 0</span>
+  result = result.replaceAll(<span class="hljs-regexp">/(?:[+-]|^)\s*0+(?:\.0+)?(\s*[+-]|$)/g</span>, <span class="hljs-string">'$1'</span>)
+  <span class="hljs-keyword">return</span> result
+}
+</div></code></pre>
+<p>Some additional regex utilities are used to easily construct regex from other sub-expressions. All of these regex are used to manipulate the latex string and clean it up for nicer viewing. Using regex is an incredibly simple and fast-to-develop solution to these kinds of string manipulation problems.</p>
+<h4 id="equation-actions">Equation actions</h4>
+<p>For equation actions, some extra information is needed with the dragged element, namely, <em>exactly what should it do when it is dropped on the equation</em>? I have an equation action component,  which composed of a <code>&lt;Draggable&gt;</code> to gain the draggability behaviour, and also carrying a &quot;transformer&quot; function (<code>(input: string) -&gt; string</code>) which determines what happens when the action is dropped on an equation, by accepting the current string representation (as LaTeX) and returning the newly modified one. This makes defining new actions incredibly simplistic at a higher level e.g.</p>
+<pre class="hljs"><code><div>&lt;EquationAction transformer={(l, [x]) =&gt; <span class="hljs-string">`<span class="hljs-subst">${l}</span> + <span class="hljs-subst">${x}</span>`</span>}&gt;
+  {MATHQUILL_NULL_TOKEN} + <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">MathTermInput</span>&gt;</span>1<span class="hljs-tag">&lt;/<span class="hljs-name">MathTermInput</span>&gt;</span></span>
+&lt;<span class="hljs-regexp">/EquationAction&gt;
+&lt;EquationAction transformer={(l, [x]) =&gt; `${l} - ${x}`}&gt;
+  {MATHQUILL_NULL_TOKEN} - &lt;MathTermInput&gt;1&lt;/</span>MathTermInput&gt;
+&lt;<span class="hljs-regexp">/EquationAction&gt;
+&lt;EquationAction
+  transformer={(l, [x]) =&gt; `${paranthesisUnless(l, strongerThanProduct)} \\times ${x}`}
+&gt;
+  {MATHQUILL_NULL_TOKEN} \times &lt;MathTermInput&gt;2&lt;/</span>MathTermInput&gt;
+&lt;<span class="hljs-regexp">/EquationAction&gt;
+</span></div></code></pre>
+<p>A transform prop is defined with a function taking the latex and any additional inputs, and returning the new latex. The additional inputs are collected from <code>&lt;MathTermInput&gt;</code> components, using React's <code>Context.Provider</code>s. These allow a context to be defined at a node in the React tree, and give subnodes the ability to access it. Each <code>EquationAction</code> provides a context for the children <code>&lt;MathTermInput&gt;</code>s to attatch and update their content value to. This context is then passed into the transformer. This is implemented as such:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> MathTermInput = React.forwardRef&lt;
+  TamaguiElement,
+  Omit&lt;MathQuillInputProps, <span class="hljs-string">'children'</span> | <span class="hljs-string">'latex'</span>&gt; &amp; {
+    <span class="hljs-attr">children</span>: string
+    key?: string | number
+  }
+&gt;<span class="hljs-function">(<span class="hljs-params">({ children, key = <span class="hljs-number">0</span>, ...props }, ref</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> ctx = React.useContext(ActionTermsContext)
+  <span class="hljs-keyword">const</span> [expression, setExpression] = React.useState&lt;string&gt;(children)
+  React.useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">if</span> (ctx) ctx[key] = expression
+  }, [ctx, expression, key])
+  <span class="hljs-comment">/* ... */</span>
+});
+</div></code></pre>
+<p><code>React.useContext</code> is used to obtain a handle on the nearest <code>ActionTermContext.Provider</code> in the React tree, and then <code>React.useEffect</code> is used to update the value stored in the context whenever the expression value changes. The <code>&lt;EquationAction&gt;</code> component then collects these values and passes them to the transformer as follows:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> listener = React.useContext(DragContext)
+<span class="hljs-keyword">const</span> state = React.useRef&lt;ActionTerms&gt;([] <span class="hljs-keyword">as</span> any <span class="hljs-comment">/* just use js weirdness */</span>)
+<span class="hljs-keyword">return</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">ActionTermsContext.Provider</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{state.current}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Draggable</span>
+      <span class="hljs-attr">onDragEnd</span>=<span class="hljs-string">{(e)</span> =&gt;</span> {
+        listener?.current?.((expr) =&gt; transformer(expr, state.current))
+      }}
+    &gt;
+      <span class="hljs-tag">&lt;<span class="hljs-name">XStack</span> <span class="hljs-attr">group</span>=<span class="hljs-string">'action'</span> <span class="hljs-attr">paddingHorizontal</span>=<span class="hljs-string">'$6'</span> <span class="hljs-attr">paddingVertical</span>=<span class="hljs-string">'$4'</span> <span class="hljs-attr">ai</span>=<span class="hljs-string">'center'</span> {<span class="hljs-attr">...props</span>}&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">MathQuillText</span> <span class="hljs-attr">size</span>=<span class="hljs-string">'$5'</span> <span class="hljs-attr">unselectable</span>&gt;</span>
+          {children}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">MathQuillText</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">XStack</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Draggable</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">ActionTermsContext.Provider</span>&gt;</span></span>
+)
+</div></code></pre>
+<p>This sets up a <code>ActionTermsContext.Provider</code> to collect the <code>&lt;MathTermInput&gt;</code> values, and a drop handler which calls the transformer with the current context state.
+This way, the context that the child nodes provide is performantly and efficiently passed up the React tree, in a way that is neatly encapsulated within the respectful  components, so that in the higher-level code which defines all the equation actions, the internal details of implementation can be hidden away, making the code cleaner and more readable.</p>
+<h4 id="action-term-inputs">Action term inputs</h4>
+<p>The inputs for terms within the equations were designed with usability in mind, allowing for many different forms of intuitive input, e.g. buttons appear on hover to increment/decrement the value (assuming simply numeric value). The hover animation for the buttons makes use of Tamagui &quot;groups&quot; to wrap the field and buttons, so that the hover is detected when hovering any elements in the group. This type of styling is implemented in Tamagui with a <code>$group-&lt;groupname&gt;-hover</code> prop, somewhat like this:</p>
+<pre class="hljs"><code><div>&lt;View group=<span class="hljs-string">'action'</span>&gt;
+  {<span class="hljs-comment">/* ... */</span>}
+    &lt;Circle
+      animation=<span class="hljs-string">'bouncy'</span>
+      backgroundColor=<span class="hljs-string">'$backgroundTransparent'</span>
+      outlineColor=<span class="hljs-string">'$backgroundTransparent'</span>
+      outlineStyle=<span class="hljs-string">'solid'</span>
+      outlineWidth=<span class="hljs-string">'$size.1'</span>
+      $pointerCoarse={{ <span class="hljs-attr">outlineWidth</span>: <span class="hljs-string">'$size.2'</span> }}
+      scale={<span class="hljs-number">0</span>}
+      $group-action-hover={{
+        <span class="hljs-attr">scale</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">backgroundColor</span>: <span class="hljs-string">'$backgroundHover'</span>,
+        <span class="hljs-attr">outlineColor</span>: <span class="hljs-string">'$backgroundHover'</span>,
+      }}
+    /&gt;
+  {<span class="hljs-comment">/* ... */</span>}
+&lt;<span class="hljs-regexp">/View&gt;
+</span></div></code></pre>
+<p>On web scrolling over the input field also quickly changes the value (intended for &quot;power-users&quot; who are fluent with the interface and prefer fast shortcuts).
+Since this functionality makes sense only on web (and not mobile), it is implimented with a component with a spoof implementation for mobile, and a seperate, true  implementation for web, which simply defers to the browser wheel event handler:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ScrollOver</span>(<span class="hljs-params">props</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">onWheel</span>=<span class="hljs-string">{props.onMouseWheel}</span>&gt;</span>{props.children}<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span>
+}
+</div></code></pre>
+<p>Finally, of course, manually typing in an expression into the input box. Providing all of these options allows the user to tweak the values in whichever way feels most comfortable to them, making the user experience a lot smoother.</p>
+<h4 id="equation-stack">Equation stack</h4>
+<p>The stack is implemented with a simple flexbox container of MathQuill fields. The equations themselves are internally stored in an array of strings, which contain the LaTeX representation of the expressions. React is used to dynamically match each element in the array with an actual rendered component.</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stackReducer</span>&lt;<span class="hljs-title">T</span>&gt;(<span class="hljs-params">
+  array: T[],
+  action: { type: <span class="hljs-string">'push'</span> | <span class="hljs-string">'modify'</span>; item: T } | { type: <span class="hljs-string">'pop'</span> }
+</span>): <span class="hljs-title">T</span>[] </span>{
+  <span class="hljs-keyword">switch</span> (action.type) {
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'push'</span>:
+      <span class="hljs-keyword">return</span> [action.item, ...array]
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'pop'</span>:
+      <span class="hljs-keyword">return</span> array.slice(<span class="hljs-number">1</span>) || []
+    <span class="hljs-keyword">case</span> <span class="hljs-string">'modify'</span>:
+      <span class="hljs-keyword">return</span> [action.item, ...(array.slice(<span class="hljs-number">1</span>) || [])]
+  }
+}
+
+<span class="hljs-keyword">const</span> [history, updateHistory] = React.useReducer(
+  stackReducer&lt;{ <span class="hljs-attr">key</span>: number; item: [string, string] }&gt;,
+  [
+    { <span class="hljs-attr">key</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">item</span>: [<span class="hljs-string">'x'</span>, <span class="hljs-string">'14'</span>] },
+    { <span class="hljs-attr">key</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">item</span>: [<span class="hljs-string">'x + 1'</span>, <span class="hljs-string">'\\sqrt{2}'</span>] },
+    { <span class="hljs-attr">key</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">item</span>: [<span class="hljs-string">'\\frac{(x + 1)^2}{2}'</span>, <span class="hljs-string">'1'</span>] },
+    { <span class="hljs-attr">key</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">item</span>: [<span class="hljs-string">'(x + 1)^2'</span>, <span class="hljs-string">'2'</span>] },
+    { <span class="hljs-attr">key</span>: <span class="hljs-number">4</span>, <span class="hljs-attr">item</span>: [<span class="hljs-string">'(x + 1)^2 - 2'</span>, <span class="hljs-string">'0'</span>] },
+    { <span class="hljs-attr">key</span>: <span class="hljs-number">5</span>, <span class="hljs-attr">item</span>: [<span class="hljs-string">'x^2 + 2x - 1'</span>, <span class="hljs-string">'0'</span>] },
+  ]
+)
+
+<span class="hljs-comment">/* ... */</span>
+&lt;EquationStack&gt;
+  {...(history ?? []).map(<span class="hljs-function">(<span class="hljs-params">eq, i</span>) =&gt;</span> (
+    <span class="hljs-comment">/* ... */</span>
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">EquationRow</span> /* <span class="hljs-attr">...</span> */&gt;</span></span>
+        {eq.item}
+      &lt;<span class="hljs-regexp">/EquationRow&gt;
+    /</span>* ... *<span class="hljs-regexp">/
+  ))}
+&lt;/</span>EquationStack&gt;
+</div></code></pre>
+<p>The <code>stackReducer</code> defines a React reducer, which allows for more structured control over the mutation of states. In this case it is used to enforce the way the stack is mutated - updates can only be dispatched as pushes, pops, etc. to the stack. This approach helps maintain safety of the stored data, ensuring its type safety, and that the information is not accidentily replaced. The history stack is later mapped to a list of React elements which get included in the final render. This way, React automatically handles updating the rendered HTML DOM whenever the equations array is updated, efficiently adding/removing elements as needed, as opposed to a naive solution which would rerender everything each update.</p>
+<h3 id="testing">Testing</h3>
+<h4 id="testing-equation-actions">Testing equation actions</h4>
+<p>The equation actions were tested to ensure all methods of tweaking the term values worked. Scrolling the mouse wheel over the input box worked as expected, tweaking the value based on the wheel delta. Using the arrow buttons also worked as expected, tweaking the value by one at a time. Typing into the input box also worked, allowing for any input, including fractional or decimal numbers, coefficients of pi, e, or other variables, or even more complex expressions.
+Additionally, using delta methods of tweaking the value (buttons and scroll wheel) was tested with more complex expressions already in the input box. If the input is composed of a simple coefficient of some expression, (e.g. <code>2x</code> or <code>8(x - 1)^2</code>), then the coefficient is tweaked. In any other case, nothing happens, as it may be unclear what should be adjusted. This worked as expected. This behavior may be slightly more effective by replacing the first number found in the expression, no matter where it appears. This may be considered in future iterations.
+The hover animations on the term inputs were also tested, and worked as expected, displaying on hover.
+Finally, the ability to drag and drop the expressions was tested. Clicking and dragging on any point within the bounds of the action should initiate a drag (unless that part has an alternative click action, e.g. the buttons or text input). This also worked as expected.</p>
+<h4 id="testing-drop-targets">Testing drop targets</h4>
+<p>When dropping an equation action on the equation stack, the appropriate action should be applied to the most recent equation. This works as expected for all actions. The drop handling should apply if the action is dropped anywhere within the bounds of the bordered drop target box. This also works as expected.</p>
+<h4 id="color-theme">Color theme</h4>
+<p><img src="./images/light.png" alt="Main page in light mode">
+<img src="./images/main.png" alt="Main page in dark mode"> <br>
+The site should support both a light and dark theme, based upon the current system theme. All of the fonts, UI elements, etc... should be clearly visible with appropriate contrast that they should be clearly distinguishable to most users, even with minor visual disabilities. The system-theme based theme selection works as expected, and there seem sto be sufficient contrast in both modes.</p>
+<h3 id="stakeholder-feedback">Stakeholder feedback</h3>
+<p>Showing the site to my stakeholders, they give the following feedback:</p>
+<ul>
+<li>Some hints could be given on how to use the UI, as it can be quite unclear on what to do on first glance.</li>
+<li>Sometimes actions can have an effect that may feel unintuituve to a user (e.g. square-rooting both sides introducing a plus or minus). Such situations should have some kind of information card giving a more in-depth explaination of what is occuring.</li>
+</ul>
+<h3 id="changes-to-make">Changes to make</h3>
+<ul>
+<li>Scroll- and button-based action term tweaking should tweak the first number found <em>anywhere</em> within the expression, not just at the beginning.</li>
+<li>UI popovers to give a tutorial on how to use the page</li>
+<li>UI popovers to give further information on some unintuitive situations which may need explaination</li>
+</ul>
+<p>With these changes, the specifications should become:</p>
+<ul>
+<li>Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions</li>
+<li>Create a visually appealing design (e.g. with animations) that maintains student interest and engagement</li>
+<li>Develop an intuitive interface that aids student understanding of algebra, with clear instruction on how to use the interface.</li>
+<li>Draggable equation operations to facilitate interactive learning</li>
+<li>Should enable students to find solutions to different algebraic equations in a fun and interactive way, guided by explainations at any possibly unintuitive points.</li>
+</ul>
+<h2 id="build-v2">Build V2</h2>
+<p><img src="./images/tutorial1.png" alt="First tutorial help card"> <br>
+<img src="./images/tutorial2.png" alt="Second tutorial help card"> <br>
+These screenshots show the tutorial cards which help new users get started with the interface, covering the basics of how the site can be used.</p>
+<p><img src="./images/simplify.apng" alt="Simplifying expressions using helper"> <br>
+This portion of the interface hints to users what parts of the expression may be simplifiable, and allows them to simplify their expression in order to move forward with solving it. It also provides additional information explaining the process in cases the user may need further information.</p>
+<p><img src="./images/info-hidden.png" alt="Small indicator for additional info being available"> <br>
+<img src="./images/info.png" alt="Explanatory popup to describe more complicated actions"> <br>
+This screenshot shows the new interface that displays for some more complex concepts that may need description to aid user understanding. This popup is non-intrusive - a small info button is shown in any places where this information is available (minimised further to a small blue circular indicator until hovered, unless on mobile for accessibility), and the full popup is then only shown on press.</p>
+<h3 id="implementation-details">Implementation details</h3>
+<h4 id="tutorial-guide">Tutorial guide</h4>
+<p>The tutorial guide was implimented using Tamagui's provided <code>&lt;Popover&gt;</code> component as follows:</p>
+<pre class="hljs"><code><div>&lt;Popover open={tutorialOpen2} onOpenChange={setTutorialOpen2} placement=<span class="hljs-string">'right'</span>&gt;
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Popover.Content</span> <span class="hljs-attr">padding</span>=<span class="hljs-string">'$3'</span> <span class="hljs-attr">maxWidth</span>=<span class="hljs-string">'30vw'</span> <span class="hljs-attr">borderColor</span>=<span class="hljs-string">'$borderColor'</span> <span class="hljs-attr">borderStyle</span>=<span class="hljs-string">'solid'</span> <span class="hljs-attr">borderWidth</span>=<span class="hljs-string">'$1'</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Arrow</span> <span class="hljs-attr">borderColor</span>=<span class="hljs-string">'$borderColor'</span> <span class="hljs-attr">borderStyle</span>=<span class="hljs-string">'solid'</span> <span class="hljs-attr">borderWidth</span>=<span class="hljs-string">'$1'</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">SolitoImage</span>
+      <span class="hljs-attr">width</span>=<span class="hljs-string">{getVariableValue(</span>'$<span class="hljs-attr">20</span>', '<span class="hljs-attr">size</span>')}
+      <span class="hljs-attr">height</span>=<span class="hljs-string">{getVariableValue(</span>'$<span class="hljs-attr">15</span>', '<span class="hljs-attr">size</span>')}
+      <span class="hljs-attr">src</span>=<span class="hljs-string">'/tutorial.apng'</span>
+      <span class="hljs-attr">alt</span>=<span class="hljs-string">'Tutorial image showing how operations can be dropped onto the equation'</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Text</span>&gt;</span>Drop the operations onto the equation in order to rearrange and solve the equation.<span class="hljs-tag">&lt;/<span class="hljs-name">Text</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Close</span> <span class="hljs-attr">position</span>=<span class="hljs-string">'absolute'</span> <span class="hljs-attr">top</span>=<span class="hljs-string">'$2'</span> <span class="hljs-attr">right</span>=<span class="hljs-string">'$2'</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">size</span>=<span class="hljs-string">'$1'</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">X</span> /&gt;</span>} /&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Close</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">XStack</span> <span class="hljs-attr">marginTop</span>=<span class="hljs-string">'$2'</span> <span class="hljs-attr">width</span>=<span class="hljs-string">'100%'</span> <span class="hljs-attr">justifyContent</span>=<span class="hljs-string">'flex-end'</span> <span class="hljs-attr">columnGap</span>=<span class="hljs-string">'$1'</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Close</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span>
+          <span class="hljs-attr">size</span>=<span class="hljs-string">'$2'</span>
+          <span class="hljs-attr">iconAfter</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">ChevronRight</span> /&gt;</span>}
+          backgroundColor='$blue6'
+          hoverStyle={{ backgroundColor: '$blue7' }}
+          pressStyle={{ backgroundColor: '$blue8' }}
+        &gt;Next<span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Close</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">XStack</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Content</span>&gt;</span></span>
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Popover.Anchor</span> <span class="hljs-attr">zIndex</span>=<span class="hljs-string">{2}</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">View</span> <span class="hljs-attr">onFocus</span>=<span class="hljs-string">{e</span> =&gt;</span> e.stopPropagation()}&gt;
+      {/* ... */}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">View</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Anchor</span>&gt;</span></span>
+&lt;<span class="hljs-regexp">/Popover&gt;
+</span></div></code></pre>
+<p>The Popover component is split into two main parts: the <code>&lt;Popover.Anchor&gt;</code> wwhich defines the content which the popover should try and attach to, and the <code>&lt;Popover.Content&gt;</code> which houses the actual content of the popover itself. Close buttons for the popover are implemented using <code>&lt;Popover.Close&gt;</code>, as well as any other additional event listeners for other special behaviour (e.g. opening next popover with next button). An additional wrapper <code>&lt;View&gt;</code> element was needed within the <code>&lt;Popover.Anchor&gt;</code>, as the default behavior for popovers was to open the popover whenever any element within the <code>&lt;Popover.Anchor&gt;</code> is focused. The additional <code>&lt;View&gt;</code> consumes these events to avoid this behaviour, as such behaviour is unexpected (otherwise causing the tutorial to show up whenever any field on the page is used).</p>
+<h4 id="simplifying-expressions">Simplifying expressions</h4>
+<p>The simplifiable sub-expressions first had to be identified and selected, which was implemented using the pre-existing regex setup for working with the underlying latex expressions. A number of &quot;rules&quot; were set up to identify expressions that could be simplified and describe how to apply those simplifications, as well as providing markup to be rendered as an explanation. The functionality for this was set up in a <code>&lt;MathSimplifyHelper&gt;</code> component, which encapsulated all the underlying implementation so that defining the rules was incredibly simple, e.g.:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> constProductPattern = rx<span class="hljs-string">`(?&lt;!\^\s*)(<span class="hljs-subst">${numPattern}</span>)\s*\\times\s*(<span class="hljs-subst">${numPattern}</span>)(?!\s*\^)`</span>
+
+<span class="hljs-comment">/* ... */</span>
+
+replace(constProductPattern, ([_, a, b]) =&gt; <span class="hljs-string">`<span class="hljs-subst">${asNumber(a) * asNumber(b)}</span>`</span>)
+replace(
+  rx<span class="hljs-string">`(<span class="hljs-subst">${numPattern}</span>?\s*(?:<span class="hljs-subst">${symbolPattern}</span>\s*)*)\\times\s*(<span class="hljs-subst">${matchingPairPattern}</span>)`</span>,
+  ([_, coefficient, term]) =&gt; {
+    <span class="hljs-comment">// Replace e.g. 2(x^2 + 3x + 2) -&gt; 2x^2 + 6x + 4</span>
+    <span class="hljs-keyword">const</span> { begin, end, pair } = matchingPairParts(term)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">${begin}</span>\\left(<span class="hljs-subst">${distribute(
+      OpType.PRODUCT,
+      coefficient,
+      pair.replace(unwrapBracketPair.regexFull(), <span class="hljs-string">'$1'</span>)
+    )}</span>\\right)<span class="hljs-subst">${end}</span>`</span>
+  },
+  () =&gt; <span class="xml"><span class="hljs-tag">&lt;&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Heading</span> <span class="hljs-attr">size</span>=<span class="hljs-string">'$2'</span>&gt;</span>Expanding brackets<span class="hljs-tag">&lt;/<span class="hljs-name">Heading</span>&gt;</span>
+      A product of a bracket can be expanded by distributing the product over each of the summed
+      terms within the bracket. E.g., taking 
+      <span class="hljs-tag">&lt;<span class="hljs-name">MathQuillText</span>&gt;</span>
+        3\times\left(x^2 + 2x + 1\right)
+      <span class="hljs-tag">&lt;/<span class="hljs-name">MathQuillText</span>&gt;</span>
+      and splitting the terms within the bracket, we can multiply each by the term outside the
+      bracket individually, as such:
+      <span class="hljs-tag">&lt;<span class="hljs-name">MathQuillText</span>&gt;</span>
+        = 3\times x^2 + 3\times 2x + 3\times 1
+      <span class="hljs-tag">&lt;/<span class="hljs-name">MathQuillText</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">MathQuillText</span>&gt;</span>
+        = 3x^2 + 6x + 3
+      <span class="hljs-tag">&lt;/<span class="hljs-name">MathQuillText</span>&gt;</span>
+    <span class="hljs-tag">&lt;/&gt;</span></span>
+)
+</div></code></pre>
+<p>The <code>replace</code> function handles all the actual logic for finding and substituting the matches. It takes only three arguments: the regular expression to match the expression (e.g. the <code>constProductPattern</code> which defines a product between two constant numbers (e.g. '2 × 2')), a replacer function, which accepts some pre-defined sections in the matched pattern (e.g. the two numbers being multiplied) and returns a suitable replacement that would be simpler (e.g. the actual product of the two constants). Optionally, a JSX Markup can also be included, which wil be rendered in an informational popup (see next section).
+The simplifiable content is now wrapped in a <code>&lt;MathSimplifiableExpression&gt;</code> component, which provides the rendering with the animated hover effect, the (optional) info section, etc. The <code>replace</code> method also attaches a click event listener, so that upon clicking the sub-expression, the simplification is made and the new equation is added to the stack:</p>
+<pre class="hljs"><code><div><span class="hljs-comment">/* ... */</span>
+  replaceHandler={() =&gt; {
+    <span class="hljs-comment">// `replaceHandler` here propogates replaced content up tree to the `&lt;EquationStack&gt;`</span>
+    replaceHandler(
+      latex.substring(<span class="hljs-number">0</span>, replaceAt) +
+        replaceWith +
+        latex.substring(replaceAt + replaceLength)
+    )
+  }}
+<span class="hljs-comment">/* ... */</span>
+</div></code></pre>
+<h4 id="explanation-popups">Explanation popups</h4>
+<p>The explanation popups were implemented in a similar fashion to the tutorial, using Tamagui's <code>&lt;Popover&gt;</code> component. The content for them is provided by the <code>&lt;MathSimplifyHelper&gt;</code>'s replacement rules (above). This content is embedded within the popover, by passing the embedded content as a prop to the React component:</p>
+<pre class="hljs"><code><div>{infoContent ? 
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Popover</span> <span class="hljs-attr">placement</span>=<span class="hljs-string">'top-end'</span>&gt;</span>
+    {/* ... */}
+    <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Content</span>
+      /* <span class="hljs-attr">styling...</span> */
+      <span class="hljs-attr">borderColor</span>=<span class="hljs-string">'$borderColor'</span>
+      <span class="hljs-attr">borderStyle</span>=<span class="hljs-string">'solid'</span>
+      <span class="hljs-attr">borderWidth</span>=<span class="hljs-string">'$1'</span>
+    &gt;</span>
+      {infoContent}
+      <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Close</span> <span class="hljs-attr">position</span>=<span class="hljs-string">'absolute'</span> <span class="hljs-attr">top</span>=<span class="hljs-string">'$2'</span> <span class="hljs-attr">right</span>=<span class="hljs-string">'$2'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">size</span>=<span class="hljs-string">'$1'</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">X</span> /&gt;</span>} /&gt;
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Close</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Arrow</span> <span class="hljs-attr">borderColor</span>=<span class="hljs-string">'$borderColor'</span> <span class="hljs-attr">borderStyle</span>=<span class="hljs-string">'solid'</span> <span class="hljs-attr">borderWidth</span>=<span class="hljs-string">'$1'</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Content</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Popover.Trigger</span> <span class="hljs-attr">asChild</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Button</span>
+        <span class="hljs-attr">animation</span>=<span class="hljs-string">'bouncy'</span>
+        <span class="hljs-attr">zIndex</span>=<span class="hljs-string">{1000}</span>
+        <span class="hljs-attr">color</span>=<span class="hljs-string">'$blue6'</span>
+        <span class="hljs-attr">icon</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Info</span> /&gt;</span>}
+        /* styling... */
+      /&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Popover.Trigger</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Popover</span>&gt;</span></span> : <span class="hljs-literal">null</span>}
+</div></code></pre>
+<p>By wrapping in <code>{infoContent ? ... : null}</code>, the popover is only included when some content is provided to the <code>infoContent</code> prop. The popover is then included, with the <code>{infoContent}</code> substituted in. Some additional template code is needed, such as the <code>&lt;Popover.Close&gt;</code> component to provide a close button, and the <code>&lt;Popover.Trigger&gt;</code> to include a button to open the popup.</p>
+<h3 id="testing">Testing</h3>
+<p>The tutorial guide was tested to ensure it showed up on page load, could be looked through or also skipped appropriately.</p>
+<p>The simplifying expressions were tested for all implemented simplifications available. The subexpressions were matched correctly and the clickable UI was correctly inserted.</p>
+<p>Finally, the explaination popups were tested to make sure they showed up in all places where they were defined.</p>
+<h3 id="stakeholder-feedback-v2">Stakeholder feedback V2</h3>
+<p>The stakeholder made the following comments on this version of the product</p>
+<ul>
+<li>The color themes are neat, but there should be some toggle to switch between them at user will, as many users are unaware of the configuration they can make within their system/browser settings.</li>
+<li>Need to be able to set the base equation to work from. Also ideally share a link which shares to this initial setup.</li>
+</ul>
+<p>To accommodate this, I will adjust the specs to the following:</p>
+<ul>
+<li>Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions</li>
+<li>Create a visually appealing design (e.g. with animations) that maintains student interest and engagement</li>
+<li>Develop an intuitive interface that aids student understanding of algebra, with clear instruction on how to use the interface.</li>
+<li>Draggable equation operations to facilitate interactive learning</li>
+<li>Should enable students to find solutions to different algebraic equations in a fun and interactive way, guided by explainations at any possibly unintuitive points.</li>
+<li>Support a customisable UI with easy configuration, with a customisable colour theme to appeal to student's preferances.</li>
+<li>Should allow teachers to share an initial state for students to be able to work from.</li>
+</ul>
+<h3 id="acceptance">Acceptance</h3>
+<p>There are still a few minor tweaks that could be made, so I will not accept this version as the final version. I will add a theme toggle button for user customisation, and a system allowing users to change the initial equation to work from. This should also provide the capability to provide a link to share with other users which should bring them to the same initial state.</p>
+<h2 id="version-3">Version 3</h2>
+<p><img src="./images/theme.apng" alt="Animation showing the theme switcher UI">
+This shows the theme switcher, which toggles between three different options - light, dark, and system.</p>
+<p><img src="./images/share.apng" alt="Animation showing initial equation selector and sharing capabilities">
+This shows the editor for the initial equations, and the share utility which shares a link that other users can use to get the same initial equation - useful for teachers sharing a question with students.</p>
+<h3 id="implementation-detail">Implementation detail</h3>
+<h4 id="theme-switcher-button">Theme switcher button &gt;.&lt;</h4>
+<p>The theme switcher button is a Tamagui <code>&lt;Button&gt;</code> which integrates tightly with Tamagui's theme system in order to switch the rendered theme:</p>
+<pre class="hljs"><code><div>  <span class="hljs-keyword">const</span> themeSetting = useThemeSetting()
+  <span class="hljs-keyword">const</span> [clientTheme, setClientTheme] = useState(<span class="hljs-string">'system'</span>)
+
+  useIsomorphicLayoutEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    setClientTheme(themeSetting.current || <span class="hljs-string">'system'</span>)
+  }, [themeSetting.current])
+</div></code></pre>
+<p>The <code>useThemeSetting</code> provides a handle to mutate the current theme, which the button press is designed to toggle. A React <code>useEffect</code> is used to call <code>setClientTheme</code>, which handles updating all the components with the new style.</p>
+<h4 id="initial-equation-editor">Initial equation editor</h4>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">BaseEquationSelector</span>(<span class="hljs-params">{
+  setExpression,
+  base,
+  ...props
+}: {
+  setExpression: (eq: { lhs: string, rhs: string }</span>) =&gt; <span class="hljs-title">void</span>
+  <span class="hljs-title">base</span>: </span>{ lhs: string, <span class="hljs-attr">rhs</span>: string }
+} &amp; ButtonProps) {
+  <span class="hljs-keyword">const</span> [leftExpr, setLeftExpr] = React.useState(base.lhs)
+  <span class="hljs-keyword">const</span> [rightExpr, setRightExpr] = React.useState(base.rhs)
+  <span class="hljs-keyword">const</span> rightField = React.useRef&lt;MathField&gt;()
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Dialog</span> <span class="hljs-attr">modal</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Trigger</span> <span class="hljs-attr">asChild</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Settings</span> /&gt;</span>} {...props}&gt;
+          Change Starting Equations
+        <span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Trigger</span>&gt;</span>
+
+      {/* ... */}
+        <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Content</span>
+          <span class="hljs-attr">bordered</span>
+          <span class="hljs-attr">elevate</span>
+          <span class="hljs-attr">key</span>=<span class="hljs-string">'content'</span>
+          <span class="hljs-attr">animateOnly</span>=<span class="hljs-string">{[</span>'<span class="hljs-attr">transform</span>', '<span class="hljs-attr">opacity</span>']}
+          <span class="hljs-attr">animation</span>=<span class="hljs-string">'bouncy'</span>
+          <span class="hljs-attr">enterStyle</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">x:</span> <span class="hljs-attr">0</span>, <span class="hljs-attr">y:</span> <span class="hljs-attr">-20</span>, <span class="hljs-attr">opacity:</span> <span class="hljs-attr">0</span>, <span class="hljs-attr">scale:</span> <span class="hljs-attr">0.9</span> }}
+          <span class="hljs-attr">exitStyle</span>=<span class="hljs-string">{{</span> <span class="hljs-attr">x:</span> <span class="hljs-attr">0</span>, <span class="hljs-attr">y:</span> <span class="hljs-attr">10</span>, <span class="hljs-attr">opacity:</span> <span class="hljs-attr">0</span>, <span class="hljs-attr">scale:</span> <span class="hljs-attr">0.95</span> }}
+          <span class="hljs-attr">gap</span>=<span class="hljs-string">'$4'</span>
+        &gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Title</span>&gt;</span>Set Initial Equation<span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Title</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Description</span>&gt;</span>
+            Change the initial equation, from which you can work from to find a solution.
+          <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Description</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">XStack</span> <span class="hljs-attr">columnGap</span>=<span class="hljs-string">'$1'</span> <span class="hljs-attr">jc</span>=<span class="hljs-string">'center'</span> <span class="hljs-attr">ai</span>=<span class="hljs-string">'center'</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">MathQuillInput</span> /* <span class="hljs-attr">...</span> *//&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">RawMathQuillText</span>&gt;</span>=<span class="hljs-tag">&lt;/<span class="hljs-name">RawMathQuillText</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">MathQuillInput</span> /* <span class="hljs-attr">...</span> *//&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">XStack</span>&gt;</span>
+
+          <span class="hljs-tag">&lt;<span class="hljs-name">XStack</span> <span class="hljs-attr">alignSelf</span>=<span class="hljs-string">'flex-end'</span> <span class="hljs-attr">columnGap</span>=<span class="hljs-string">'$2'</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Close</span> <span class="hljs-attr">displayWhenAdapted</span> <span class="hljs-attr">asChild</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">size</span>=<span class="hljs-string">'$3'</span> <span class="hljs-attr">aria-label</span>=<span class="hljs-string">'Close'</span>&gt;</span>
+                Cancel
+              <span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Close</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Close</span> <span class="hljs-attr">displayWhenAdapted</span> <span class="hljs-attr">asChild</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-name">Button</span>
+                <span class="hljs-attr">theme</span>=<span class="hljs-string">'blue'</span>
+                <span class="hljs-attr">size</span>=<span class="hljs-string">'$3'</span>
+                <span class="hljs-attr">aria-label</span>=<span class="hljs-string">'Close'</span>
+                <span class="hljs-attr">onPress</span>=<span class="hljs-string">{(e)</span> =&gt;</span> setExpression({ lhs: leftExpr, rhs: rightExpr })}
+              &gt;
+                Save changes
+              <span class="hljs-tag">&lt;/<span class="hljs-name">Button</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Close</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">XStack</span>&gt;</span>
+
+          <span class="hljs-tag">&lt;<span class="hljs-name">Dialog.Close</span> <span class="hljs-attr">asChild</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">position</span>=<span class="hljs-string">'absolute'</span> <span class="hljs-attr">top</span>=<span class="hljs-string">'$3'</span> <span class="hljs-attr">right</span>=<span class="hljs-string">'$3'</span> <span class="hljs-attr">size</span>=<span class="hljs-string">'$2'</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">X</span> /&gt;</span>} /&gt;
+          <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Close</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Content</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Dialog.Portal</span>&gt;</span></span>
+    &lt;<span class="hljs-regexp">/Dialog&gt;
+  )
+}
+</span></div></code></pre>
+<p>The config itself is a Tamagui dialog, which is hooked into the passed base expression state using the <code>setExpression</code> and <code>base</code> props, which pass a &quot;getter&quot; (<code>base</code>) and &quot;setter&quot; <code>setExpression</code> to the component. The components calls <code>setExpression</code> in the submit button, which propogates the new information to the parent nodes, which also pass it down to the <code>&lt;EquationHistoryHost/&gt;</code> component, which then resets it's state based on the new value:</p>
+<pre class="hljs"><code><div>React.useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  updateHistory({ <span class="hljs-attr">type</span>: <span class="hljs-string">'set'</span>, <span class="hljs-attr">item</span>: { <span class="hljs-attr">key</span>: key, <span class="hljs-attr">item</span>: [base.lhs, base.rhs] } })
+  setKey(key + <span class="hljs-number">1</span>)
+}, [base])
+</div></code></pre>
+<p>This hooks a callback to whenever the <code>base</code> prop in the <code>&lt;EquationHistoryHost/&gt;</code> component is updated. The component responds by dispatching a 'set' event to the <code>Reducer</code> (see earlier), which resets the state to  just a single equation, the <code>base</code>'s LHS and RHS.</p>
+<h4 id="sharing-with-url">Sharing with url</h4>
+<p>The share UI was implemented with another Tamagui <code>&lt;Dialog&gt;</code> similar to the initial equation editor. This one contains a standard <code>&lt;Input&gt;</code> component, and a <code>&lt;Button&gt;</code> to copy the link. The copying uses the <code>@react-native-clipboard/clipboard</code> library, to maintain compatibility with web <em>and</em> native mobile:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ShareDialog</span>(<span class="hljs-params">{
+  base,
+  ...props
+}: {
+  base: { lhs: string, rhs: string }
+} &amp; ButtonProps</span>) </span>{
+  <span class="hljs-keyword">const</span> [clip, setClip] = useClipboard()
+  <span class="hljs-keyword">const</span> toast = useToastController()
+  <span class="hljs-keyword">const</span> url = <span class="hljs-keyword">new</span> URL(global.location?.href ?? <span class="hljs-string">'https://math-playground.pages.dev/'</span>)
+  url.searchParams.set(<span class="hljs-string">'lhs'</span>, base.lhs)
+  url.searchParams.set(<span class="hljs-string">'rhs'</span>, base.rhs)
+
+  {<span class="hljs-comment">/* ... */</span>}
+    &lt;Input
+      value={url.toString()}
+      onPress={isWeb ? <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> (e.target <span class="hljs-keyword">as</span> unknown <span class="hljs-keyword">as</span> HTMLInputElement).select() : <span class="hljs-literal">undefined</span>}
+    /&gt;
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Button</span> <span class="hljs-attr">icon</span>=<span class="hljs-string">{</span>&lt;<span class="hljs-attr">Copy</span> /&gt;</span>} position='absolute' right={0} onPress={e =&gt; {
+      setClip(url.toString())
+      toast.show("Copied to clipboard!", {
+        duration: 2000,
+      })
+    }}&gt;
+  {/* ... */}
+</span></div></code></pre>
+<p>The <code>useClipboard</code> call accesses a handle to the clipboard data. The link is composed from the <code>location.href</code> as well as the <code>base</code> prop which  is passed by the parent.
+In order to load the shared data, the page has some initial code to parse the initial paramaters from the URL:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">const</span> { useParams } = createParam&lt;{ lhs?: string; rhs?: string }&gt;()
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">HomeScreen</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> { params, setParams } = useParams();
+  <span class="hljs-keyword">const</span> nParams = { <span class="hljs-attr">lhs</span>: params.lhs || <span class="hljs-string">'4x + 3'</span>, <span class="hljs-attr">rhs</span>: params.rhs || <span class="hljs-string">'x + 12'</span> };
+  <span class="hljs-comment">/* ... */</span>
+</div></code></pre>
+<p>The <code>useParams</code> accesses the passed query parameters in the URL, and then <code>nParams</code> simply fills the values with sensible defaults in case the page is accessed without this information.</p>
+<h3 id="testing-v3">Testing V3</h3>
+<p>The initial equation setter was tested to ensure that equations could easily and fluently be typed into the field. E.g, as well as pressing <code>Tab</code> to advance to the next field, the user can press <code>=</code>, and the field will move to the RHS input, as seems intuitive. The dialog buttons were also tested to work as expected  - the 'save' button applies the changes as expected, while the 'cancel' and 'x' buttons close without applying the changes. Tamagui also by default allows for dialogs to  be cancelled with the <code>Escape</code> key.</p>
+<p>The equation sharing was tested so all links generated work when opened by another user or in another tab. The initial equation is also preserved on reload (although any further working isn't, which may/may not be intuituive (sometimes ppl would expect reload to be an easy way to reset, wheras other times users may accidentaly or otherwise reload without wanting the slate cleared)).</p>
+<p>The theme selector was tested to work for all the theme colors, and that the &quot;system&quot; setting reflected the user's system theme setting.</p>
+<h3 id="stakeholder-feedback-v3">Stakeholder feedback V3</h3>
+<p>The stakeholder says that they are pleased with the current state of the site. There is sufficient tools for the site to be usable in class and to feel intuitive for students to learn. While future expantion is possible (made plausible by the maintainability and extensibility of the solution), it is for now not needed. The stakeholder says they appreciate the site's logo in the navbar, as it suits nicely within the nature of the site.</p>
+<h3 id="acceptability">Acceptability</h3>
+<p>The solution is in a place where it could be suitably accepted. The product is in a usable state that could come to help many students with their learning.</p>
+<h2 id="fitness-for-purpose">Fitness for purpose</h2>
+<p>My solution meets the designated specifications:</p>
+<ul>
+<li>
+<blockquote>
+<p>Design a web application with a drag-and-drop based UI, similar to Scratch, to allow students to experiment with mathematical equations and expressions</p>
+</blockquote>
+<p>This specification is met with the drag-and-drop UI, <br>
+<img src="./images/dragging.apng" alt="Animation showing the equation actions being dragged onto the equation"> <br>
+The UI layout differs slightly from Scratch's, but this is validated due to the layout considerations, as the bottom of the screen has more space on desktop, and is quick and easy to reach on both desktop and mobile.</p>
+</li>
+<li>
+<blockquote>
+<p>Create a visually appealing design (e.g. with animations) that maintains student interest and engagement</p>
+</blockquote>
+<p><img src="./images/dragging.apng" alt="Animation showing the equation actions being dragged onto the equation"> <br>
+<img src="./images/actions.apng" alt="Animation showing the hover animation on the equation actions"> <br>
+This specification is met by the simplistic UI, using a clean, simple, and customisable solid background and a well-thought-out layout. Additionally the fluent animations when interacting with the equations and the equation actions makes using the product feel very smooth  and keeps the user engaged.</p>
+</li>
+<li>
+<blockquote>
+<p>Develop an intuitive interface that aids student understanding of algebra</p>
+</blockquote>
+<p><img src="./images/main.png" alt="Application main screen, showing the equation working stack, and the bottom toolbar with mathmatical operations"> <br>
+The equation stack layout is very effective at conveying the process, showing each step along the way in a similar layout as you might see in handwritten working. The nature of the way the drag-and-drop interface works forces the user to  make actions to both sides of the equation, really reinforcing the idea that actions must be made to both sides to maintain equivilence.</p>
+</li>
+<li>
+<blockquote>
+<p>Draggable equation operations to facilitate interactive learning.</p>
+</blockquote>
+<p><img src="./images/dragging.apng" alt="Animation showing the equation actions being dragged onto the equation"> <br>
+The drag-and-drop UI is very intuitive, especially for younger learners, as it feels very natural to simply &quot;grab&quot; onto the things that you need and &quot;put&quot; them where you need them. It is very interactive in a way that can be captivating for user engagement.</p>
+</li>
+<li>
+<blockquote>
+<p>Should enable students to find solutions to different algebraic equations in a fun and interactive way</p>
+</blockquote>
+<p><img src="./images/actions.apng" alt="Animation showing the hover animation on the equation actions"> <br>
+The system of having a toolbar where the user can access any operations really gives the user some freedom to find the solution <em>their</em> way, so that they can really make sense of what is happening and come to the solution in their own way. <br>
+<img src="./images/simplify.apng" alt="Animation showing cancelling terms being simplified"> <br>
+The UI also helps them along the way by offering simplifications which can be made, so that the user can make their way back down to the final answer. These features give the user a wonderful opportunity to learn as they find the solution and to do so in an engaging and intuitive manner.</p>
+</li>
+<li>
+<blockquote>
+<p>Support a customisable UI with easy configuration, with a customisable colour theme to appeal to student's preferances.</p>
+</blockquote>
+<p><img src="./images/theme.apng" alt="Animation showing the theme switcher UI">
+This spec is met by the theme switcher button, which allows the user to customise the page appearencce to their liking.</p>
+</li>
+<li>
+<blockquote>
+<p>Should allow teachers to share an initial state for students to be able to work from.</p>
+</blockquote>
+<p><img src="./images/share.apng" alt="Animation showing initial equation selector and sharing capabilities">
+This spec is met through the use of the link sharing capabilities.</p>
+</li>
+</ul>
+<h3 id="integration">Integration</h3>
+<p>Overall, I think the techniques integrate together quite well to make an overall fun, intuitive UI. The drag-and-drop nature works really well with the animations in order to create a very fluent design, which feels very natural to use. This keeps the user engaged; meanwhile the way the interface is thought out is constricting enough that the user cannot make any fatal errors, while still giving enough freedom allowing the user to find their own way to the solution, which is a fundamental aspect to their learning. The technologies used to create the product have integrated really nicely as well, Tamagui for UI has offered a lot to make the interface as visually appealing as it is, and has worked rewally well with React Native Web, making the codebase incredibly flexible while remaining perfectly clean and type-safe code. The majority of the UI is already in a state to support future expansions to native desktop or mobile apps (only really lacking support for rendering math natively). React has also worked very nicely with the Next.js backend, the interactions between the two are near seamless. Along with using Cloudflare for hosting, building and deploying has been incredibly seamless, using Continuous Integration on Github and some VSCode extensions, I can deploy right from my IDE. Additionally, Next.js and Cloudflare have great support for local development, overall giving a very clean and tidy developer experience, and greatly benefiting the speed at which I could develop this for the stakeholder. I think the setup with Next.js - Cloudflare - React was certainly the best option for hosting and serving, as they are a relatively well known combo (2024 is know among javascript devs as the &quot;year of serverlessness&quot;, refering to hosting everything on the edge using e.g. Cloudflare workers), with great support from community and frequent updates. React is by far the largest modern JS framework and has come to be industry standard, being used for almost anything nowadays.</p>
+<h3 id="considerations">Considerations</h3>
+<h4 id="technical-and-social-acceptability">Technical and Social acceptability</h4>
+<p>Much consideration has been put into the code aspect to ensure it adheres to modern-day technical conventions. Typescript was used, which ensures that code is type-safe, ensuring the code is clean and easy to  understand. Using typescript properly can prevent bugs and make maintanence much easier further down the line. Conventions for frameworks were also followed, such as prefering functional components for React over class-based ones. <em>Biome</em> (a code linter, which checks code safety  and styling conventions) was also used in order to maintain the readability and consistency in the code styling.</p>
+<p>Social considerations were also considered, especially concerning how the users (targeting younger learners) would be affected by the UI. The drag-and-drop style especially, was chosen due to how clear and intuitive it is especially to younger audiences, who (especially in modern generations) have grown especially used to touchscreen and the idea of dragging things around exacly where they want them should meet their expectations for how the UI would work. Commonly understood styling hints were also used to support this, such as the border around the drop zone, the dotted underline on the simplifiable expressions.</p>
+<h4 id="maintainablility">Maintainablility</h4>
+<p>Overall, the state of the final product is relatively stable. Thanks to  Cloudflare's free hosting, there is no running cost to the project, so the site could be extremely long-lived even with no maintenence support, although preferably the project would be atleast periodically maintained. Thanks to it being open-source on Github, the community can make contributions or forks of the project, so that even if it dies, another person could pick up the project and update it. The packages we are using are constantly changing as they are modern and always looking at new ways to do things, but by using a package manager and specifying versions, theoretically the codebase could remain stable in a frozen state, however I would still recommend periodic maintanence to upgrade dependancies to ensure the tamagui-compiled UI is stable across the ever-changing browser standards and to mitigate any security vulnerabilities found in any of the server framework. Maintaining and managin the project is easy due to  it's presence on Github, along with the Continuous Integration that allows easy deployment to Cloudflare. Bugs can be reported on the Github issue tracker and even the solutions contributed by the community through a pull request. Overall, open-sourcing on Github is a great and easy solution to ensure the project remains in a maintainable state. The product has been designed in a very maintainable manner, using abstraction and encapsulation to organise the code, allowing for very easy changes, and also the use of Typescript helps, as it gives maintainers a much clearer indication of what is happening within the code.</p>
+<h4 id="health-and-safety">Health and Safety</h4>
+<p>As a developer, health and safety during development is a major concern. As humans, we work best on a calmer, clear mind, so it is beneficial to take periodic breaks, as this allows us to think thinks over, and not get too stressed or angry working on one thing all at once. Maintaining a good mental health like this increases productivity and overall means the project can be developed faster, the code will be more well-thought-out and better quality. As well as mental health, there is the concern of physical health - problems like posture issues, dehydration, and RSI are increadibly common among developers. As such I have ensured to frequently check my posture, and take breaks to avoid straining myself physically, and to get drinks (coffee all too often '~'). Additionally in terms of end-user safety, we want to avoid things like high-frequency flashing, in case of users with photo-sensative epilepsy. Additionally, we want to avoid rapid or extraneous movement, to again avoid RSI. This was especially considered during the layout stage - we want the most heavily used stuff to be placed in an optimal location to minimise effort for the user to reach it.</p>
+<h4 id="manufacturing-practices">Manufacturing practices</h4>
+<p>A major consideration is the permissions and licencing for all the content used in the production of the product. All images used are self-created, as we are primarily using them to inform users how to use the site, and so liscensing is not a concern. When hosting these images on the web, it is also important to consider the size of files, as bandwith can be a concern for users <em>and</em> for hosting alike, so ideally the smaller the file, the better. Additionally, the larger files will take longer do load, decreasing the feeling of &quot;responsiveness&quot; of the site, and detracting from the user experience. The Solito image library provides a great solution for hosting images - it runs on the edge to scale images to various resolutions, and serves the images based upon a variety of factors, e.g. initially loading lower-resolution images for fast load speed, and later upgrading the resolution if the client network is idling. This way the user gets the best case experience - a fast initial load, and sufficient resolution as the image has time to load fully. Another concern is font size for text readability - the majority of text is maths rendered with MathQuill. I chose a reasonably large base font size, as it fits the clean and simplistic aesthetic. The font sizes are all defined using relative units, so the user's browser font size preferences are also taken into account, making the site more accessible for users with hardness of sight or visual disabilities. On the backend, best practices have been constantly considered during the manufacturing and development process. Typescript for type safety and Biome for linting has been used to ensure the code is high quality and follows the conventional standards. This also provides the benefit of increased maintainability. All aspects of the product have also been extensively tested in order to ensure their utmost quality.</p>
+<h4 id="sustainability">Sustainability</h4>
+<p>Another consideration when determining which technologies to use is how easy it is to upgrade those dependancies and how those dependancies might change in future. By using a package manager (bun), all these dependancies can be managed through a JSON dependancy list (package.json). Package managers often also provide many CLI tools to make maintaining and updating dependancies a breeze for speedy development (e.g. in this project <code>bun deps:update</code> could be used to check for and update dependancies). This makes maintaining the project over time very simple and swift, so that future developers/maintainers time can be saved. The codebase is kept clean, again through the use of typescript and linting, and also through following conventions and using sensible names for components and variables. Hosting for everything is handled entirely through external services like Cloudflare, meaning there is very little extra maintanence needed to keep the site up and online, making the solution very sustainable - it could last an extremely long time with absolutely no maintanence, until any major changes were made in Cloudflare (unlikely to their size and publicity) or any breaking changes in web standards (unlikely, as Tamagui and React Web Native compile to reasonably basic HTML and CSS features, which are unlikely to be changed al all as that would break the maajority of the web).</p>
+<h4 id="project-lifecycle">Project Lifecycle</h4>
+<p>All content used by the site is self-hosted, so we have control over all the material used. The nature of the project and it's uses for education make it safe to keep the content on the internet endlessly - the material will always be relevant and usable for the forseeable future, so there is no concern of needing to remove the content in the case it becomes outdated. The nature of the web is to generally maintain backwards-compatability - websites made back in the days of HTML4 still function today! As such, the project should survive into future versions of browsers, servers, node.js (since dependancies are listed with specific versions), etc. (so long as we don't have another <code>leftpad</code> incident).</p>
+
+</body>
+</html>

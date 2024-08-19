@@ -1,4 +1,4 @@
-import { MathQuillText } from '@t4/ui'
+import { MathQuillText, Heading } from '@t4/ui'
 import React from 'react'
 import { MathSimplifiableExpression } from './MathSimplifiableExpression'
 import { MATHQUILL_NULL_TOKEN, MathQuillTextProps } from './MathQuillText'
@@ -15,6 +15,10 @@ import {
   unwrapBracketPair,
 } from './latexutil'
 import { rx, Rx } from './rx'
+import { RawMathQuillText } from './RawMathQuillText'
+import { MathTermInput } from './MathTermInput'
+import { ActionTerms, ActionTermsContext } from './EquationAction'
+import { createTextSpanFromBounds } from 'typescript'
 
 const sumNumPattern = rx`(?:[+-]\s*)?(?<![\.\d])\d+(?:\.\d+)?`
 const asNumber = (x: string) => parseFloat(x.replace(/^\s*([+-])\s*/, '$1'))
@@ -32,7 +36,11 @@ export function MathSimplifyHelper({ latex, replaceHandler, ...props }: MathSimp
     element: string | React.ReactElement
   }[] = [{ srcIdx: 0, element: latex }]
 
-  function replace(pattern: RegExp | Rx, replacement: (ctx: RxMatch) => string) {
+  function replace(
+    pattern: RegExp | Rx,
+    replacement: (ctx: RxMatch) => string,
+    infoContent: () => React.ReactNode = () => undefined
+  ) {
     parts = parts.flatMap(({ srcIdx, element }) => {
       if (typeof element === 'string') {
         const matches = element.matchAll(pattern instanceof Rx ? pattern.regex() : pattern)
@@ -57,6 +65,7 @@ export function MathSimplifyHelper({ latex, replaceHandler, ...props }: MathSimp
                       latex.substring(replaceAt + replaceLength)
                   )
                 }}
+                infoContent={infoContent()}
               >
                 {replaceAt > 0 ? MATHQUILL_NULL_TOKEN : null}
                 {match[0]}
@@ -87,7 +96,19 @@ export function MathSimplifyHelper({ latex, replaceHandler, ...props }: MathSimp
         coefficient,
         pair.replace(unwrapBracketPair.regexFull(), '$1')
       )}\\right)${end}`
-    }
+    },
+    () => (
+      <>
+        <Heading size='$2'>Expanding brackets</Heading>
+        A product of a bracket can be expanded by distributing the product over each of the summed
+        terms within the bracket. E.g., taking
+        <MathQuillText>3\times\left(x^2 + 2x + 1\right)</MathQuillText>
+        and splitting the terms within the bracket, we can multiply each by the term outside the
+        bracket individually, as such:
+        <MathQuillText>= 3\times x^2 + 3\times 2x + 3\times 1</MathQuillText>
+        <MathQuillText>= 3x^2 + 6x + 3</MathQuillText>
+      </>
+    )
   )
   // replace(differencePattern.regex(), ([_, a, b]) => `${parseFloat(a) - parseFloat(b)}`);
 

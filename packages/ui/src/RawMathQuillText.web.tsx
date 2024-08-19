@@ -44,9 +44,8 @@ export const RawMathQuillText: React.FunctionComponent<RawMathQuillTextProps> = 
       `,
         }}
       />
-      {errored ? (
-        childrenString
-      ) : (
+      {errored ? childrenString : null}
+      {
         <StaticMathField
           style={
             unselectable
@@ -70,12 +69,12 @@ export const RawMathQuillText: React.FunctionComponent<RawMathQuillTextProps> = 
                 ;(global as any).jQuery?.(math.el())?.off()
               }
               mathquillDidMount?.(math)
-            }, 0)
+            }, 100)
           }}
         >
           {childrenString}
         </StaticMathField>
-      )}
+      }
       {_additionalRawChildren ? _additionalRawChildren : null}
     </SizableText>
   )
