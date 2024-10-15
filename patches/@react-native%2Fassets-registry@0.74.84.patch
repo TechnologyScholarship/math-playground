@@ -17,6 +17,7 @@ index 02470da3c4962ad1bbdc62d9ed295c19ca4905fe..735e0cccd49be9f785f9e646b4f87117
 -  +name: string,
 -  +type: string,
 -  ...
+-};
 +// export type PackagerAsset = {
 +//   +__packager_asset: boolean,
 +//   +fileSystemLocation: string,
@@ -28,7 +29,7 @@ index 02470da3c4962ad1bbdc62d9ed295c19ca4905fe..735e0cccd49be9f785f9e646b4f87117
 +//   +name: string,
 +//   +type: string,
 +//   ...
- };
++// };
  
 -const assets: Array<PackagerAsset> = [];
 +// const assets: Array<PackagerAsset> = [];
