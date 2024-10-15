@@ -50,7 +50,7 @@ export function EquationHistoryHost({
   ...props
 }: React.PropsWithChildren<{
   dropHandler: React.MutableRefObject<EquationDropHandler>
-  base: { lhs: string, rhs: string }
+  base: { lhs: string; rhs: string }
 }> &
   ViewProps) {
   const keyState = React.useState(1)

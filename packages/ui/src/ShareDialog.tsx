@@ -2,13 +2,13 @@ import { Dialog, Button, ButtonProps, Adapt, Sheet, XStack, Input, View, isWeb }
 import { Share, X, Copy } from '@tamagui/lucide-icons'
 import React from 'react'
 import { useClipboard } from '@react-native-clipboard/clipboard'
-import { useToastController } from '@tamagui/toast';
+import { useToastController } from '@tamagui/toast'
 
 export function ShareDialog({
   base,
   ...props
 }: {
-  base: { lhs: string, rhs: string }
+  base: { lhs: string; rhs: string }
 } & ButtonProps) {
   const [clip, setClip] = useClipboard()
   const toast = useToastController()
@@ -58,14 +58,21 @@ export function ShareDialog({
           <View>
             <Input
               value={url.toString()}
-              onPress={isWeb ? (e) => (e.target as unknown as HTMLInputElement).select() : undefined}
+              onPress={
+                isWeb ? (e) => (e.target as unknown as HTMLInputElement).select() : undefined
+              }
             />
-            <Button icon={<Copy />} position='absolute' right={0} onPress={e => {
-              setClip(url.toString())
-              toast.show("Copied to clipboard!", {
-                duration: 2000,
-              })
-            }}>
+            <Button
+              icon={<Copy />}
+              position='absolute'
+              right={0}
+              onPress={(e) => {
+                setClip(url.toString())
+                toast.show('Copied to clipboard!', {
+                  duration: 2000,
+                })
+              }}
+            >
               Copy
             </Button>
           </View>

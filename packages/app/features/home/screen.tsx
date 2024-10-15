@@ -40,8 +40,8 @@ export function HomeScreen() {
   const dropListener = useRef<EquationDropHandler>(() => {})
   const [tutorialOpen, setTutorialOpen] = React.useState(true)
   const [tutorialOpen2, setTutorialOpen2] = React.useState(false)
-  const { params, setParams } = useParams();
-  const nParams = { lhs: params.lhs || '4x + 3', rhs: params.rhs || 'x + 12' };
+  const { params, setParams } = useParams()
+  const nParams = { lhs: params.lhs || '4x + 3', rhs: params.rhs || 'x + 12' }
 
   return (
     <YStack
@@ -59,7 +59,11 @@ export function HomeScreen() {
       <XStack padding='$2' paddingBottom={0} ai='stretch'>
         <XStack fb={0} flexGrow={1} jc='flex-start' ai='center' columnGap='$2'>
           <ShareDialog size='$2' base={nParams} />
-          <BaseEquationSelector size='$2' base={nParams} setExpression={state => setParams(state, { webBehavior: 'replace' })} />
+          <BaseEquationSelector
+            size='$2'
+            base={nParams}
+            setExpression={(state) => setParams(state, { webBehavior: 'replace' })}
+          />
         </XStack>
         <XStack fb={0} flexGrow={1} jc='center' ai='center'>
           <RawMathQuillText>{'M_a t(h)\\cdot \\frac{P(la = y)}{g(r)ound}'}</RawMathQuillText>

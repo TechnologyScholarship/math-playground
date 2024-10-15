@@ -10,8 +10,8 @@ export function BaseEquationSelector({
   base,
   ...props
 }: {
-  setExpression: (eq: { lhs: string, rhs: string }) => void
-  base: { lhs: string, rhs: string }
+  setExpression: (eq: { lhs: string; rhs: string }) => void
+  base: { lhs: string; rhs: string }
 } & ButtonProps) {
   const [leftExpr, setLeftExpr] = React.useState(base.lhs)
   const [rightExpr, setRightExpr] = React.useState(base.rhs)

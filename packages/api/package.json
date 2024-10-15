@@ -30,6 +30,9 @@
 		"@cloudflare/workers-types": "^4.20240722.0",
 		"drizzle-kit": "^0.23.0",
 		"typescript": "^5.5.4",
-	    "wrangler": "^3.71.0"
+		"wrangler": "^3.71.0"
+	},
+	"patchedDependencies": {
+		"@react-native/assets-registry@0.74.84": "patches/@react-native%2Fassets-registry@0.74.84.patch"
 	}
 }
